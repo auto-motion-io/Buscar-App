@@ -1,0 +1,29 @@
+2024-01-26 23:30:07.7111|INFO|DS4Windows version 3.3.3
+2024-01-26 23:30:07.7111|INFO|DS4Windows exe file: DS4Windows.exe
+2024-01-26 23:30:07.7111|INFO|DS4Windows Assembly Architecture: x64
+2024-01-26 23:30:07.7111|INFO|OS Version: Microsoft Windows NT 10.0.19044.0
+2024-01-26 23:30:07.7111|INFO|OS Product Name: Windows 10 Home
+2024-01-26 23:30:07.7111|INFO|OS Release ID: 2009
+2024-01-26 23:30:07.7111|INFO|System Architecture: x64
+2024-01-26 23:30:07.7111|INFO|Logger created
+2024-01-26 23:30:08.4511|INFO|LinkedProfiles.xml can't be found.
+2024-01-26 23:30:12.2240|INFO|Running as User
+2024-01-26 23:30:13.4384|INFO|Starting...
+2024-01-26 23:30:15.4395|INFO|Some applications may block controller inputs. (Windows UAC Conflictions). Please go to https://ryochan7.github.io/ds4windows-site/troubleshooting/kb-mouse-issues/#windows-not-responding-to-ds4ws-kb-m-commands-in-some-situations for more information and workarounds.
+2024-01-26 23:30:15.4395|INFO|Using output KB+M handler: SendInput
+2024-01-26 23:30:15.4395|INFO|Connection to ViGEmBus 1.17.333.0 established
+2024-01-26 23:30:15.4395|INFO|Searching for controllers...
+2024-01-26 23:30:15.4395|INFO|Using Shared Mode
+2024-01-26 23:30:29.0251|INFO|Found Controller: DC:0C:2D:01:C6:6E (BT) (DS4 v.2).
+2024-01-26 23:30:29.0462|WARN|DC:0C:2D:01:C6:6E disconnected due to read failure: 0
+2024-01-26 23:30:29.0462|INFO|Gamepad data write connection is lost. Disconnecting the gamepad. LastErrorCode=0
+2024-01-26 23:30:29.0506|INFO|Controller 1 was removed or lost connection. Charge the battery
+2024-01-26 23:30:34.2309|INFO|Found Controller: DC:0C:2D:01:C6:6E (USB) (DS4 v.2).
+2024-01-26 23:30:34.2390|INFO|Controller 1 is not using a profile. Battery level is 100%
+2024-01-27 01:02:04.4890|INFO|Controller 1 was removed or lost connection
+2024-01-27 01:03:07.4360|INFO|User Session Ending
+2024-01-27 01:03:07.4360|INFO|Stopping Virtual Output Controllers
+2024-01-27 01:03:07.4360|INFO|Closing connection to ViGEmBus
+2024-01-27 01:03:07.4360|INFO|Stopping DS4 Input Controllers
+2024-01-27 01:03:07.4407|INFO|Stopped DS4Windows
+2024-01-27 01:03:07.4407|INFO|Closing connection to output handler SendInput
