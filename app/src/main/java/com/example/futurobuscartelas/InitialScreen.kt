@@ -52,9 +52,6 @@ fun PreviewPreLogin() {
 
 @Composable
 fun PreLoginScreen(navController: NavHostController) {
-
-
-
     Box(
         modifier = Modifier
             .fillMaxSize()
