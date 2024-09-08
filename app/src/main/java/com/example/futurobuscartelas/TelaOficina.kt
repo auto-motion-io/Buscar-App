@@ -199,7 +199,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                     text = "Fast Motors",
                     color = Color(59, 86, 60),
                     fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = PRODUCT_SANS_FAMILY
                 )
                 Image(
                     painter = painterResource(id = R.mipmap.icon_fav),
@@ -225,7 +226,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         text = "5.0",
                         Modifier.padding(bottom = 4.dp, start = 5.dp),
                         fontSize = 14.sp,
-                        color = Color(30, 30, 30)
+                        color = Color(30, 30, 30),
+                        fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
             }
@@ -279,7 +281,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                                 )
                             }
                             Text(text = "Carros", fontSize = 14.sp,
-                                color = Color(59, 86, 60))
+                                color = Color(59, 86, 60),
+                                fontFamily = PRODUCT_SANS_FAMILY)
                         }
                         Row (
                             modifier = Modifier
@@ -299,7 +302,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                                 )
                             }
                             Text(text = "Motos", fontSize = 14.sp,
-                                color = Color(59, 86, 60))
+                                color = Color(59, 86, 60),
+                                fontFamily = PRODUCT_SANS_FAMILY)
                         }
                     }
                     Row (
@@ -323,7 +327,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                                 )
                             }
                             Text(text = "Combustão", fontSize = 14.sp,
-                                color = Color(59, 86, 60))
+                                color = Color(59, 86, 60),
+                                fontFamily = PRODUCT_SANS_FAMILY)
                         }
                     }
                 }
@@ -346,6 +351,7 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         text = "9H00 ás 16H00",
                         fontSize = 14.sp,
                         color = Color(50, 50, 50, 240),
+                        fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
             }
@@ -382,7 +388,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             Modifier
                                 .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -398,7 +405,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             Modifier
                                 .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -413,7 +421,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         Text(text = "T", Modifier
                             .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -428,7 +437,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         Text(text = "Q", Modifier
                             .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -443,7 +453,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         Text(text = "Q", Modifier
                             .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -458,7 +469,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         Text(text = "S", Modifier
                             .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -473,7 +485,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         Text(text = "S", Modifier
                             .padding(4.dp),
                             color = Color(60, 60, 60),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                 }
@@ -488,7 +501,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         text = "Serviços",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(59, 86, 60)
+                        color = Color(59, 86, 60),
+                        fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
                 Row (
@@ -513,7 +527,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             text = "Fast Motors",
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp)
+                            modifier = Modifier.padding(top = 5.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -533,7 +548,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             text = "Fast Motors",
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp)
+                            modifier = Modifier.padding(top = 5.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                 }
@@ -546,7 +562,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         text = "Peças",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(59, 86, 60)
+                        color = Color(59, 86, 60),
+                        fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
                 Row (
@@ -572,7 +589,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             text = "Fast Motors",
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp)
+                            modifier = Modifier.padding(top = 5.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                     Column (
@@ -592,7 +610,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             text = "Fast Motors",
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp)
+                            modifier = Modifier.padding(top = 5.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                 }
@@ -606,6 +625,7 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(59, 86, 60),
+                    fontFamily = PRODUCT_SANS_FAMILY
                 )
             }
             Row (
@@ -634,7 +654,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                             Row {
                                 Text(
                                     text = "Marcos Gonzales",
-                                    fontSize = 14.sp
+                                    fontSize = 14.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY
                                 )
                             }
                             Row (
@@ -676,7 +697,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                                 text = "23/04/2024 - 13:55",
                                 modifier = Modifier.padding(bottom = 8.dp),
                                 fontSize = 12.sp,
-                                color = Color(190, 190, 190)
+                                color = Color(190, 190, 190),
+                                fontFamily = PRODUCT_SANS_FAMILY
                             )
                         }
                     }
@@ -687,7 +709,8 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                     ) {
                         Text(
                             text = "A expressão Lorem ipsum em design gráfico e editoração é um texto padrão em latim utilizado na produção gráfica para preencher os espaços de texto em publicações para testar e ajustar aspectos visuais antes de utilizar conteúdo real.",
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
                 }
