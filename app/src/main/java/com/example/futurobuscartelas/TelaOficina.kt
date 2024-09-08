@@ -41,7 +41,6 @@ class TelaOficinaActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FuturoBuscarTelasTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
@@ -158,7 +157,7 @@ class TelaOficinaActivity : ComponentActivity() {
             }
         }
     }
-}
+
 
 @Composable
 fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
@@ -705,7 +704,5 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
 )
 @Composable
 fun GreetingPreview() {
-    FuturoBuscarTelasTheme {
         OficinaScreen("Android")
-    }
 }

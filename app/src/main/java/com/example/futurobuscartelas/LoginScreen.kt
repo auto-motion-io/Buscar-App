@@ -197,7 +197,7 @@ fun CustomOutlinedTextField(
 
 @Composable
 
-fun UpperLabelText(value: String) {
+private fun UpperLabelText(value: String) {
     Text(
         text = value,
         modifier = Modifier.padding(0.dp, 0.dp, 6.dp, 10.dp),
