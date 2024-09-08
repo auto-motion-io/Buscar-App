@@ -4,4 +4,5 @@
     <string name="title_activity_exercicio">Exercicio</string>
     <string name="title_activity_tela_pre_login">TelaPreLogin</string>
     <string name="title_activity_main">Buscar</string>
+    <string name="title_activity_before_sign_up_screen">BeforeSignUpScreen</string>
 </resources>

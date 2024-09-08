@@ -49,124 +49,121 @@ class LoginActivity() : ComponentActivity() {
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun LoginScreenPreview(){
+fun LoginScreenPreview() {
     val navController = rememberNavController()
     LoginScreen(navController = navController)
 }
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
-    val horizontalPadding = 24.dp
-    val verticalPadding = 64.dp
+
 
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
 
-    FuturoBuscarTelasTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = BackGroundColor
-        ) {
-            Box(modifier = Modifier.fillMaxSize()) {
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = BackGroundColor
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = DefaultHorizontalPadding,
+                        end = DefaultHorizontalPadding,
+                        top = DefaultVerticalPadding,
+                        bottom = 0.dp
+                    )
+            ) {
+
+                ArrowBackButton(navController = navController)
+
+
+                Spacer(modifier = Modifier.height(36.dp))
+
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            start = horizontalPadding,
-                            end = horizontalPadding,
-                            top = verticalPadding,
-                            bottom = 0.dp
-                        )
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-
-                    ArrowBackButton(navController = navController)
-
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = "Login",
+                            style = TextStyle(
+                                fontFamily = PRODUCT_SANS_FAMILY,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 36.sp,
+                                color = VerdeBuscar
+                            ),
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(36.dp))
 
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(
-                                text = "Login",
-                                style = TextStyle(
-                                    fontFamily = PRODUCT_SANS_FAMILY,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 36.sp,
-                                    color = VerdeBuscar
-                                ),
-                                modifier = Modifier.weight(1f)
-                            )
-                        }
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        UpperLabelText(value = "Email*")
+                        CustomOutlinedTextField(
+                            value = email,
+                            onValueChange = { email = it },
+                        )
 
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        UpperLabelText(value = "Senha*")
+                        CustomOutlinedTextField(
+                            value = senha,
+                            onValueChange = { senha = it },
+                            isPasswordField = true
+                        )
+                        Text(
+                            text = "Esqueci minha senha",
+                            modifier = Modifier.padding(6.dp),
+                            textDecoration = TextDecoration.Underline,
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontSize = 14.sp,
+                            color = Color(71, 71, 71, 255)
+                        )
                         Spacer(modifier = Modifier.height(36.dp))
 
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            UpperLabelText(value = "Email*")
-                            CustomOutlinedTextField(
-                                value = email,
-                                onValueChange = { email = it },
+                        Button(
+                            onClick = { /*TODO*/ },
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .height(54.dp)
+                                .width(138.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = VerdeBuscar
                             )
-
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            UpperLabelText(value = "Senha*")
-                            CustomOutlinedTextField(
-                                value = senha,
-                                onValueChange = { senha = it },
-                                isPasswordField = true
-                            )
+                        ) {
                             Text(
-                                text = "Esqueci minha senha",
-                                modifier = Modifier.padding(6.dp),
-                                textDecoration = TextDecoration.Underline,
-                                fontFamily = PRODUCT_SANS_FAMILY,
-                                fontSize = 14.sp,
-                                color = Color(71, 71, 71, 255)
-                                )
-                            Spacer(modifier = Modifier.height(36.dp))
-
-                            Button(
-                                onClick = { /*TODO*/ },
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .height(54.dp)
-                                    .width(138.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = VerdeBuscar
-                                )
-                            ) {
-                                Text(
-                                    text = "Entrar",
-                                    style = TextStyle(
-                                        color = Color.White,
-                                        fontWeight = FontWeight.Bold,
-                                        fontFamily = PRODUCT_SANS_FAMILY
-                                    ),
-                                    fontSize = 16.sp,
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
+                                text = "Entrar",
+                                style = TextStyle(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = PRODUCT_SANS_FAMILY
+                                ),
+                                fontSize = 16.sp,
+                                textAlign = TextAlign.Center,
+                            )
                         }
                     }
                 }
-
-                Image(
-                    painter = painterResource(id = R.drawable.cars_footer),
-                    contentDescription = "Carros decoração",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter)
-                        .padding(0.dp, 0.dp, 0.dp, 24.dp)
-                        .size(130.dp),
-                    contentScale = ContentScale.FillWidth
-                )
             }
+
+            Image(
+                painter = painterResource(id = R.drawable.cars_footer),
+                contentDescription = "Carros decoração",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(0.dp, 0.dp, 0.dp, 24.dp)
+                    .size(130.dp),
+                contentScale = ContentScale.FillWidth
+            )
         }
     }
 }
-
 
 
 @Composable
@@ -200,14 +197,14 @@ fun CustomOutlinedTextField(
 
 @Composable
 
-fun UpperLabelText(value:String){
+fun UpperLabelText(value: String) {
     Text(
         text = value,
-        modifier = Modifier.padding(0.dp,0.dp,6.dp,10.dp),
+        modifier = Modifier.padding(0.dp, 0.dp, 6.dp, 10.dp),
         style = TextStyle(
             fontFamily = PRODUCT_SANS_FAMILY,
             fontWeight = FontWeight.Bold,
-            color = Color(71,71,71),
+            color = Color(71, 71, 71),
             fontSize = 18.sp
         )
     )

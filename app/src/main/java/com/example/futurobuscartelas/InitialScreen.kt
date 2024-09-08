@@ -101,9 +101,9 @@ fun PreLoginScreen(navController: NavHostController) {
                     .align(Alignment.CenterHorizontally)
                     .offset(18.dp)
             )
-            Spacer(modifier = Modifier.height(72.dp))
+            Spacer(modifier = Modifier.height(84.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("before-signup") },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .height(54.dp)

@@ -8,22 +8,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.futurobuscartelas.ui.theme.FuturoBuscarTelasTheme
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -42,11 +36,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            FuturoBuscarTelasTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {
                     MyApp()
-                }
-            }
         }
     }
 }
@@ -65,46 +55,17 @@ fun MyApp(){
         NavHost(navController = navController, startDestination = "pre_login") {
             composable("pre_login") { PreLoginScreen(navController) }
             composable("login") { LoginScreen(navController) }
+            composable("before-signup"){ BeforeSignUpScreen(navController = navController)}
         }
 
 }
 }
 
-@Composable
-fun ArrowBackButton(navController: NavController)  {
-    var clicked by remember { mutableStateOf(false) }
 
-    // Definindo a cor de fundo animada
-    val targetColor = if (clicked) ClickAnimationColor else BackGroundColor
-    val animatedColor by animateColorAsState(targetColor, animationSpec = tween(durationMillis = 300))
-
-    Box(
-        contentAlignment = Alignment.Center, // Centraliza o conteúdo da Box
-        modifier = Modifier
-            .size(36.dp) // Tamanho da Box
-            .clip(shape = CircleShape)
-            .background(animatedColor) // Forma circular e cor animada
-            .clickable {
-                clicked = !clicked
-                navController.popBackStack()
-            }
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.arrow_back_green),
-            contentDescription = "Botão voltar",
-            modifier = Modifier
-                .size(24.dp)
-                .clip(RoundedCornerShape(24.dp)),
-            contentScale = ContentScale.Fit
-        )
-    }
-}
 
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true,)
 fun InitPreview() {
-    FuturoBuscarTelasTheme {
         MyApp()
-    }
 }
