@@ -66,4 +66,32 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    implementation ("androidx.compose.ui:ui-graphics:1.7.0")
+    // Dependência principal do Jetpack Compose
+    implementation ("androidx.compose.ui:ui:1.7.0")
+    implementation ("androidx.compose.material:material:1.7.0")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.7.0")
+    implementation ("androidx.compose.animation:animation:1.7.0")
+
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.5")
+    implementation ("androidx.activity:activity-compose:1.9.2")
+
+}
+dependencies {
+    val nav_version = "2.8.0"
+    // Jetpack Compose integration
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    // Views/Fragments integration
+    implementation("androidx.navigation:navigation-fragment:$nav_version")
+    implementation("androidx.navigation:navigation-ui:$nav_version")
+
+    // Feature module support for Fragments
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:$nav_version")
+
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.30.0")
+
+    // Testing Navigation
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+
 }

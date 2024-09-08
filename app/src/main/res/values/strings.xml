@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">FuturoBuscarTelas</string>
+    <string name="app_name">Buscar</string>
     <string name="title_activity_tela_aula">TelaAula</string>
+    <string name="title_activity_exercicio">Exercicio</string>
+    <string name="title_activity_tela_pre_login">TelaPreLogin</string>
+    <string name="title_activity_main">Buscar</string>
 </resources>
