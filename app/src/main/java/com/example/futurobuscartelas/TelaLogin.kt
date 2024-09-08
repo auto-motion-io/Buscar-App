@@ -52,8 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.futurobuscartelas.ui.theme.FuturoBuscarTelasTheme
-
+import com.example.futurobuscartelas.ui.theme.*
 
 
 class LoginActivity() : ComponentActivity() {
@@ -78,7 +77,7 @@ fun LoginScreen(navController: NavHostController) {
     FuturoBuscarTelasTheme {
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = Color(248, 247, 244)
+            color = BackGroundColor
         ) {
             Box(modifier = Modifier.fillMaxSize()) {
                 Column(
@@ -107,7 +106,7 @@ fun LoginScreen(navController: NavHostController) {
                                     fontFamily = PRODUCT_SANS_FAMILY,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 36.sp,
-                                    color = Color(59, 86, 60, 255)
+                                    color = VerdeBuscar
                                 ),
                                 modifier = Modifier.weight(1f)
                             )
@@ -147,7 +146,7 @@ fun LoginScreen(navController: NavHostController) {
                                     .height(54.dp)
                                     .width(138.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(59, 86, 60, 255)
+                                    containerColor = VerdeBuscar
                                 )
                             ) {
                                 Text(
@@ -193,13 +192,13 @@ fun CustomOutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Color(59, 86, 60, 255),
+            focusedTextColor = VerdeBuscar,
             unfocusedTextColor = Color.Black,
-            focusedLabelColor = Color(59, 86, 60, 255),
+            focusedLabelColor = VerdeBuscar,
             unfocusedLabelColor = Color.Gray,
-            focusedBorderColor = Color(59, 86, 60, 255),
+            focusedBorderColor = VerdeBuscar,
             unfocusedBorderColor = Color.Transparent,
-            unfocusedContainerColor = Color(240, 239, 236)
+            unfocusedContainerColor = BackGroundColor
         ),
         singleLine = true,
         shape = RoundedCornerShape(50.dp),

@@ -32,9 +32,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.futurobuscartelas.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -51,13 +51,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val PRODUCT_SANS_FAMILY = FontFamily(
-    Font(R.font.product_sans_regular, FontWeight.Normal),
-    Font(R.font.product_sans_bold, FontWeight.Bold)
-)
-val backGroundColor = Color(248, 247, 244)
-val clickAnimationColor = Color(241, 240, 238, 255)
-val verdeBuscar = Color(59, 86, 60, 255)
+
+
 @Composable
 fun MyApp(){
     val navController = rememberNavController()
@@ -80,7 +75,7 @@ fun ArrowBackButton(navController: NavController)  {
     var clicked by remember { mutableStateOf(false) }
 
     // Definindo a cor de fundo animada
-    val targetColor = if (clicked) clickAnimationColor else backGroundColor
+    val targetColor = if (clicked) ClickAnimationColor else BackGroundColor
     val animatedColor by animateColorAsState(targetColor, animationSpec = tween(durationMillis = 300))
 
     Box(

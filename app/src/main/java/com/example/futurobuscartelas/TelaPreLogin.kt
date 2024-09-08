@@ -1,11 +1,7 @@
 package com.example.futurobuscartelas
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.os.Bundle
+
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.futurobuscartelas.ui.theme.ui.theme.FuturoBuscarTelasTheme
+import com.example.futurobuscartelas.ui.theme.*
 
 
 class TelaPreLogin() : ComponentActivity() {
@@ -63,7 +58,7 @@ fun PreLoginScreen(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(backGroundColor),
+            .background(BackGroundColor),
     ) {
         Column(
             modifier = Modifier
@@ -101,7 +96,7 @@ fun PreLoginScreen(navController: NavHostController) {
                 fontSize = 32.sp,
                 style = TextStyle(
                     lineHeight = 40.sp,
-                    color = verdeBuscar
+                    color = VerdeBuscar
                 ),
                 textAlign = TextAlign.Start,
                 modifier = Modifier
@@ -118,14 +113,14 @@ fun PreLoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = backGroundColor,
+                    containerColor = BackGroundColor,
                 ),
-                border = BorderStroke(2.dp, verdeBuscar)
+                border = BorderStroke(2.dp, VerdeBuscar)
             ) {
                 Text(
                     text = "Cadastre-se",
                     style = TextStyle(
-                        color = verdeBuscar,
+                        color = VerdeBuscar,
                         fontWeight = FontWeight.Bold,
                         fontFamily = PRODUCT_SANS_FAMILY
                     ),
@@ -142,7 +137,7 @@ fun PreLoginScreen(navController: NavHostController) {
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = verdeBuscar
+                    containerColor = VerdeBuscar
                 )
             ) {
                 Text(

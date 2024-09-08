@@ -25,12 +25,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.example.futurobuscartelas.ui.theme.*
 
 class MainViewModel : ViewModel() {
     private val _isLoading = mutableStateOf(true)
@@ -64,14 +63,14 @@ fun LoadingScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backGroundColor),
+            .background(BackGroundColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         Box(
             modifier = Modifier
-                .background(backGroundColor)
+                .background(BackGroundColor)
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
