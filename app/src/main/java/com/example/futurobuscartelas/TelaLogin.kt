@@ -198,7 +198,7 @@ fun CustomOutlinedTextField(
             unfocusedLabelColor = Color.Gray,
             focusedBorderColor = VerdeBuscar,
             unfocusedBorderColor = Color.Transparent,
-            unfocusedContainerColor = BackGroundColor
+            unfocusedContainerColor = InputContainerUnfocusedColor
         ),
         singleLine = true,
         shape = RoundedCornerShape(50.dp),
