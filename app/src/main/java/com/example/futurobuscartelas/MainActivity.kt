@@ -65,7 +65,7 @@ fun MyApp(){
 
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true,)
+@Preview(showBackground = true, showSystemUi = true)
 fun InitPreview() {
         MyApp()
 }
