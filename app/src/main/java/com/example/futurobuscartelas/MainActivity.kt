@@ -14,9 +14,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -102,7 +99,7 @@ fun ArrowBackButton(navController: NavController)  {
 
 
 @Composable
-@Preview(showBackground = true, showSystemUi = true,)
+@Preview(showBackground = true, showSystemUi = true)
 fun InitPreview() {
     FuturoBuscarTelasTheme {
         MyApp()
