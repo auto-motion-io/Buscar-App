@@ -4,11 +4,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,9 +43,8 @@ fun BeforeSignUpPreview() {
 @Composable
 fun BeforeSignUpScreen(navController: NavController) {
     BaseScreenLayout {
-        Column {
+        Column (modifier = Modifier.fillMaxWidth()) {
             ArrowBackButton(navController = navController)
-
             Image(
                 painter = painterResource(id = R.drawable.logo_buscar),
                 contentDescription = "Logo buscar",
@@ -50,7 +53,7 @@ fun BeforeSignUpScreen(navController: NavController) {
                     .align(Alignment.CenterHorizontally),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(48.dp))
             Text(
                 text = buildAnnotatedString {
                     withStyle(
@@ -79,30 +82,72 @@ fun BeforeSignUpScreen(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .offset(18.dp)
             )
-            Spacer(modifier = Modifier.height(128.dp))
+            Spacer(modifier = Modifier.height(62.dp))
 
             Column(
-                modifier = Modifier.fillMaxWidth().offset(18.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = 18.dp)
             ) {
 
-            Text(
-                modifier = Modifier
-                    .padding(vertical = 6.dp),
-                text = "Vamos começar",
-                color = VerdeBuscar,
-                fontWeight = FontWeight.Bold,
-                fontFamily = PRODUCT_SANS_FAMILY,
-                fontSize = 32.sp
-            )
-            Text(
-                text = "Se cadastre para procurar pelas melhores oficinas, serviços ou produtos",
-                fontFamily = PRODUCT_SANS_FAMILY,
-                color = Color(0xFF646464),
-                fontSize = 15.sp
-            )
+                Text(
+                    modifier = Modifier
+                        .padding(vertical = 6.dp),
+                    text = "Vamos começar",
+                    color = VerdeBuscar,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontSize = 30.sp
+
+                )
+                Text(
+                    modifier = Modifier.padding(bottom = 22.dp),
+                    text = "Se cadastre para procurar pelas melhores oficinas, serviços ou produtos",
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    color = Color(0xFF646464),
+                    fontSize = 16.sp
+                )
+
+                DefaultButtonMotion(
+                    text = "Cadastre-se", isFilled = true, modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                ) {
+                }
+
+                Text(
+                    text = "Acessar com",
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(vertical = 16.dp),
+                    style = TextStyle(
+                        fontFamily = PRODUCT_SANS_FAMILY,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(71, 71, 71, 255)
+                    )
+                )
+                Image(
+                    painter = painterResource(id = R.drawable.icon_google),
+                    contentDescription = "Icone google login",
+                    Modifier
+                        .size(48.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
             }
         }
     }
+            Box(modifier = Modifier.fillMaxSize()){
+            Image(
+                painter = painterResource(id = R.drawable.cars_footer),
+                contentDescription = "Carros decoração",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(0.dp, 0.dp, 0.dp, 24.dp)
+                    .size(130.dp),
+                contentScale = ContentScale.FillWidth
+            )
+            }
 }

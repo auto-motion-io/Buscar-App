@@ -127,10 +127,12 @@ fun LoginScreen(navController: NavHostController) {
                         Spacer(modifier = Modifier.height(36.dp))
 
                         Button(
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                navController.navigate("oficina")
+                            },
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
-                                .height(54.dp)
+                                .height(50.dp)
                                 .width(138.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = VerdeBuscar

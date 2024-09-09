@@ -56,6 +56,7 @@ fun MyApp(){
             composable("pre_login") { PreLoginScreen(navController) }
             composable("login") { LoginScreen(navController) }
             composable("before-signup"){ BeforeSignUpScreen(navController = navController)}
+            composable("oficina"){ OficinaScreen(name = "")}
         }
 
 }

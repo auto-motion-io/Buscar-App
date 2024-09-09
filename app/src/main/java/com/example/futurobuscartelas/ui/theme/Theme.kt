@@ -4,15 +4,18 @@ import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,15 +24,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.futurobuscartelas.R
 
 // Paddings
 
-val DefaultHorizontalPadding = 24.dp
+val DefaultHorizontalPadding = 36.dp
 val DefaultVerticalPadding = 64.dp
 
 // Common Components
@@ -85,5 +93,37 @@ fun BaseScreenLayout(content: @Composable () -> Unit) {
         content()
 
     }
+}
+
+
+@Composable
+fun DefaultButtonMotion(text: String, isFilled: Boolean, modifier: Modifier, onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        modifier = modifier
+            .then(
+                if (!isFilled)
+                    Modifier.border(2.dp, VerdeBuscar, shape = RoundedCornerShape(100))
+                else modifier
+            )
+            .clip(RoundedCornerShape(100)),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = VerdeBuscar
+        )
+    ) {
+        Text(
+            text = text,
+            color = if (isFilled) Color.White else VerdeBuscar,
+            style = TextStyle(
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontFamily = PRODUCT_SANS_FAMILY
+            ),
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+        )
+
+    }
+
 }
 
