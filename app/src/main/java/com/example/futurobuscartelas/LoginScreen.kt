@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas
 
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,7 +62,9 @@ fun LoginScreen(navController: NavHostController) {
 
     var email by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
-
+    var isEmailValid by remember { mutableStateOf(false) }
+    var isSenhaValid by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -102,18 +106,24 @@ fun LoginScreen(navController: NavHostController) {
                     Spacer(modifier = Modifier.height(36.dp))
 
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        UpperLabelText(value = "Email*")
+                        UpperLabelText(value = "Email")
                         CustomOutlinedTextField(
                             value = email,
-                            onValueChange = { email = it },
+                            onValueChange = {
+                                email = it
+                                if (email == "motion@gmail.com") isEmailValid = true
+                            },
                         )
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        UpperLabelText(value = "Senha*")
+                        UpperLabelText(value = "Senha")
                         CustomOutlinedTextField(
                             value = senha,
-                            onValueChange = { senha = it },
+                            onValueChange = {
+                                senha = it
+                                if (senha == "motion") isSenhaValid = true
+                            },
                             isPasswordField = true
                         )
                         Text(
@@ -122,26 +132,36 @@ fun LoginScreen(navController: NavHostController) {
                             textDecoration = TextDecoration.Underline,
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontSize = 14.sp,
-                            color = Color(71, 71, 71, 255)
+                            color = VerdeBuscar
                         )
                         Spacer(modifier = Modifier.height(36.dp))
 
                         Button(
                             onClick = {
-                                navController.navigate("oficina")
+                                if (!isEmailValid || !isSenhaValid) {
+                                    Toast.makeText(
+                                        context,
+                                        "Email ou senha inválidos",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    navController.navigate("oficina")
+                                }
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)
                                 .height(50.dp)
                                 .width(138.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = VerdeBuscar
-                            )
+                                containerColor = VerdeBuscar,
+                                disabledContainerColor = Color.LightGray,
+                                disabledContentColor = Color.White,
+                            ),
+                            enabled = senha.isNotBlank() && email.isNotBlank()
                         ) {
                             Text(
                                 text = "Entrar",
                                 style = TextStyle(
-                                    color = Color.White,
                                     fontWeight = FontWeight.Bold,
                                     fontFamily = PRODUCT_SANS_FAMILY
                                 ),
@@ -206,7 +226,7 @@ private fun UpperLabelText(value: String) {
         style = TextStyle(
             fontFamily = PRODUCT_SANS_FAMILY,
             fontWeight = FontWeight.Bold,
-            color = Color(71, 71, 71),
+            color = VerdeBuscar,
             fontSize = 18.sp
         )
     )
