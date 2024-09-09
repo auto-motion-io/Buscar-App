@@ -68,7 +68,7 @@ fun PreLoginScreen(navController: NavHostController) {
                 modifier = Modifier
                     .width(128.dp)
                     .align(Alignment.CenterHorizontally),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.FillWidth
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(

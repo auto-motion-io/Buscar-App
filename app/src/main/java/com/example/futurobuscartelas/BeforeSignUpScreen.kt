@@ -51,7 +51,7 @@ fun BeforeSignUpScreen(navController: NavController) {
                 modifier = Modifier
                     .width(128.dp)
                     .align(Alignment.CenterHorizontally),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.FillWidth
             )
             Spacer(modifier = Modifier.height(48.dp))
             Text(
@@ -83,7 +83,7 @@ fun BeforeSignUpScreen(navController: NavController) {
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(62.dp))
+            Spacer(modifier = Modifier.height(218.dp))
 
             Column(
                 modifier = Modifier
@@ -138,16 +138,5 @@ fun BeforeSignUpScreen(navController: NavController) {
             }
         }
     }
-            Box(modifier = Modifier.fillMaxSize()){
-            Image(
-                painter = painterResource(id = R.drawable.cars_footer),
-                contentDescription = "Carros decoração",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(0.dp, 0.dp, 0.dp, 24.dp)
-                    .size(130.dp),
-                contentScale = ContentScale.FillWidth
-            )
-            }
+
 }
