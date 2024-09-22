@@ -3,6 +3,7 @@ package com.example.futurobuscartelas.ui.theme
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,9 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.futurobuscartelas.R
+import kotlin.math.ceil
 
 @Composable
 fun addAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
@@ -110,3 +113,135 @@ fun addAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
         }
     }
 }
+
+@Composable
+fun checkSemana(listaDias: List<Boolean>){
+    val diasSemana = listOf("D", "S", "T", "Q", "Q", "S", "S");
+
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(60.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        for(i in diasSemana.indices){
+            Column(
+                Modifier.padding(start = 20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if(listaDias[i]){
+                    checkOn()
+                } else{
+                    checkOff()
+                }
+                Text(
+                    text = diasSemana[i],
+                    Modifier
+                        .padding(4.dp),
+                    color = Color(60, 60, 60),
+                    fontSize = 14.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun checkOn(){
+    Image(
+        painterResource(id = R.mipmap.icon_check),
+        contentDescription = "Icone de Check",
+        Modifier.size(24.dp)
+    )
+}
+
+@Composable
+fun checkOff(){
+    Image(
+        painterResource(id = R.mipmap.icon_check_semcor),
+        contentDescription = "Icone de Check sem cor",
+        Modifier.size(24.dp)
+    )
+}
+
+@Composable
+fun listarServicos(modifier: Modifier) {
+    val listaServicos = listOf("Troca de Óleo", "Troca de Pneu", "Alinhamento", "Balanceamento", "Teste")
+
+    // Agrupa os serviços em pares
+    val groupedServicos = listaServicos.chunked(2)
+
+    Column(modifier = modifier) {
+        for (grupo in groupedServicos) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                for (servico in grupo) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 14.dp)
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(color = Color(240, 239, 236))
+                        ) {}
+                        Text(
+                            text = servico,
+                            color = Color(59, 86, 60),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun listarPecas(modifier: Modifier) {
+    val listaPecas = listOf("Pneu", "Farois", "Bateria", "Freios", "Filtros", "Correias")
+
+    // Agrupa as peças em pares
+    val groupedPecas = listaPecas.chunked(2)
+
+    Column(modifier = modifier) {
+        for (grupo in groupedPecas) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                for (peca in grupo) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 14.dp)
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(color = Color(240, 239, 236))
+                        ) {}
+                        Text(
+                            text = peca,
+                            color = Color(59, 86, 60),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 5.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+

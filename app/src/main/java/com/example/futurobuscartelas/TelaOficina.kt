@@ -386,198 +386,10 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         Modifier.size(20.dp)
                     )
                 }
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    Column(
-                        Modifier.padding(start = 20.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check_semcor),
-                            contentDescription = "Icone de Check sem cor",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "D",
-                            Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier.padding(start = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check),
-                            contentDescription = "Icone de Check",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "S",
-                            Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier.padding(start = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check),
-                            contentDescription = "Icone de Check",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "T", Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier.padding(start = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check),
-                            contentDescription = "Icone de Check",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "Q", Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier.padding(start = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check),
-                            contentDescription = "Icone de Check",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "Q", Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier.padding(start = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check),
-                            contentDescription = "Icone de Check",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "S", Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier.padding(start = 18.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Image(
-                            painterResource(id = R.mipmap.icon_check_semcor),
-                            contentDescription = "Icone de Check sem cor",
-                            Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "S", Modifier
-                                .padding(4.dp),
-                            color = Color(60, 60, 60),
-                            fontSize = 14.sp,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                }
+                checkSemana(listOf(false, true, true, true, true, false, true))
             }
 
             //--------------
-            Column(
-                Modifier.padding(top = 20.dp)
-            ) {
-                Row {
-                    Text(
-                        text = "Serviços",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color(59, 86, 60),
-                        fontFamily = PRODUCT_SANS_FAMILY
-                    )
-                }
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Column(
-                        Modifier
-                            .weight(0.4f)
-                            .padding(end = 14.dp)
-                    ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(170.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = "Fast Motors",
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier
-                            .weight(0.4f)
-                            .padding(end = 14.dp)
-                    ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(170.dp)
-                                .padding(top = 5.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = "Fast Motors",
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                }
-            }
             Column(
                 Modifier.padding(top = 20.dp)
             ) {
@@ -596,48 +408,28 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         .padding(top = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
-                        Modifier
-                            .weight(0.4f)
-                            .padding(end = 14.dp)
-                    ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(170.dp)
-                                .padding(top = 5.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = "Fast Motors",
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Column(
-                        Modifier
-                            .weight(0.4f)
-                            .padding(end = 14.dp)
-                    ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(170.dp)
-                                .padding(top = 5.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = "Fast Motors",
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
+                    listarServicos(Modifier.weight(0.4f))
+                }
+            }
+            Column(
+                Modifier.padding(top = 20.dp)
+            ) {
+                Row {
+                    Text(
+                        text = stringResource(R.string.label_pecas),
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(59, 86, 60),
+                        fontFamily = PRODUCT_SANS_FAMILY
+                    )
+                }
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    listarPecas(Modifier.weight(0.4f))
                 }
             }
 

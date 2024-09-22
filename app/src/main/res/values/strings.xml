@@ -7,4 +7,5 @@
     <string name="title_activity_before_sign_up_screen">BeforeSignUpScreen</string>
     <string name="label_servicos">Serviços</string>
     <string name="label_avaliacoes">Avaliações\n</string>
+    <string name="label_pecas">Peças</string>
 </resources>
