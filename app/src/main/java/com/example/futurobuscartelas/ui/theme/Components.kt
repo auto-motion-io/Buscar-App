@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.futurobuscartelas.R
@@ -242,6 +243,33 @@ fun listarPecas(modifier: Modifier) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun addCategoria(categoria: String){
+    Column (
+        Modifier.width(100.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Column (
+            Modifier
+                .height(80.dp)
+                .width(80.dp)
+                .clip(RoundedCornerShape(46.dp))
+                .background(color = Color(241, 240, 237))
+        ) {}
+        Row (
+            Modifier.padding(10.dp)
+        ) {
+            Text(
+                text = categoria,
+                color = Color(59, 86, 60),
+                fontWeight = FontWeight.Bold,
+                fontFamily = PRODUCT_SANS_FAMILY,
+            )
+        }
+
     }
 }
 

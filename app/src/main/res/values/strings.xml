@@ -8,4 +8,8 @@
     <string name="label_servicos">Serviços</string>
     <string name="label_avaliacoes">Avaliações\n</string>
     <string name="label_pecas">Peças</string>
+    <string name="title_activity_tela_inicial">TelaInicial</string>
+    <string name="label_bemvindo">Bem-vindo!</string>
+    <string name="label_tokenOs">Insira o token para verificação da sua OS</string>
+    <string name="label_token">Token</string>
 </resources>

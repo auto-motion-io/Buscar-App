@@ -13,6 +13,11 @@
         android:theme="@style/Theme.FuturoBuscarTelas"
         tools:targetApi="31">
         <activity
+            android:name=".TelaInicial"
+            android:exported="false"
+            android:label="@string/title_activity_tela_inicial"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
             android:name=".BeforeSignUpScreen"
             android:exported="false"
             android:label="@string/title_activity_before_sign_up_screen"
@@ -33,11 +38,11 @@
             android:name=".TelaPreLogin"
             android:exported="false"
             android:label="@string/title_activity_tela_pre_login"
-            android:theme="@style/Theme.FuturoBuscarTelas"></activity>
+            android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
             android:name=".LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.FuturoBuscarTelas"></activity>
+            android:theme="@style/Theme.FuturoBuscarTelas" />
     </application>
 
 </manifest>
