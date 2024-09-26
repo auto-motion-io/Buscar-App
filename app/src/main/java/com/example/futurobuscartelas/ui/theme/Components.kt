@@ -273,3 +273,30 @@ fun addCategoria(categoria: String){
     }
 }
 
+@Composable
+fun listarFavoritos() {
+    val numFav = 6 // Número total de favoritos
+
+    // Itera pela metade dos favoritos, já que serão exibidos 2 por linha
+    for (i in 0 until (numFav / 2)) {
+        Row(
+            Modifier
+                .padding(bottom = 15.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            // Exibe dois itens por linha
+            for (j in 0..1) {
+                Column(
+                    Modifier
+                        .width(160.dp)
+                        .height(110.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(Color(235, 235, 235))
+                ) {
+                    // Aqui você pode adicionar o conteúdo de cada item
+                }
+            }
+        }
+    }
+}

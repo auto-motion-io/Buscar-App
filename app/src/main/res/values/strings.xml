@@ -12,4 +12,7 @@
     <string name="label_bemvindo">Bem-vindo!</string>
     <string name="label_tokenOs">Insira o token para verificação da sua OS</string>
     <string name="label_token">Token</string>
+    <string name="title_activity_tela_pesquisar_oficinas">TelaPesquisarOficinas</string>
+    <string name="label_tituloOficinas">Oficinas</string>
+    <string name="label_motos">Motos</string>
 </resources>
