@@ -3,6 +3,7 @@ package com.example.futurobuscartelas
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,8 +29,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,7 +68,7 @@ fun LoginScreen(navController: NavHostController) {
     var isEmailValid by remember { mutableStateOf(false) }
     var isSenhaValid by remember { mutableStateOf(false) }
     val context = LocalContext.current
-
+    val focusManager = LocalFocusManager.current
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = BackGroundColor
@@ -89,7 +92,12 @@ fun LoginScreen(navController: NavHostController) {
 
                 Column(
                     modifier = Modifier.fillMaxWidth()
-                ) {
+                        .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            focusManager.clearFocus() // Fecha o teclado ao tocar fora do campo de texto
+                        })
+                        })
+                {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = "Login",
@@ -107,7 +115,7 @@ fun LoginScreen(navController: NavHostController) {
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         UpperLabelText(value = "Email")
-                        CustomOutlinedTextField(
+                        CustomInputMotion(
                             value = email,
                             onValueChange = {
                                 email = it
@@ -118,7 +126,7 @@ fun LoginScreen(navController: NavHostController) {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         UpperLabelText(value = "Senha")
-                        CustomOutlinedTextField(
+                        CustomInputMotion(
                             value = senha,
                             onValueChange = {
                                 senha = it
@@ -188,46 +196,4 @@ fun LoginScreen(navController: NavHostController) {
 }
 
 
-@Composable
-fun CustomOutlinedTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    isPasswordField: Boolean = false
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = VerdeBuscar,
-            unfocusedTextColor = Color.Black,
-            focusedLabelColor = VerdeBuscar,
-            unfocusedLabelColor = Color.Gray,
-            focusedBorderColor = VerdeBuscar,
-            unfocusedBorderColor = Color.Transparent,
-            unfocusedContainerColor = InputContainerUnfocusedColor
-        ),
-        singleLine = true,
-        shape = RoundedCornerShape(50.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(52.dp),
-        textStyle = TextStyle(fontSize = 16.sp),
-        visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None
-    )
-}
 
-@Composable
-
-private fun UpperLabelText(value: String) {
-    Text(
-        text = value,
-        modifier = Modifier.padding(0.dp, 0.dp, 6.dp, 10.dp),
-        style = TextStyle(
-            fontFamily = PRODUCT_SANS_FAMILY,
-            fontWeight = FontWeight.Bold,
-            color = VerdeBuscar,
-            fontSize = 18.sp
-        )
-    )
-}

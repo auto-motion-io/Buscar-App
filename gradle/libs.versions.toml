@@ -1,4 +1,6 @@
 [versions]
+
+viewModel = "2.8.6"
 agp = "8.5.2"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
@@ -11,6 +13,8 @@ composeBom = "2024.04.01"
 navigationRuntimeKtx = "2.8.0"
 
 [libraries]
+
+viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewModel" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

@@ -113,9 +113,11 @@ fun BeforeSignUpScreen(navController: NavController) {
                     text = "Cadastre-se", isFilled = true, modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(50.dp)
-                ) {
-                }
+                        .height(50.dp),
+                    onClick = {
+                       navController.navigate("signup")
+                    }
+                )
 
                 Text(
                     text = "Acessar com",
