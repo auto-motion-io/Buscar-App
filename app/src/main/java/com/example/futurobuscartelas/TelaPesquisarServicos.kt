@@ -8,15 +8,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.futurobuscartelas.ui.theme.telaBaseOSP
 
 @Composable
-fun TelaPesquisarOficinas(navController: NavController) {
+fun TelaPesquisarServicos(navController: NavController) {
     telaBaseOSP(
         navController = navController,
-        titulo = stringResource(id = R.string.label_tituloOficinas))
+        titulo = stringResource(R.string.label_servicos)
+    )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun TelaPesquisarOficinasPreview() {
+fun TelaPesquisarServicosPreview() {
     val navController = rememberNavController()
-    TelaPesquisarOficinas(navController)
+    TelaPesquisarServicos(navController)
 }

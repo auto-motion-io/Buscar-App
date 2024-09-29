@@ -16,4 +16,5 @@
     <string name="label_tituloOficinas">Oficinas</string>
     <string name="label_motos">Motos</string>
     <string name="title_activity_sign_up_screen">SignUpScreen</string>
+    <string name="title_activity_tela_pesquisar_servicos">TelaPesquisarServicos</string>
 </resources>
