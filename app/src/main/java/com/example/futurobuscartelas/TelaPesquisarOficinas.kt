@@ -23,6 +23,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -36,21 +37,13 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.futurobuscartelas.ui.theme.ArrowBackButton
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
-
-class TelaPesquisarOficinas : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                TelaPesquisarOficinas()
-            }
-        }
-    }
-}
+import com.example.futurobuscartelas.ui.theme.VerdeBuscar
+import com.example.futurobuscartelas.ui.theme.botaoPesquisa
+import com.example.futurobuscartelas.ui.theme.cardFiltro
+import com.example.futurobuscartelas.ui.theme.listarOficinas
 
 @Composable
-fun TelaPesquisarOficinas(navController: NavController) {
+fun TelaPesquisarOficinas(navController: NavController, modifier: Modifier) {
     Column (Modifier.padding(top = 40.dp, start = 20.dp, end = 20.dp)) {
         Row(){
             ArrowBackButton(navController = navController)
@@ -80,24 +73,7 @@ fun TelaPesquisarOficinas(navController: NavController) {
                 fontWeight = FontWeight.Bold
             )
             Row () {
-                Button(
-                    onClick = { /*TODO*/ },
-                    Modifier
-                        .padding(0.dp)
-                        .width(40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0,0,0, 0)
-                    ),
-                    contentPadding = PaddingValues(0.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.mipmap.icon_lupa),
-                        contentDescription = "Botão de Pesquisa",
-                        Modifier
-                            .size(22.dp)
-                            .wrapContentSize()
-                    )
-                }
+                botaoPesquisa(false)
                 Button(
                     onClick = { /*TODO*/ },
                     Modifier
@@ -119,35 +95,30 @@ fun TelaPesquisarOficinas(navController: NavController) {
             }
         }
         Row (
-            Modifier.padding(top = 5.dp)
+            Modifier.padding(top = 5.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Column (
-                Modifier
-                    .width(120.dp)
-                    .height(50.dp)
-                    .clip(RoundedCornerShape(30.dp))
-                    .background(color = Color(59, 86, 60))
-            ) {
-                Image(
-                    painter = painterResource(R.mipmap.icon_moto),
-                    contentDescription = "Icone de Moto",
-                    Modifier.size(20.dp)
-                )
-            }
-            Column (
-                Modifier
-                    .width(120.dp)
-                    .height(50.dp)
-                    .padding(start = 5.dp)
-                    .clip(RoundedCornerShape(30.dp))
-                    .background(color = Color(59, 86, 60))
-            ) {
-                Image(
-                    painter = painterResource(R.mipmap.icon_moto),
-                    contentDescription = "Icone de Moto",
-                    Modifier.size(20.dp)
-                )
-            }
+            cardFiltro(
+                "Motos",
+                painterResource(R.mipmap.icon_moto_branco),
+                "Icone de Moto",
+                Modifier.width(120.dp)
+            )
+            cardFiltro(
+                "Combustão",
+                painterResource(R.mipmap.icon_combustao),
+                "Icone de Galão de Gasolina",
+                Modifier.width(140.dp)
+            )
+        }
+        Row (
+            Modifier
+                .padding(top = 20f.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            listarOficinas(modifier = Modifier)
         }
     }
 }
@@ -156,5 +127,5 @@ fun TelaPesquisarOficinas(navController: NavController) {
 @Composable
 fun TelaPesquisarOficinasPreview() {
     val navController = rememberNavController()
-    TelaPesquisarOficinas(navController)
+    TelaPesquisarOficinas(navController, modifier = Modifier)
 }

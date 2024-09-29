@@ -48,6 +48,7 @@ import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import com.example.futurobuscartelas.ui.theme.addCategoria
+import com.example.futurobuscartelas.ui.theme.botaoPesquisa
 import com.example.futurobuscartelas.ui.theme.listarFavoritos
 
 class TelaInicialActivity : ComponentActivity() {
@@ -163,23 +164,7 @@ fun TelaInicial(modifier: Modifier = Modifier) {
                         shape = RoundedCornerShape(50.dp),
                         onValueChange = { token = it }
                     )
-                    Button(onClick = { /*TODO*/ },
-                        Modifier
-                            .padding(start = 5.dp, top = 5.dp)
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(220.dp)),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = VerdeBuscar,
-                            disabledContainerColor = Color.LightGray,
-                            disabledContentColor = Color.White),
-                            contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(R.mipmap.icon_lupa_white),
-                            contentDescription = "Icone de Lupa Branca",
-                            Modifier.size(16.dp)
-                        )
-                    }
+                    botaoPesquisa()
                 }
             }
         }
@@ -196,7 +181,7 @@ fun TelaInicial(modifier: Modifier = Modifier) {
                     fontFamily = PRODUCT_SANS_FAMILY
                 )
             }
-            listarFavoritos()
+            listarFavoritos(modifier)
         }
     }
 }

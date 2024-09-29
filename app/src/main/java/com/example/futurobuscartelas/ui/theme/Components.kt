@@ -5,19 +5,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -274,27 +279,219 @@ fun addCategoria(categoria: String){
 }
 
 @Composable
-fun listarFavoritos() {
-    val numFav = 6 // Número total de favoritos
+fun listarFavoritos(modifier: Modifier) {
+    val listaFavoritos = listOf("Favorito 1","Favorito 2","Favorito 3","Favorito 4","Favorito 5","Favorito 6")
 
-    // Itera pela metade dos favoritos, já que serão exibidos 2 por linha
-    for (i in 0 until (numFav / 2)) {
-        Row(
+    // Agrupa os serviços em pares
+    val groupedFavoritos = listaFavoritos.chunked(2)
+
+    Column(modifier = modifier) {
+        for (grupo in groupedFavoritos) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                for (servico in grupo) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 14.dp)
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(color = Color(240, 239, 236))
+                        ) {}
+                        Text(
+                            text = servico,
+                            color = Color(59, 86, 60),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun botaoPesquisa(fundo: Boolean){
+    if(fundo){
+        Button(onClick = { /*TODO*/ },
             Modifier
-                .padding(bottom = 15.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(start = 5.dp, top = 5.dp)
+                .size(48.dp)
+                .clip(RoundedCornerShape(220.dp)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = VerdeBuscar,
+                disabledContainerColor = Color.LightGray,
+                disabledContentColor = Color.White),
+            contentPadding = PaddingValues(0.dp)
         ) {
-            // Exibe dois itens por linha
-            for (j in 0..1) {
-                Column(
-                    Modifier
-                        .width(160.dp)
-                        .height(110.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(Color(235, 235, 235))
-                ) {
-                    // Aqui você pode adicionar o conteúdo de cada item
+            Image(
+                painter = painterResource(R.mipmap.icon_lupa_white),
+                contentDescription = "Icone de Lupa Branca",
+                Modifier.size(16.dp)
+            )
+        }
+    } else{
+        Button(
+            onClick = { /*TODO*/ },
+            Modifier
+                .padding(0.dp)
+                .width(40.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0,0,0, 0)
+            ),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Image(
+                painter = painterResource(R.mipmap.icon_lupa),
+                contentDescription = "Botão de Pesquisa",
+                Modifier
+                    .size(22.dp)
+                    .wrapContentSize()
+            )
+        }
+    }
+}
+
+@Composable
+fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier){
+    Button (
+        onClick = { /*TODO*/ },
+        modifier
+            .height(50.dp)
+            .clip(RoundedCornerShape(220.dp)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = VerdeBuscar,
+                disabledContainerColor = Color.LightGray,
+                disabledContentColor = Color.White),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Image(
+            painter = imagePainter,
+            contentDescription = descricaoConteudo,
+            Modifier.size(22.dp)
+        )
+        Text(
+            text = tituloCard,
+            fontFamily = PRODUCT_SANS_FAMILY,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun listarOficinas(modifier: Modifier) {
+    val listaOficinas = listOf("Fast Motors","Fast Motors","Fast Motors","Fast Motors","Fast Motors","Fast Motors")
+
+    // Agrupa os serviços em pares
+    val groupedOficinas = listaOficinas.chunked(2)
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        for (grupo in groupedOficinas) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                for (oficina in grupo) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 7.dp, end = 7.dp)
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(140.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(color = Color(240, 239, 236, 210))
+                        ) {}
+
+                        Column (
+                            Modifier.padding(bottom = 10.dp)
+                        ) {
+                            Row (
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp, end = 5.dp, top = 5.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(
+                                    text = oficina,
+                                    fontSize = 16.sp,
+                                    color = Color(59, 86, 60),
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(top = 5.dp),
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                )
+                                Row (
+                                    Modifier.padding(top = 7.dp)
+                                ){
+                                    Image(
+                                        painter = painterResource(R.mipmap.icon_stars),
+                                        contentDescription = "Imagem de Estrela",
+                                        Modifier
+                                            .padding(end = 2.dp)
+                                            .size(12.dp)
+                                    )
+                                    Text(
+                                        text = "5.0",
+                                        fontSize = 12.sp,
+                                        fontFamily = PRODUCT_SANS_FAMILY
+                                    )
+                                }
+                            }
+                            Row (
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp, end = 5.dp),
+                            ) {
+                                Text(
+                                    text = "$$$",
+                                    color = Color(59, 86, 60),
+                                    fontSize = 14.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY
+                                )
+                                Text(
+                                    text = "$",
+                                    color = Color(190, 190, 190),
+                                    fontSize = 14.sp, fontFamily = PRODUCT_SANS_FAMILY
+                                )
+                            }
+                            Row (
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp, end = 5.dp, top = 6.dp),
+                            ) {
+                                Image(
+                                    painter = painterResource(R.mipmap.icon_local),
+                                    contentDescription = "Icone de ponto de localização",
+                                    Modifier.size(11.dp)
+                                )
+                                Row (
+                                    Modifier.padding(start = 4.dp)
+                                ) {
+                                    Text(
+                                        text = "Av. Miguel Ferreira de Melo. 500",
+                                        fontFamily = PRODUCT_SANS_FAMILY,
+                                        fontSize = 10.sp,
+                                        color = Color(0,0,0, 180)
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
