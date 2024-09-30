@@ -365,28 +365,54 @@ fun botaoPesquisa(fundo: Boolean){
 }
 
 @Composable
-fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier){
-    Button (
-        onClick = { /*TODO*/ },
-        modifier
-            .height(50.dp)
-            .clip(RoundedCornerShape(220.dp)),
+fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier, fundo: Boolean){
+    if(fundo){
+        Button (
+            onClick = { /*TODO*/ },
+            modifier
+                .height(50.dp)
+                .clip(RoundedCornerShape(220.dp)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = VerdeBuscar,
                 disabledContainerColor = Color.LightGray,
                 disabledContentColor = Color.White),
-        contentPadding = PaddingValues(0.dp)
-    ) {
-        Image(
-            painter = imagePainter,
-            contentDescription = descricaoConteudo,
-            Modifier.size(22.dp)
-        )
-        Text(
-            text = tituloCard,
-            fontFamily = PRODUCT_SANS_FAMILY,
-            modifier = Modifier.padding(start = 8.dp)
-        )
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Image(
+                painter = imagePainter,
+                contentDescription = descricaoConteudo,
+                Modifier.size(22.dp)
+            )
+            Text(
+                text = tituloCard,
+                fontFamily = PRODUCT_SANS_FAMILY,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+    }
+    else{
+        Button (
+            onClick = { /*TODO*/ },
+            modifier
+                .height(50.dp)
+                .clip(RoundedCornerShape(220.dp)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0, 0, 0, 0),
+                disabledContainerColor = Color.LightGray,
+                disabledContentColor = Color.White),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Image(
+                painter = imagePainter,
+                contentDescription = descricaoConteudo,
+                Modifier.size(22.dp)
+            )
+            Text(
+                text = tituloCard,
+                fontFamily = PRODUCT_SANS_FAMILY,
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
     }
 }
 
