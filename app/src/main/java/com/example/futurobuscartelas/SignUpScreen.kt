@@ -51,7 +51,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -73,18 +75,19 @@ import com.example.futurobuscartelas.ui.theme.isKeyboardVisible
 fun SignUpScreen(navController: NavController) {
     val viewmodel = viewModel<SignUpViewModel>()
     val steps = remember {
-        mutableIntStateOf(2)
+        mutableIntStateOf(3)
     }
 
     when (steps.intValue) {
         1 -> FirstStepScreen(navController, steps, viewmodel)
-        2 -> SecondStepScreen(steps)
-        //2 -> ThirdStepScreen(navController, steps)
-        // Adicione mais etapas conforme necessário
+        2 -> SecondStepScreen(steps,viewmodel)
+        3 -> ThirdStepScreen(steps,viewmodel)
     }
 
 
 }
+
+
 
 @Composable
 fun FirstStepScreen(
@@ -185,14 +188,14 @@ fun FirstStepScreen(
                     steps.value = 2
                 }
             )
-            Spacer(modifier = Modifier.height(46.dp))
 
             Image(
                 painter = painterResource(id = R.drawable.logo_buscar),
                 contentDescription = "logo buscar",
                 modifier = Modifier
                     .size(72.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.CenterHorizontally),
+                alignment = Alignment.BottomCenter
             )
 
         }
@@ -200,10 +203,8 @@ fun FirstStepScreen(
 }
 
 @Composable
-fun SecondStepScreen(steps: MutableState<Int>) {
-    var teste by remember {
-        mutableStateOf(false)
-    }
+fun SecondStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
+
     BaseScreenLayout {
         Column(
             modifier = Modifier
@@ -211,14 +212,13 @@ fun SecondStepScreen(steps: MutableState<Int>) {
         ) {
             ArrowBackButton(onClick = {
                 steps.value = 1
-                teste = !teste
             })
             Spacer(modifier = Modifier.height(36.dp))
             Text(
                 text = "Próximo passo",
                 style = TextStyle(
                     fontFamily = PRODUCT_SANS_FAMILY,
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     color = Color(0x99474747)
                 )
             )
@@ -264,8 +264,80 @@ fun SecondStepScreen(steps: MutableState<Int>) {
                     steps.value = 3
                 }
             )
+            Text(
+                text = "Continuar sem foto",
+                color = VerdeBuscar,
+                style = TextStyle(
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(6.dp)
+                    .clickable {
+                        steps.value = 3
+                    },
+            )
+
+            Image(
+                painter = painterResource(id = R.drawable.logo_buscar),
+                contentDescription = "logo buscar",
+                modifier = Modifier
+                    .size(72.dp)
+                    .align(Alignment.CenterHorizontally),
+                alignment = Alignment.BottomCenter
+            )
         }
 
+    }
+}
+
+
+
+@Composable
+fun ThirdStepScreen(steps: MutableState<Int>, viewmodel: SignUpViewModel) {
+    BaseScreenLayout {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            ArrowBackButton(onClick = {
+                steps.value = 2
+            })
+            Spacer(modifier = Modifier.height(36.dp))
+            Text(
+                text = "Falta pouco!",
+                style = TextStyle(
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontSize = 12.sp,
+                    color = Color(0x99474747)
+                )
+            )
+
+
+            Text(
+                text = "Selecione suas preferências",
+                style = TextStyle(
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 36.sp,
+                    color = VerdeBuscar
+                ),
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Você está a procura atendimento para qual tipo de veículo?",
+                style = TextStyle(
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontSize = 16.sp,
+                    color = Color(0x99474747)
+                )
+            )
+
+
+        }
     }
 }
 

@@ -83,7 +83,7 @@ fun BeforeSignUpScreen(navController: NavController) {
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
             )
-            Spacer(modifier = Modifier.height(218.dp))
+            Spacer(modifier = Modifier.height(86.dp))
 
             Column(
                 modifier = Modifier
