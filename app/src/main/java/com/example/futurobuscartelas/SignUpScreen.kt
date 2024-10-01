@@ -69,6 +69,7 @@ import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.UpperLabelText
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
+import com.example.futurobuscartelas.ui.theme.cardFiltro
 import com.example.futurobuscartelas.ui.theme.isKeyboardVisible
 
 @Composable
@@ -334,6 +335,14 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewmodel: SignUpViewModel) {
                     fontSize = 16.sp,
                     color = Color(0x99474747)
                 )
+            )
+
+            cardFiltro(
+                tituloCard = "Motos",
+                imagePainter = painterResource(R.mipmap.icon_moto),
+                descricaoConteudo = "Icone de Moto",
+                fundo = false,
+                modifier = Modifier.width(120.dp).border(2.dp, VerdeBuscar, CircleShape),
             )
 
 

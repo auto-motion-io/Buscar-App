@@ -410,7 +410,8 @@ fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
             Text(
                 text = tituloCard,
                 fontFamily = PRODUCT_SANS_FAMILY,
-                modifier = Modifier.padding(start = 8.dp)
+                modifier = Modifier.padding(start = 8.dp),
+                color = VerdeBuscar
             )
         }
     }
@@ -593,13 +594,15 @@ fun telaBaseOSP(navController: NavController, titulo: String){
                 "Motos",
                 painterResource(R.mipmap.icon_moto_branco),
                 "Icone de Moto",
-                Modifier.width(120.dp)
+                Modifier.width(120.dp),
+                true
             )
             cardFiltro(
                 "Combustão",
                 painterResource(R.mipmap.icon_combustao),
                 "Icone de Galão de Gasolina",
-                Modifier.width(140.dp)
+                Modifier.width(140.dp),
+                true
             )
         }
         Row (
