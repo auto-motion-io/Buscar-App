@@ -376,7 +376,7 @@ fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
                 containerColor = VerdeBuscar,
                 disabledContainerColor = Color.LightGray,
                 disabledContentColor = Color.White),
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(16.dp)
         ) {
             Image(
                 painter = imagePainter,
@@ -400,7 +400,7 @@ fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
                 containerColor = Color(0, 0, 0, 0),
                 disabledContainerColor = Color.LightGray,
                 disabledContentColor = Color.White),
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             Image(
                 painter = imagePainter,

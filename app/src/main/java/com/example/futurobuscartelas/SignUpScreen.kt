@@ -3,6 +3,7 @@ package com.example.futurobuscartelas
 import android.app.Activity
 import android.graphics.Rect
 import android.view.ViewTreeObserver
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,7 +24,10 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -81,13 +86,12 @@ fun SignUpScreen(navController: NavController) {
 
     when (steps.intValue) {
         1 -> FirstStepScreen(navController, steps, viewmodel)
-        2 -> SecondStepScreen(steps,viewmodel)
-        3 -> ThirdStepScreen(steps,viewmodel)
+        2 -> SecondStepScreen(steps, viewmodel)
+        3 -> ThirdStepScreen(steps, viewmodel)
     }
 
 
 }
-
 
 
 @Composable
@@ -294,8 +298,7 @@ fun SecondStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
     }
 }
 
-
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ThirdStepScreen(steps: MutableState<Int>, viewmodel: SignUpViewModel) {
     BaseScreenLayout {
@@ -337,16 +340,65 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewmodel: SignUpViewModel) {
                 )
             )
 
-            cardFiltro(
-                tituloCard = "Motos",
-                imagePainter = painterResource(R.mipmap.icon_moto),
-                descricaoConteudo = "Icone de Moto",
-                fundo = false,
-                modifier = Modifier.width(120.dp).border(2.dp, VerdeBuscar, CircleShape),
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Row(
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                cardFiltro(
+                    tituloCard = "Carros",
+                    imagePainter = painterResource(R.mipmap.icon_carro),
+                    descricaoConteudo = "Icone de Carro",
+                    fundo = false,
+                    modifier = Modifier
+                        .widthIn(min = 120.dp)
+                        .border(2.dp, VerdeBuscar, CircleShape),
+                )
+
+
+                cardFiltro(
+                    tituloCard = "Motos",
+                    imagePainter = painterResource(R.mipmap.icon_moto),
+                    descricaoConteudo = "Icone de Moto",
+                    fundo = false,
+                    modifier = Modifier
+                        .widthIn(min = 120.dp)
+                        .border(2.dp, VerdeBuscar, CircleShape),
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            Row(
+                horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxWidth()
             )
+            {
+                cardFiltro(
+                    tituloCard = "Caminhões",
+                    imagePainter = painterResource(R.drawable.icon_caminhao),
+                    descricaoConteudo = "Icone de Caminhão",
+                    fundo = false,
+                    modifier = Modifier
+                        .widthIn(min = 120.dp)
+                        .border(2.dp, VerdeBuscar, CircleShape),
+                )
+
+                cardFiltro(
+                    tituloCard = "Ônibus",
+                    imagePainter = painterResource(R.drawable.icon_onibus),
+                    descricaoConteudo = "Icone de Ônibus",
+                    fundo = false,
+                    modifier = Modifier
+                        .widthIn(min = 120.dp)
+                        .border(2.dp, VerdeBuscar, CircleShape),
+                )
+
+            }
 
 
         }
+
+
     }
 }
 
