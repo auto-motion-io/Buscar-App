@@ -140,7 +140,13 @@ fun BaseScreenLayout(content: @Composable () -> Unit) {
 
 
 @Composable
-fun DefaultButtonMotion(text: String, isFilled: Boolean, modifier: Modifier, onClick: () -> Unit) {
+fun DefaultButtonMotion(
+    text: String,
+    isFilled: Boolean,
+    modifier: Modifier,
+    onClick: () -> Unit,
+    enabled: Boolean = true
+) {
     Button(
         onClick = onClick,
         modifier = modifier
@@ -152,7 +158,8 @@ fun DefaultButtonMotion(text: String, isFilled: Boolean, modifier: Modifier, onC
             .clip(RoundedCornerShape(100)),
         colors = ButtonDefaults.buttonColors(
             containerColor = VerdeBuscar
-        )
+        ),
+        enabled = enabled
     ) {
         Text(
             text = text,

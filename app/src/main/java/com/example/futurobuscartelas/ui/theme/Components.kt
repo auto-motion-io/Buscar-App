@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -365,10 +366,10 @@ fun botaoPesquisa(fundo: Boolean){
 }
 
 @Composable
-fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier, fundo: Boolean){
+fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier, fundo: Boolean,onclick:()->Unit){
     if(fundo){
         Button (
-            onClick = { /*TODO*/ },
+            onClick = { onclick() },
             modifier
                 .height(50.dp)
                 .clip(RoundedCornerShape(220.dp)),
@@ -381,7 +382,8 @@ fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
             Image(
                 painter = imagePainter,
                 contentDescription = descricaoConteudo,
-                Modifier.size(22.dp)
+                Modifier.size(22.dp),
+                colorFilter = ColorFilter.tint(Color.White)
             )
             Text(
                 text = tituloCard,
@@ -392,7 +394,7 @@ fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
     }
     else{
         Button (
-            onClick = { /*TODO*/ },
+            onClick = { onclick() },
             modifier
                 .height(50.dp)
                 .clip(RoundedCornerShape(220.dp)),
@@ -595,14 +597,16 @@ fun telaBaseOSP(navController: NavController, titulo: String){
                 painterResource(R.mipmap.icon_moto_branco),
                 "Icone de Moto",
                 Modifier.width(120.dp),
-                true
+                true,
+                onclick = {}
             )
             cardFiltro(
                 "Combustão",
                 painterResource(R.mipmap.icon_combustao),
                 "Icone de Galão de Gasolina",
                 Modifier.width(140.dp),
-                true
+                true,
+                onclick = {}
             )
         }
         Row (
