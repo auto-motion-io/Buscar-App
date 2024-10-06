@@ -1,4 +1,4 @@
-package com.example.futurobuscartelas
+package com.example.futurobuscartelas.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.ui.theme.*
 
 class MainViewModel : ViewModel() {

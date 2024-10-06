@@ -1,7 +1,9 @@
 package com.example.futurobuscartelas
 
+import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -49,7 +51,15 @@ import com.example.futurobuscartelas.ui.theme.*
 
 
 class LoginActivity() : ComponentActivity() {
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            // Inicializa o NavController aqui
+            val navController = rememberNavController()
+            // Chama a composable principal
+            LoginScreen(navController = navController)
+        }
+    }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
