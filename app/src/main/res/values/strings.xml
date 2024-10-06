@@ -18,4 +18,6 @@
     <string name="title_activity_sign_up_screen">SignUpScreen</string>
     <string name="title_activity_tela_pesquisar_servicos">TelaPesquisarServicos</string>
     <string name="title_activity_tela_pesquisar_peças">TelaPesquisarPeças</string>
+    <string name="label_tituloSOS">S.O.S.</string>
+    <string name="label_tituloExemplo">Fast Motors</string>
 </resources>
