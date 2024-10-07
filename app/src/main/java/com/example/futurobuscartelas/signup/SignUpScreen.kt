@@ -2,7 +2,6 @@ package com.example.futurobuscartelas.signup
 
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,8 +20,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -32,11 +28,9 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -53,7 +47,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -74,7 +67,7 @@ import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.UpperLabelText
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
-import com.example.futurobuscartelas.ui.theme.cardFiltro
+import com.example.futurobuscartelas.ui.theme.CardFiltro
 import com.example.futurobuscartelas.ui.theme.isKeyboardVisible
 
 @Composable
@@ -425,7 +418,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Carros",
                     imagePainter = painterResource(R.mipmap.icon_carro),
                     descricaoConteudo = "Icone de Carro",
@@ -439,7 +432,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                 )
 
 
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Motos",
                     imagePainter = painterResource(R.mipmap.icon_moto),
                     descricaoConteudo = "Icone de Moto",
@@ -458,7 +451,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                 modifier = Modifier.fillMaxWidth()
             )
             {
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Caminhões",
                     imagePainter = painterResource(R.drawable.icon_caminhao),
                     descricaoConteudo = "Icone de Caminhão",
@@ -471,7 +464,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                     },
                 )
 
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Ônibus",
                     imagePainter = painterResource(R.drawable.icon_onibus),
                     descricaoConteudo = "Icone de Ônibus",
@@ -503,7 +496,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Combustão",
                     imagePainter = painterResource(R.drawable.icon_combustao),
                     descricaoConteudo = "Icone de galão de gasolina",
@@ -517,7 +510,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                 )
 
 
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Elétricos",
                     imagePainter = painterResource(R.drawable.icon_eletrico),
                     descricaoConteudo = "Icone de eletricidade",
@@ -537,7 +530,7 @@ fun ThirdStepScreen(steps: MutableState<Int>, viewModel: SignUpViewModel) {
                 horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(12.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
-                cardFiltro(
+                CardFiltro(
                     tituloCard = "Híbridos",
                     imagePainter = painterResource(R.drawable.icon_hibrido),
                     descricaoConteudo = "Icone híbrido",

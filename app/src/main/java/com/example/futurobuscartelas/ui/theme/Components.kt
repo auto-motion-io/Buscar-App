@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,16 +30,17 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.futurobuscartelas.R
-import kotlin.math.ceil
 
 @Composable
-fun addAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
+fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
     var estrelasAdd: Int = 0;
 
     Row(
@@ -126,7 +129,7 @@ fun addAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
 }
 
 @Composable
-fun checkSemana(listaDias: List<Boolean>){
+fun CheckSemana(listaDias: List<Boolean>){
     val diasSemana = listOf("D", "S", "T", "Q", "Q", "S", "S");
 
     Row(
@@ -141,9 +144,9 @@ fun checkSemana(listaDias: List<Boolean>){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 if(listaDias[i]){
-                    checkOn()
+                    CheckOn()
                 } else{
-                    checkOff()
+                    CheckOff()
                 }
                 Text(
                     text = diasSemana[i],
@@ -159,7 +162,7 @@ fun checkSemana(listaDias: List<Boolean>){
 }
 
 @Composable
-fun checkOn(){
+fun CheckOn(){
     Image(
         painterResource(id = R.mipmap.icon_check),
         contentDescription = "Icone de Check",
@@ -168,7 +171,7 @@ fun checkOn(){
 }
 
 @Composable
-fun checkOff(){
+fun CheckOff(){
     Image(
         painterResource(id = R.mipmap.icon_check_semcor),
         contentDescription = "Icone de Check sem cor",
@@ -177,7 +180,7 @@ fun checkOff(){
 }
 
 @Composable
-fun listarServicos(modifier: Modifier) {
+fun ListarServicos(modifier: Modifier) {
     val listaServicos = listOf("Troca de Óleo", "Troca de Pneu", "Alinhamento", "Balanceamento", "Teste")
 
     // Agrupa os serviços em pares
@@ -217,7 +220,7 @@ fun listarServicos(modifier: Modifier) {
 }
 
 @Composable
-fun listarPecas(modifier: Modifier) {
+fun ListarPecas(modifier: Modifier) {
     val listaPecas = listOf("Pneu", "Farois", "Bateria", "Freios", "Filtros", "Correias")
 
     // Agrupa as peças em pares
@@ -257,7 +260,7 @@ fun listarPecas(modifier: Modifier) {
 }
 
 @Composable
-fun addCategoria(categoria: String){
+fun AddCategoria(categoria: String){
     Column (
         Modifier.width(100.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -284,7 +287,7 @@ fun addCategoria(categoria: String){
 }
 
 @Composable
-fun listarFavoritos(modifier: Modifier) {
+fun ListarFavoritos(modifier: Modifier) {
     val listaFavoritos = listOf("Favorito 1","Favorito 2","Favorito 3","Favorito 4","Favorito 5","Favorito 6")
 
     // Agrupa os serviços em pares
@@ -324,7 +327,7 @@ fun listarFavoritos(modifier: Modifier) {
 }
 
 @Composable
-fun botaoPesquisa(fundo: Boolean){
+fun BotaoPesquisa(fundo: Boolean){
     if(fundo){
         Button(onClick = { /*TODO*/ },
             Modifier
@@ -366,7 +369,7 @@ fun botaoPesquisa(fundo: Boolean){
 }
 
 @Composable
-fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier, fundo: Boolean,onclick:()->Unit){
+fun CardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier, fundo: Boolean, onclick:()->Unit){
     if(fundo){
         Button (
             onClick = { onclick() },
@@ -420,7 +423,7 @@ fun cardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
 }
 
 @Composable
-fun listarOficinas(modifier: Modifier) {
+fun ListarOficinas(modifier: Modifier) {
     val listaOficinas = listOf("Fast Motors","Fast Motors","Fast Motors","Fast Motors","Fast Motors","Fast Motors")
 
     // Agrupa os serviços em pares
@@ -532,12 +535,13 @@ fun listarOficinas(modifier: Modifier) {
 }
 
 @Composable
-fun telaBaseOSP(navController: NavController, titulo: String){
+fun TelaBaseOSP(navController: NavController, titulo: String){
     Column (
         Modifier
             .padding(top = 40.dp, start = 20.dp, end = 20.dp)
             .verticalScroll(
-                rememberScrollState())
+                rememberScrollState()
+            )
     ) {
         Row(){
             ArrowBackButton(navController = navController)
@@ -567,7 +571,7 @@ fun telaBaseOSP(navController: NavController, titulo: String){
                 fontWeight = FontWeight.Bold
             )
             Row () {
-                botaoPesquisa(false)
+                BotaoPesquisa(false)
                 Button(
                     onClick = { /*TODO*/ },
                     Modifier
@@ -592,7 +596,7 @@ fun telaBaseOSP(navController: NavController, titulo: String){
             Modifier.padding(top = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            cardFiltro(
+            CardFiltro(
                 "Motos",
                 painterResource(R.mipmap.icon_moto_branco),
                 "Icone de Moto",
@@ -600,7 +604,7 @@ fun telaBaseOSP(navController: NavController, titulo: String){
                 true,
                 onclick = {}
             )
-            cardFiltro(
+            CardFiltro(
                 "Combustão",
                 painterResource(R.mipmap.icon_combustao),
                 "Icone de Galão de Gasolina",
@@ -616,7 +620,92 @@ fun telaBaseOSP(navController: NavController, titulo: String){
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            listarOficinas(modifier = Modifier)
+            ListarOficinas(modifier = Modifier)
         }
     }
+}
+
+@Composable
+fun ListarOS(){
+    val listaOs = listOf("01258", "01258", "01258")
+
+    Column (
+        Modifier.padding(top = 36.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
+    ) {
+        for (os in listaOs){
+            Row (
+                Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(color = Color(240, 240, 240)),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column (
+                    Modifier.padding(horizontal = 20.dp)
+                ) {
+                    Text(
+                        text = "#$os",
+                        fontSize = 22.sp,
+                        fontFamily = PRODUCT_SANS_FAMILY,
+                        fontWeight = FontWeight.Bold,
+                        color = VerdeBuscar
+                    )
+                    Text(
+                        text = "CMM-5861",
+                        color = Color(130,130,130)
+                    )
+                }
+                Row (
+                    Modifier.padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(15.dp)
+                            .height(15.dp)
+                            .clip(RoundedCornerShape(40.dp))
+                            .background(color = Color(253, 216, 53))
+                    )
+                    Text(
+                        text = "Em andamento",
+                        fontSize = 12.sp,
+                        fontFamily = PRODUCT_SANS_FAMILY
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomInputPerfil(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    isPasswordField: Boolean = false
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = VerdeBuscar,
+            unfocusedTextColor = Color.Black,
+            focusedLabelColor = VerdeBuscar,
+            unfocusedLabelColor = VerdeBuscar,
+            focusedBorderColor = VerdeBuscar,
+            unfocusedBorderColor = Color.Transparent,
+            unfocusedContainerColor = Color(222, 222, 222)
+        ),
+        singleLine = true,
+        shape = RoundedCornerShape(50.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(52.dp),
+        textStyle = TextStyle(fontSize = 16.sp),
+        visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None
+    )
 }

@@ -35,9 +35,9 @@ import androidx.compose.ui.unit.sp
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
-import com.example.futurobuscartelas.ui.theme.addCategoria
-import com.example.futurobuscartelas.ui.theme.botaoPesquisa
-import com.example.futurobuscartelas.ui.theme.listarFavoritos
+import com.example.futurobuscartelas.ui.theme.AddCategoria
+import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
+import com.example.futurobuscartelas.ui.theme.ListarFavoritos
 
 class TelaInicialActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,9 +104,9 @@ fun TelaInicial(modifier: Modifier = Modifier) {
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                addCategoria(categoria = "Oficinas")
-                addCategoria(categoria = "Serviços")
-                addCategoria(categoria = "Peças")
+                AddCategoria(categoria = "Oficinas")
+                AddCategoria(categoria = "Serviços")
+                AddCategoria(categoria = "Peças")
             }
         }
         Column (Modifier.padding(top = 30.dp)) {
@@ -152,7 +152,7 @@ fun TelaInicial(modifier: Modifier = Modifier) {
                         shape = RoundedCornerShape(50.dp),
                         onValueChange = { token = it }
                     )
-                    botaoPesquisa(true)
+                    BotaoPesquisa(true)
                 }
             }
         }
@@ -169,7 +169,7 @@ fun TelaInicial(modifier: Modifier = Modifier) {
                     fontFamily = PRODUCT_SANS_FAMILY
                 )
             }
-            listarFavoritos(modifier)
+            ListarFavoritos(modifier)
         }
     }
 }

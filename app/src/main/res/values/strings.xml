@@ -20,4 +20,13 @@
     <string name="title_activity_tela_pesquisar_peças">TelaPesquisarPeças</string>
     <string name="label_tituloSOS">S.O.S.</string>
     <string name="label_tituloExemplo">Fast Motors</string>
+    <string name="title_activity_tela_consulta_os">TelaConsultaOS</string>
+    <string name="tituloConsulta">Consulta OS</string>
+    <string name="label_subtituloConsulta">Insira o token para a verificação da sua OS</string>
+    <string name="label_minhasOs">Minhas OS</string>
+    <string name="label_subtituloMinhaOs">Marcadas para receber notificações</string>
+    <string name="title_activity_tela_perfil">TelaPerfil</string>
+    <string name="label_minhaAgenda">Minha Agenda</string>
+    <string name="label_nome">Nome*</string>
+    <string name="label_sobrenome">Sobrenome*</string>
 </resources>

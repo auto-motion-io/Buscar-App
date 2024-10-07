@@ -5,11 +5,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.futurobuscartelas.ui.theme.telaBaseOSP
+import com.example.futurobuscartelas.ui.theme.TelaBaseOSP
 
 @Composable
 fun TelaPesquisarOficinas(navController: NavController) {
-    telaBaseOSP(
+    TelaBaseOSP(
         navController = navController,
         titulo = stringResource(id = R.string.label_tituloOficinas))
 }
