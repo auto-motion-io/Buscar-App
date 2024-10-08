@@ -709,3 +709,78 @@ fun CustomInputPerfil(
         visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
+
+@Composable
+fun CardAgenda(dia: String, mes: String){
+    Column (
+        Modifier
+            .width(160.dp)
+            .height(200.dp)
+            .clip(RoundedCornerShape(30.dp))
+            .background(VerdeBuscar)
+    ) {
+        Row (
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Text(
+                    text = dia,
+                    fontSize = 28.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = mes,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Column(
+                Modifier.padding(top = 10.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.mipmap.icon_lixeira),
+                    contentDescription = "Icone de excluir(lixeira)",
+                    Modifier
+                        .size(16.dp)
+                )
+            }
+        }
+        Row {
+            Column {
+
+            }
+        }
+    }
+}
+
+@Composable
+fun ListarAgenda(){
+    val listaCompromissos = listOf(
+        Pair(11, "SET"),
+        Pair(19, "OUT"),
+        Pair(7, "NOV")
+    )
+
+    val groupedCompromissos = listaCompromissos.chunked(2)
+    Column (
+        Modifier.padding(top = 0.dp),
+    ) {
+        for (grupo in groupedCompromissos) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                for (compromisso in grupo) {
+                    CardAgenda(compromisso.first.toString(), compromisso.second)
+                }
+            }
+        }
+    }
+}

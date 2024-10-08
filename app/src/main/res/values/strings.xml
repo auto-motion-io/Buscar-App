@@ -29,4 +29,7 @@
     <string name="label_minhaAgenda">Minha Agenda</string>
     <string name="label_nome">Nome*</string>
     <string name="label_sobrenome">Sobrenome*</string>
+    <string name="title_activity_tela_minha_agenda">TelaMinhaAgenda</string>
+    <string name="label_subtituloMinhaAgenda">Visualize e Gerencie seus agendamentos</string>
+    <string name="label_esseMes">Esse mês</string>
 </resources>
