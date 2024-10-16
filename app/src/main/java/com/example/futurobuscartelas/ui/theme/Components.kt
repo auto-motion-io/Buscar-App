@@ -1,5 +1,10 @@
 package com.example.futurobuscartelas.ui.theme
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +12,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,12 +22,20 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.TelaConsultaOS
+import com.example.futurobuscartelas.TelaInicial
+import com.example.futurobuscartelas.TelaPerfil
+import com.example.futurobuscartelas.TelaSOS
 
 @Composable
 fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
@@ -718,11 +736,12 @@ fun CardAgenda(dia: String, mes: String){
             .height(200.dp)
             .clip(RoundedCornerShape(30.dp))
             .background(VerdeBuscar)
+            .padding(20.dp),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         Row (
             Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, end = 20.dp, top = 20.dp),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -752,7 +771,20 @@ fun CardAgenda(dia: String, mes: String){
         }
         Row {
             Column {
-
+                Text(
+                    text = stringResource(R.string.label_exemploOficina),
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 5.dp)
+                )
+                Text(
+                    text = stringResource(R.string.label_exemploHorario),
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                )
             }
         }
     }
@@ -780,6 +812,107 @@ fun ListarAgenda(){
                 for (compromisso in grupo) {
                     CardAgenda(compromisso.first.toString(), compromisso.second)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun NavigationBar(
+selectedTabIndex: Int, // Tab atualmente selecionada
+onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
+) {
+    BottomNavigation(
+        backgroundColor = Color.White,
+        contentColor = Color.Black
+    ) {
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(R.mipmap.icon_home_nocolor),
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "Icone de Home"
+                )
+            },
+            selected = selectedTabIndex == 0,
+            onClick = { onTabSelected(0) }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(R.mipmap.icon_alert_nocolor),
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "Icone de Alerta"
+                )
+            },
+            selected = selectedTabIndex == 1,
+            onClick = { onTabSelected(1) }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(R.mipmap.icon_order_nocolor),
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "Icone de Ordem de Serviço"
+                )
+            },
+            selected = selectedTabIndex == 2,
+            onClick = { onTabSelected(2) }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    painter = painterResource(R.mipmap.icon_profile_nocolor),
+                    modifier = Modifier.size(20.dp),
+                    contentDescription = "Icone de Perfil"
+                )
+            },
+            selected = selectedTabIndex == 3,
+            onClick = { onTabSelected(3) }
+        )
+    }
+}
+
+@Composable
+fun MainScreen() {
+    var selectedTabIndex by remember { mutableStateOf(0) }
+
+    Scaffold(
+        bottomBar = {
+            NavigationBar(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+        }
+    ) { paddingValues ->
+        Box(modifier = Modifier.fillMaxSize()) {
+            AnimatedVisibility(
+                visible = selectedTabIndex == 0,
+                enter = slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
+            ) {
+                TelaInicial(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+            }
+
+            AnimatedVisibility(
+                visible = selectedTabIndex == 1,
+                enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
+            ) {
+                TelaSOS(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+            }
+
+            AnimatedVisibility(
+                visible = selectedTabIndex == 2,
+                enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
+            ) {
+                TelaConsultaOS(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+            }
+
+            AnimatedVisibility(
+                visible = selectedTabIndex == 3,
+                enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn(),
+                exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
+            ) {
+                TelaPerfil(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
             }
         }
     }

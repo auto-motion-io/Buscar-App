@@ -16,6 +16,7 @@ import com.example.futurobuscartelas.onboarding.BeforeSignUpScreen
 import com.example.futurobuscartelas.onboarding.LoadingScreen
 import com.example.futurobuscartelas.onboarding.MainViewModel
 import com.example.futurobuscartelas.signup.SignUpScreen
+import com.example.futurobuscartelas.ui.theme.MainScreen
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -23,7 +24,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-                    MyApp()
+            //MyApp()
+            var isLogged: Boolean = true;
+            if(isLogged){
+                MainScreen()
+            }
         }
     }
 }

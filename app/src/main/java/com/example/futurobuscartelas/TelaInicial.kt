@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -38,144 +39,158 @@ import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import com.example.futurobuscartelas.ui.theme.AddCategoria
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.ListarFavoritos
-
-class TelaInicialActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                TelaInicial(
-                    modifier = Modifier.padding(innerPadding)
-                )
-            }
-        }
-    }
-}
+import com.example.futurobuscartelas.ui.theme.NavigationBar
 
 @Composable
-fun TelaInicial(modifier: Modifier = Modifier) {
+fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 
     var token by remember { mutableStateOf("") }
 
-    Column (
-        Modifier
-            .fillMaxSize()
-            .padding(top = 20.dp, start = 30.dp, end = 30.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Row (
-            Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(id = R.mipmap.icon_user),
-                contentDescription = "Imagem do Usuário",
-                Modifier
-                    .padding(end = 10.dp)
-                    .size(50.dp)
+    Scaffold (
+        bottomBar = {
+            NavigationBar(
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = onTabSelected
             )
-            Column {
-                Text(
-                    text = stringResource(id = R.string.label_bemvindo),
-                    fontSize = 18.sp,
-                    color = Color(59, 86, 60),
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
-                Text(
-                    text = "Marcos Gonzales",
-                    fontSize = 18.sp,
-                    color = Color(59, 86, 60),
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
-            }
         }
-
-        Column (Modifier.padding(top = 30.dp)) {
-            Column (Modifier.padding(bottom = 20.dp)) {
-                Text(
-                    text = "Categorias",
-                    fontSize = 36.sp,
-                    color = Color(59, 86, 60),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
-            }
-            Row (
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                AddCategoria(categoria = "Oficinas")
-                AddCategoria(categoria = "Serviços")
-                AddCategoria(categoria = "Peças")
-            }
-        }
-        Column (Modifier.padding(top = 30.dp)) {
-            Column (Modifier.padding(bottom = 5.dp)) {
-                Text(
-                    text = "Consulta OS",
-                    fontSize = 36.sp,
-                    color = Color(59, 86, 60),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
-            }
-            Text(
-                text = stringResource(id = R.string.label_tokenOs)
-            )
+    ) { paddingValues ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(paddingValues)
+        ){
             Column (
-                Modifier.padding(top = 20.dp)
+                Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp, bottom = 20.dp, start = 30.dp, end = 30.dp)
             ) {
-                Text(
-                    text = stringResource(id = R.string.label_token),
-                    color = VerdeBuscar,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
                 Row (
-                    Modifier
-                        .padding(top = 5.dp)
-                        .fillMaxWidth()
+                    Modifier.fillMaxWidth()
+                        .padding(bottom = 30.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    OutlinedTextField(
-                        value = token,
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedTextColor = VerdeBuscar,
-                            unfocusedTextColor = Color.Black,
-                            focusedLabelColor = VerdeBuscar,
-                            unfocusedLabelColor = Color.Gray,
-                            focusedBorderColor = VerdeBuscar,
-                            unfocusedBorderColor = Color.Transparent,
-                            unfocusedContainerColor = InputContainerUnfocusedColor
-                        ),
-                        singleLine = true,
-                        shape = RoundedCornerShape(50.dp),
-                        onValueChange = { token = it }
+                    Image(
+                        painter = painterResource(R.mipmap.logo_buscar),
+                        contentDescription = "Logo do Buscar",
+                        Modifier.width(60.dp)
                     )
-                    BotaoPesquisa(true)
+                }
+                Row(
+                    Modifier.fillMaxWidth()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.mipmap.icon_user),
+                        contentDescription = "Imagem do Usuário",
+                        Modifier
+                            .padding(end = 10.dp)
+                            .size(50.dp)
+                    )
+                    Column {
+                        Text(
+                            text = stringResource(id = R.string.label_bemvindo),
+                            fontSize = 18.sp,
+                            color = Color(59, 86, 60),
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                        Text(
+                            text = "Marcos Gonzales",
+                            fontSize = 18.sp,
+                            color = Color(59, 86, 60),
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                }
+
+                Column(Modifier.padding(top = 30.dp)) {
+                    Column(Modifier.padding(bottom = 20.dp)) {
+                        Text(
+                            text = stringResource(R.string.label_categorias),
+                            fontSize = 36.sp,
+                            color = Color(59, 86, 60),
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        AddCategoria(categoria = "Oficinas")
+                        AddCategoria(categoria = "Serviços")
+                        AddCategoria(categoria = "Peças")
+                    }
+                }
+                Column(Modifier.padding(top = 30.dp)) {
+                    Column(Modifier.padding(bottom = 5.dp)) {
+                        Text(
+                            text = "Consulta OS",
+                            fontSize = 36.sp,
+                            color = Color(59, 86, 60),
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                    Text(
+                        text = stringResource(id = R.string.label_tokenOs)
+                    )
+                    Column(
+                        Modifier.padding(top = 20.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.label_token),
+                            color = VerdeBuscar,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                        Row(
+                            Modifier
+                                .padding(top = 5.dp)
+                                .fillMaxWidth()
+                        ) {
+                            OutlinedTextField(
+                                value = token,
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedTextColor = VerdeBuscar,
+                                    unfocusedTextColor = Color.Black,
+                                    focusedLabelColor = VerdeBuscar,
+                                    unfocusedLabelColor = Color.Gray,
+                                    focusedBorderColor = VerdeBuscar,
+                                    unfocusedBorderColor = Color.Transparent,
+                                    unfocusedContainerColor = InputContainerUnfocusedColor
+                                ),
+                                singleLine = true,
+                                shape = RoundedCornerShape(50.dp),
+                                onValueChange = { token = it }
+                            )
+                            BotaoPesquisa(true)
+                        }
+                    }
+                }
+                Column(
+                    Modifier
+                        .padding(top = 30.dp)
+                        .fillMaxSize()
+                ) {
+                    Column(Modifier.padding(bottom = 20.dp)) {
+                        Text(
+                            text = "Favoritos",
+                            fontSize = 36.sp,
+                            color = Color(59, 86, 60),
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
+                    ListarFavoritos(Modifier)
                 }
             }
-        }
-        Column (
-            Modifier
-                .padding(top = 30.dp)
-                .fillMaxSize()) {
-            Column (Modifier.padding(bottom = 20.dp)) {
-                Text(
-                    text = "Favoritos",
-                    fontSize = 36.sp,
-                    color = Color(59, 86, 60),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
-            }
-            ListarFavoritos(modifier)
         }
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun GreetingPreview2() {
-    TelaInicial()
+fun TelaInicialPreview() {
+    TelaInicial(selectedTabIndex = 0, onTabSelected = {})
 }

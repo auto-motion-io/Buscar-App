@@ -32,4 +32,12 @@
     <string name="title_activity_tela_minha_agenda">TelaMinhaAgenda</string>
     <string name="label_subtituloMinhaAgenda">Visualize e Gerencie seus agendamentos</string>
     <string name="label_esseMes">Esse mês</string>
+    <string name="label_exemploOficina">Exemplo de Oficina</string>
+    <string name="label_exemploHorario">9H30</string>
+    <string name="label_home">Home</string>
+    <string name="label_alert">Alerta</string>
+    <string name="label_order">Ordem de Serviço</string>
+    <string name="label_profile">Perfil</string>
+    <string name="label_categorias">Categorias</string>
+    <string name="label_exemploAvaliacao">5.0</string>
 </resources>
