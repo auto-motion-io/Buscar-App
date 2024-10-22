@@ -1,6 +1,8 @@
 package com.example.futurobuscartelas.login
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,6 +23,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,10 +44,15 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.signup.SignUpViewModel
 import com.example.futurobuscartelas.ui.theme.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import com.example.futurobuscartelas.login.LoginState
 
 
 class LoginActivity() : ComponentActivity() {
@@ -65,16 +74,49 @@ fun LoginScreenPreview() {
     LoginScreen(navController = navController)
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun LoginScreen(navController: NavHostController) {
-
-
-    var email by remember { mutableStateOf("") }
-    var senha by remember { mutableStateOf("") }
-    var isEmailValid by remember { mutableStateOf(false) }
-    var isSenhaValid by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val userRepository = remember { UserRepository(context) }
+    val viewmodel = remember { LoginViewModel(userRepository) }
+
+
+    val loginState by viewmodel.loginState.collectAsState()
+
+    var email by viewmodel.email
+    var senha by viewmodel.senha
+
+    var userData by remember { mutableStateOf<UserData?>(null) }
+
+    // Coletar dados diretamente do repositório
+    LaunchedEffect(Unit) {
+        userRepository.getUserData().collect { data ->
+            userData = data
+        }
+    }
+
     val focusManager = LocalFocusManager.current
+    Log.i("userdata","useru data ${userData}")
+    LaunchedEffect(loginState) {
+        when (loginState) {
+            is LoginState.Success -> {
+                navController.navigate("oficina") {
+                    popUpTo("login") { inclusive = true }
+                }
+            }
+
+            is LoginState.Error -> {
+                viewmodel.clearUserData()
+                val message = (loginState as LoginState.Error).message
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+
+            else -> Unit
+        }
+    }
+
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = BackGroundColor
@@ -97,11 +139,12 @@ fun LoginScreen(navController: NavHostController) {
                 Spacer(modifier = Modifier.height(36.dp))
 
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .pointerInput(Unit) {
-                        detectTapGestures(onTap = {
-                            focusManager.clearFocus() // Fecha o teclado ao tocar fora do campo de texto
-                        })
+                            detectTapGestures(onTap = {
+                                focusManager.clearFocus()
+                            })
                         })
                 {
                     Row(modifier = Modifier.fillMaxWidth()) {
@@ -125,7 +168,6 @@ fun LoginScreen(navController: NavHostController) {
                             value = email,
                             onValueChange = {
                                 email = it
-                                if (email == "motion@gmail.com") isEmailValid = true
                             },
                         )
 
@@ -136,7 +178,6 @@ fun LoginScreen(navController: NavHostController) {
                             value = senha,
                             onValueChange = {
                                 senha = it
-                                if (senha == "motion") isSenhaValid = true
                             },
                             isPasswordField = true
                         )
@@ -151,16 +192,9 @@ fun LoginScreen(navController: NavHostController) {
                         Spacer(modifier = Modifier.height(36.dp))
 
                         Button(
+
                             onClick = {
-                                if (!isEmailValid || !isSenhaValid) {
-                                    Toast.makeText(
-                                        context,
-                                        "Email ou senha inválidos",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } else {
-                                    navController.navigate("oficina")
-                                }
+                                viewmodel.login()
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)

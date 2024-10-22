@@ -20,7 +20,7 @@ interface BuscarApi {
     suspend fun cadastrarUsuario(@Body usuario: CreateUsuarioDTO): Response<Usuario>
 
     @POST("usuarios/login")
-    suspend fun login(@Body usuario: LoginUsuarioDTO): Response<LoginUsuarioResponse>
+    suspend fun login(@Body usuario: LoginUsuarioDTO): Response<LoginUsuarioResponseDTO>
 
     @PUT("usuarios/{id}")
     suspend fun atualizar(@Path("id") id: Int, @Body updateUsuarioDTO: UpdateUsuarioDTO): Response<Usuario>

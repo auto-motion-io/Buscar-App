@@ -1,9 +1,6 @@
 package com.example.futurobuscartelas.dto
 
-import com.example.futurobuscartelas.models.Usuario
 
-
-data class LoginUsuarioResponse(val token: String, val user: Usuario)
 data class UpdateUsuarioDTO(val name: String, val email: String)
 data class SendEmailDTO(val email: String)
 data class ConfirmTokenDTO(val token: String)

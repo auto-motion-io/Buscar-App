@@ -109,5 +109,9 @@ dependencies {
     //NAV ANIMATION
     implementation ("com.google.accompanist:accompanist-navigation-animation:0.28.0")
 
+    //DATASTORE
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("androidx.datastore:datastore-core:1.0.0")
+
 
 }
