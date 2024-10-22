@@ -8,7 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.futurobuscartelas.api.BuscarApi
-import com.example.futurobuscartelas.api.CreateUsuarioDTO
+import com.example.futurobuscartelas.dto.CreateUsuarioDTO
 import com.example.futurobuscartelas.api.RetrofitService
 import com.example.futurobuscartelas.models.Usuario
 import com.google.android.gms.common.api.Response

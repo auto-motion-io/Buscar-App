@@ -56,7 +56,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.futurobuscartelas.LoginActivity
+import com.example.futurobuscartelas.login.LoginActivity
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.ui.theme.ArrowBackButton
 import com.example.futurobuscartelas.ui.theme.BaseScreenLayout

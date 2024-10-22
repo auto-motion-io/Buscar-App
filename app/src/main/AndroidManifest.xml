@@ -78,7 +78,7 @@
             android:label="@string/title_activity_tela_pre_login"
             android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".login.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.FuturoBuscarTelas" />
     </application>

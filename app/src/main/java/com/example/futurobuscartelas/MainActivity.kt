@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.futurobuscartelas.login.LoginScreen
 import com.example.futurobuscartelas.onboarding.BeforeSignUpScreen
 import com.example.futurobuscartelas.onboarding.LoadingScreen
 import com.example.futurobuscartelas.onboarding.MainViewModel
@@ -25,9 +26,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             //MyApp()
-            var isLogged: Boolean = true;
+            var isLogged: Boolean = false;
             if(isLogged){
                 MainScreen()
+            }else{
+                MyApp()
             }
         }
     }

@@ -1,4 +1,5 @@
 package com.example.futurobuscartelas.api
+import com.example.futurobuscartelas.dto.*
 import com.example.futurobuscartelas.models.Usuario
 import retrofit2.Call
 import retrofit2.http.*
@@ -6,22 +7,6 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Path
 import retrofit2.http.Query
-
-
-//DTOS UTILIZADAS
-
-data class CreateUsuarioDTO(val nome: String,val sobrenome:String, val email: String, val senha: String,val preferenciasVeiculos:String, val preferenciasPropulsao:String)
-data class LoginUsuarioRequest(val email: String, val password: String)
-data class LoginUsuarioResponse(val token: String, val user: Usuario)
-data class UpdateUsuarioDTO(val name: String, val email: String)
-data class SendEmailDTO(val email: String)
-data class ConfirmTokenDTO(val token: String)
-data class UpdateSenhaUsuarioDTO(val currentPassword: String, val newPassword: String)
-data class UpdateFotoUsuarioDTO(val photoUrl: String)
-data class GoogleAuthDTO(val tokenId: String)
-data class GoogleResponseDTO(val chave: String)
-data class CreateUserGoogleDTO(val name: String, val email: String)
-data class UpdatePreferenciasDTO(val preferences: List<String>)
 
 
 interface BuscarApi {
@@ -35,7 +20,7 @@ interface BuscarApi {
     suspend fun cadastrarUsuario(@Body usuario: CreateUsuarioDTO): Response<Usuario>
 
     @POST("usuarios/login")
-    suspend fun login(@Body usuario: LoginUsuarioRequest): Response<LoginUsuarioResponse>
+    suspend fun login(@Body usuario: LoginUsuarioDTO): Response<LoginUsuarioResponse>
 
     @PUT("usuarios/{id}")
     suspend fun atualizar(@Path("id") id: Int, @Body updateUsuarioDTO: UpdateUsuarioDTO): Response<Usuario>
