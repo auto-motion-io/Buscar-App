@@ -1,6 +1,8 @@
 package com.example.futurobuscartelas.login
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -48,6 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.TelaInicialActivity
 import com.example.futurobuscartelas.signup.SignUpViewModel
 import com.example.futurobuscartelas.ui.theme.*
 import kotlinx.coroutines.GlobalScope
@@ -101,9 +104,13 @@ fun LoginScreen(navController: NavHostController) {
     LaunchedEffect(loginState) {
         when (loginState) {
             is LoginState.Success -> {
-                navController.navigate("oficina") {
-                    popUpTo("login") { inclusive = true }
+                val intent = Intent(context, TelaInicialActivity::class.java).apply {
+                    // Se necessário, passe dados extras
+                    //putExtra("USER_DATA", userData)
                 }
+                context.startActivity(intent)
+                // Finaliza a Activity atual para remover da pilha (similar ao popUpTo)
+                (context as? Activity)?.finish()
             }
 
             is LoginState.Error -> {

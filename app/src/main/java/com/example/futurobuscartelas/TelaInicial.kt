@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -39,7 +40,20 @@ import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import com.example.futurobuscartelas.ui.theme.AddCategoria
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.ListarFavoritos
+import com.example.futurobuscartelas.ui.theme.MainScreen
 import com.example.futurobuscartelas.ui.theme.NavigationBar
+
+
+class TelaInicialActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TelaInicial(0) { }
+        }
+    }
+}
 
 @Composable
 fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
