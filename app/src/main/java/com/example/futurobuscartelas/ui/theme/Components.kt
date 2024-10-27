@@ -51,11 +51,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.TelaConsultaOS
 import com.example.futurobuscartelas.TelaInicial
 import com.example.futurobuscartelas.TelaPerfil
 import com.example.futurobuscartelas.TelaSOS
+import com.example.futurobuscartelas.models.Oficina
 
 @Composable
 fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
@@ -913,6 +915,192 @@ fun MainScreen() {
                 exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             ) {
                 TelaPerfil(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+            }
+        }
+    }
+}
+
+@Composable
+fun CardSOS(oficina: Oficina){
+
+    val imageUrl = "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0" // Altere para o ID correto da imagem padrão
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(500.dp)
+            .clip(RoundedCornerShape(40.dp))
+            .background(color = Color(240, 240, 240))
+    ) {
+        // Imagem de fundo do card
+        AsyncImage(
+            model = imageUrl, // URL da imagem
+            contentDescription = "Logo da ${oficina.nome}",
+            modifier = Modifier.size(100.dp) // Ajuste o tamanho conforme necessário
+        )
+
+        // Conteúdo do Card sobreposto
+        Column(
+            Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                Modifier
+                    .weight(0.43f)
+                    .fillMaxSize()
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(30.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Image(
+                        painter = painterResource(R.mipmap.icon_fav_semcor),
+                        contentDescription = "Imagem de Coração(Favoritar)",
+                        Modifier.size(20.dp)
+                    )
+                }
+            }
+
+            Column(
+                Modifier
+                    .weight(0.60f)
+                    .fillMaxSize()
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        Modifier
+                            .width(55.dp)
+                            .height(55.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                            .background(color = Color(230, 230, 230)),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.mipmap.icon_local),
+                            contentDescription = "Imagem de indicação de local",
+                            Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        Modifier
+                            .width(55.dp)
+                            .height(55.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                            .background(color = Color(230, 230, 230)),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.mipmap.icon_whatsapp),
+                            contentDescription = "Imagem de WhatsApp",
+                            Modifier.size(20.dp)
+                        )
+                    }
+                }
+
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(2.5f)
+                ) {
+                    Column(
+                        Modifier
+                            .weight(0.8f)
+                            .fillMaxSize()
+                    ) {
+                        Column(
+                            Modifier
+                                .fillMaxSize()
+                                .padding(top = 10.dp, start = 20.dp)
+                        ) {
+                            Text(
+                                text = oficina.nome,
+                                fontSize = 30.sp,
+                                fontFamily = PRODUCT_SANS_FAMILY,
+                                fontWeight = FontWeight.Bold,
+                                color = VerdeBuscar
+                            )
+                            Text(
+                                text = stringResource(R.string.label_distancia),
+                                fontSize = 16.sp,
+                                fontFamily = PRODUCT_SANS_FAMILY,
+                                color = Color(50, 50, 50),
+                                modifier = Modifier.padding(top = 5.dp)
+                            )
+                            Row(Modifier.padding(top = 5.dp)) {
+                                Text(
+                                    text = "$$$",
+                                    color = VerdeBuscar,
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontSize = 16.sp
+                                )
+                                Text(
+                                    text = "$",
+                                    color = Color(50, 50, 50),
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontSize = 16.sp
+                                )
+                            }
+                            Row(
+                                Modifier.padding(top = 6.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(R.mipmap.icon_local),
+                                    contentDescription = "Imagem de indicação de local",
+                                    Modifier.size(20.dp)
+                                )
+                                Text(
+                                    text = oficina.cep,
+                                    color = Color(50, 50, 50),
+                                    modifier = Modifier.padding(start = 5.dp)
+                                )
+                            }
+                        }
+                    }
+                    Column(
+                        Modifier
+                            .weight(0.20f)
+                            .fillMaxSize()
+                            .padding(top = 18.dp)
+                    ) {
+                        Row {
+                            Image(
+                                painter = painterResource(R.mipmap.icon_stars),
+                                contentDescription = "Ícone de Avaliação (Estrela)",
+                                Modifier.size(16.dp)
+                            )
+                            Text(
+                                text = "4.5",
+                                modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY,
+                                fontSize = 16.sp
+                            )
+                        }
+                    }
+                }
             }
         }
     }

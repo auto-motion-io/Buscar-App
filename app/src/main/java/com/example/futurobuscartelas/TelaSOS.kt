@@ -1,8 +1,13 @@
 package com.example.futurobuscartelas
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,22 +25,55 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
+import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.signup.SignUpViewModel
+import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
+import com.example.futurobuscartelas.ui.theme.CardSOS
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+    val viewModel: TelasViewModel = viewModel()
+    val oficinas = viewModel.getOficinas() // Obtém a lista de oficinas atualizadas do ViewModel
+    var showMessage by remember { mutableStateOf(false) } // Estado para controlar a mensagem
+
+    // Chamamos listarOficinas quando a tela é composta
+    LaunchedEffect(Unit) {
+        viewModel.listarOficinas()
+    }
+
+    // Use derivedStateOf para garantir que visibleCards atualize com oficinas
+    val visibleCards = remember { mutableStateListOf<Oficina>() }
+
+    LaunchedEffect(oficinas) {
+        visibleCards.clear()
+        visibleCards.addAll(oficinas)
+    }
 
     Scaffold (
         bottomBar = {
@@ -89,178 +128,96 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                         )
                     }
                 }
-                Column (
-                    Modifier
-                        .fillMaxWidth()
-                        .height(500.dp)
-                        .clip(RoundedCornerShape(40.dp))
-                        .background(color = Color(240, 240, 240)),
-                    verticalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row (
-                        Modifier
-                            .weight(0.43f)
-                            .fillMaxSize()
-                    ) {
-                        Row (
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(30.dp),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Image(
-                                painter = painterResource(R.mipmap.icon_fav_semcor),
-                                contentDescription = "Imagem de Coração(Favoritar)",
-                                Modifier.size(20.dp)
-                            )
-                        }
 
-                    }
-                    Column (
-                        Modifier
-                            .weight(0.60f)
-                            .fillMaxSize()
-                    ) {
-                        Row (
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row (
-                                Modifier
-                                    .width(55.dp)
-                                    .height(55.dp)
-                                    .clip(RoundedCornerShape(100.dp))
-                                    .background(color = Color(230, 230, 230)),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(R.mipmap.icon_local),
-                                    contentDescription = "Imagem de indicação de local",
-                                    Modifier
-                                        .size(20.dp)
+                // Box para exibir os cartões
+                // Box para exibir os cartões
+                Box(Modifier.fillMaxSize()) {
+                    visibleCards.forEach { oficina ->
+                        SwipeableCard(
+                            cardContent = { CardSOS(oficina) }, // Passa os dados da oficina para o CardSOS
+                            onSwipeComplete = {
+                                // Remove o cartão da lista após o swipe
+                                visibleCards.remove(oficina) // Use remove para eliminar diretamente
 
-                                )
-                            }
-                        }
-                        Row (
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(1f)
-                                .padding(end = 8.dp),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row (
-                                Modifier
-                                    .width(55.dp)
-                                    .height(55.dp)
-                                    .clip(RoundedCornerShape(100.dp))
-                                    .background(color = Color(230, 230, 230)),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(R.mipmap.icon_whatsapp),
-                                    contentDescription = "Imagem de indicação de local",
-                                    Modifier
-                                        .size(20.dp)
-
-                                )
-                            }
-                        }
-                        Row (
-                            Modifier
-                                .fillMaxWidth()
-                                .weight(2.5f)
-                                .background(color = Color(240, 240, 240))
-                        ) {
-                            Column (
-                                Modifier
-                                    .weight(0.8f)
-                                    .fillMaxSize()
-                            ) {
-                                Column (
-                                    Modifier
-                                        .fillMaxSize()
-                                        .padding(top = 10.dp, start = 20.dp),
-                                ) {
-                                    Text(
-                                        text = stringResource(R.string.label_tituloExemplo),
-                                        fontSize = 30.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontWeight = FontWeight.Bold,
-                                        color = VerdeBuscar
-                                    )
-                                    Text(
-                                        text = "600 Metros",
-                                        fontSize = 16.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        color = Color(50, 50, 50),
-                                        modifier = Modifier.padding(top = 5.dp)
-                                    )
-                                    Row (
-                                        Modifier.padding(top = 5.dp)
-                                    ) {
-                                        Text(
-                                            text = "$$$",
-                                            color = VerdeBuscar,
-                                            fontFamily = PRODUCT_SANS_FAMILY,
-                                            fontSize = 16.sp
-                                        )
-                                        Text(
-                                            text = "$",
-                                            color = Color(50, 50, 50),
-                                            fontFamily = PRODUCT_SANS_FAMILY,
-                                            fontSize = 16.sp
-                                        )
-                                    }
-                                    Row (
-                                        Modifier.padding(top = 6.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Image(
-                                            painter = painterResource(R.mipmap.icon_local),
-                                            contentDescription = "Imagem de indicação de local",
-                                            Modifier.size(20.dp)
-                                        )
-                                        Text(
-                                            text = "Rua Miguel Ferreira de Melo, 789",
-                                            color = Color(50, 50, 50),
-                                            modifier = Modifier.padding(start = 5.dp)
-                                        )
-                                    }
+                                // Verifica se não há mais cartões
+                                if (visibleCards.isEmpty()) {
+                                    showMessage = true // Exibe a mensagem
                                 }
                             }
-                            Column (
-                                Modifier
-                                    .weight(0.20f)
-                                    .fillMaxSize()
-                                    .padding(top = 18.dp)
-                            ) {
-                                Row {
-                                    Image(
-                                        painter = painterResource(R.mipmap.icon_stars),
-                                        contentDescription = "Icone de Avaliação (Estrela)",
-                                        Modifier.size(16.dp)
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.label_exemploAvaliacao),
-                                        modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontSize = 16.sp
-                                    )
-                                }
-                            }
-                        }
+                        )
                     }
+                }
+
+                // Exibição da mensagem quando todos os cartões forem removidos
+                if (showMessage) {
+                    Text(
+                        text = "Acabaram as oficinas em sua área, aperte na tela para resetar a lista",
+                        fontSize = 18.sp,
+                        color = Color.Gray,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .align(Alignment.CenterHorizontally) // Centraliza o texto
+                            .pointerInput(Unit) {
+                                detectTapGestures(onTap = {
+                                    // Resetando a lista de cartões e escondendo a mensagem
+                                    visibleCards.clear()
+                                    visibleCards.addAll(oficinas) // Use addAll para restaurar
+                                    showMessage = false
+                                })
+                            }
+                    )
                 }
             }
         }
+    }
+}
+
+
+@Composable
+fun SwipeableCard(
+    cardContent: @Composable () -> Unit,
+    onSwipeComplete: () -> Unit
+) {
+    val offsetX = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+
+    Box(
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragEnd = {
+                        // Define limite para swipe completo
+                        if (offsetX.value > 300f || offsetX.value < -300f) {
+                            // Anima para fora da tela
+                            scope.launch {
+                                offsetX.animateTo(
+                                    if (offsetX.value > 0) 1000f else -1000f,
+                                    animationSpec = tween(durationMillis = 300)
+                                )
+                                onSwipeComplete() // Chama a função de completar o swipe
+                                offsetX.snapTo(0f)
+                            }
+                        } else {
+                            // Retorna o card para o centro se não completar o swipe
+                            scope.launch {
+                                offsetX.animateTo(0f, tween(durationMillis = 300))
+                            }
+                        }
+                    },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+                        scope.launch {
+                            offsetX.snapTo(offsetX.value + dragAmount.x)
+                        }
+                    }
+                )
+            }
+            .offset { IntOffset(offsetX.value.roundToInt(), 0) } // Controla a posição do card com o offset
+    ) {
+        cardContent() // Renderiza o conteúdo do cartão
     }
 }
 

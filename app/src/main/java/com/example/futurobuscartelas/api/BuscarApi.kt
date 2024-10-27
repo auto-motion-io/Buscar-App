@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas.api
 import com.example.futurobuscartelas.dto.*
+import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.Usuario
 import retrofit2.Call
 import retrofit2.http.*
