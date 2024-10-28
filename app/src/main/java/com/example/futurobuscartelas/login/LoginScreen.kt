@@ -106,8 +106,9 @@ fun LoginScreen(navController: NavHostController) {
             is LoginState.Success -> {
                 val intent = Intent(context, TelaInicialActivity::class.java).apply {
                     // Se necessário, passe dados extras
-                    //putExtra("USER_DATA", userData)
+
                 }
+                intent.putExtra("name",userData)
                 context.startActivity(intent)
                 // Finaliza a Activity atual para remover da pilha (similar ao popUpTo)
                 (context as? Activity)?.finish()

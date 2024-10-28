@@ -7,17 +7,18 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.io.Serializable
 
 // Extensão para inicializar o DataStore
 val Context.dataStore by preferencesDataStore("user_prefs")
 
 // Modelo para os dados do usuário
-data class UserData(
+data class UserData  (
     val idUsuario: Int,
     val nome: String,
     val token: String,
     val fotoUrl: String?
-)
+): Serializable
 
 // Repositório responsável por acessar a DataStore
 class UserRepository(private val context: Context) {

@@ -11,8 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.login.LoginScreen
+import com.example.futurobuscartelas.login.UserData
+import com.example.futurobuscartelas.login.UserRepository
 import com.example.futurobuscartelas.onboarding.BeforeSignUpScreen
 import com.example.futurobuscartelas.onboarding.LoadingScreen
 import com.example.futurobuscartelas.onboarding.MainViewModel
@@ -26,7 +29,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             //MyApp()
-            var isLogged: Boolean = false;
+            val context = LocalContext.current
+            val userRepository = remember { UserRepository(context) }
+            var userData by remember { mutableStateOf<UserData?>(null) }
+
+            // Coletar dados diretamente do repositório
+            LaunchedEffect(Unit) {
+                userRepository.getUserData().collect { data ->
+                    userData = data
+                }
+            }
+
+            var isLogged: Boolean = userData != null
             if(isLogged){
                 MainScreen()
             }else{
