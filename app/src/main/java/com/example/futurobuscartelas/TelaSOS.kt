@@ -130,7 +130,6 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                 }
 
                 // Box para exibir os cartões
-                // Box para exibir os cartões
                 Box(Modifier.fillMaxSize()) {
                     visibleCards.forEach { oficina ->
                         SwipeableCard(
@@ -185,7 +184,7 @@ fun SwipeableCard(
     Box(
         Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .pointerInput(Unit) {
                 detectDragGestures(
                     onDragEnd = {

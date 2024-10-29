@@ -42,6 +42,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -923,7 +924,7 @@ fun MainScreen() {
 @Composable
 fun CardSOS(oficina: Oficina){
 
-    val imageUrl = "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0" // Altere para o ID correto da imagem padrão
+    val imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
 
     Box(
         modifier = Modifier
@@ -936,7 +937,8 @@ fun CardSOS(oficina: Oficina){
         AsyncImage(
             model = imageUrl, // URL da imagem
             contentDescription = "Logo da ${oficina.nome}",
-            modifier = Modifier.size(100.dp) // Ajuste o tamanho conforme necessário
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize().padding(0.dp) // Ajuste o tamanho conforme necessário
         )
 
         // Conteúdo do Card sobreposto
@@ -953,9 +955,12 @@ fun CardSOS(oficina: Oficina){
             ) {
                 Row(
                     Modifier
-                        .fillMaxWidth()
-                        .padding(30.dp),
-                    horizontalArrangement = Arrangement.End
+                        .width(50.dp)
+                        .height(50.dp)
+                        .clip(RoundedCornerShape(100.dp))
+                        .background(color = Color(230, 230, 230)),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Image(
                         painter = painterResource(R.mipmap.icon_fav_semcor),
@@ -967,21 +972,21 @@ fun CardSOS(oficina: Oficina){
 
             Column(
                 Modifier
-                    .weight(0.60f)
+                    .weight(0.55f)
                     .fillMaxSize()
             ) {
                 Row(
                     Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(end = 5.dp),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
                         Modifier
-                            .width(55.dp)
-                            .height(55.dp)
+                            .width(50.dp)
+                            .height(50.dp)
                             .clip(RoundedCornerShape(100.dp))
                             .background(color = Color(230, 230, 230)),
                         verticalAlignment = Alignment.CenterVertically,
@@ -999,14 +1004,14 @@ fun CardSOS(oficina: Oficina){
                     Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(end = 5.dp, bottom = 5.dp),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(
                         Modifier
-                            .width(55.dp)
-                            .height(55.dp)
+                            .width(50.dp)
+                            .height(50.dp)
                             .clip(RoundedCornerShape(100.dp))
                             .background(color = Color(230, 230, 230)),
                         verticalAlignment = Alignment.CenterVertically,
@@ -1024,10 +1029,13 @@ fun CardSOS(oficina: Oficina){
                     Modifier
                         .fillMaxWidth()
                         .weight(2.5f)
+                        .clip(RoundedCornerShape(40.dp))
+                        .background(Color(240,240,240,200))
                 ) {
                     Column(
                         Modifier
                             .weight(0.8f)
+                            .padding(5.dp)
                             .fillMaxSize()
                     ) {
                         Column(
@@ -1082,9 +1090,9 @@ fun CardSOS(oficina: Oficina){
                     }
                     Column(
                         Modifier
-                            .weight(0.20f)
+                            .weight(0.25f)
                             .fillMaxSize()
-                            .padding(top = 18.dp)
+                            .padding(top = 18.dp, end = 5.dp)
                     ) {
                         Row {
                             Image(

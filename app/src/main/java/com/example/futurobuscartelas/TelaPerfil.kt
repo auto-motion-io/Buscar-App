@@ -1,9 +1,12 @@
 package com.example.futurobuscartelas
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,23 +19,29 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.futurobuscartelas.login.UserRepository
 import com.example.futurobuscartelas.ui.theme.CustomInputMotion
 import com.example.futurobuscartelas.ui.theme.CustomInputPerfil
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
@@ -40,12 +49,19 @@ import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.UpperLabelText
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
+import kotlinx.coroutines.launch
 
 @Composable
 fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 
     var nome by remember { mutableStateOf("") }
     var sobrenome by remember { mutableStateOf("") }
+
+
+    val context = LocalContext.current
+    val userRepository = remember { UserRepository(context) }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold (
         bottomBar ={
@@ -116,14 +132,51 @@ fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         fontSize = 18.sp
                                     )
-                                    Column(
-                                        verticalArrangement = Arrangement.Center
-                                    ) {
-                                        Image(
-                                            painter = painterResource(R.mipmap.icon_editar),
-                                            contentDescription = "Icone de Editar",
-                                            Modifier.size(10.dp),
-                                        )
+                                    Row(
+
+                                    ){
+                                        Button(
+                                            onClick = { /* Lógica de edição */ },
+                                            modifier = Modifier.size(20.dp), // Tamanho definido para equivalência visual
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.Transparent,
+                                                contentColor = Color.Unspecified
+                                            ),
+                                            contentPadding = PaddingValues(0.dp) // Remove o padding interno do Button
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.mipmap.icon_editar),
+                                                contentDescription = "Ícone de Editar",
+                                                modifier = Modifier.size(12.dp) // Tamanho do ícone
+                                            )
+                                        }
+
+                                        Button(
+                                            onClick = {
+                                                coroutineScope.launch {
+                                                    userRepository.clearUserData()
+                                                }
+                                                val intent = Intent(context, TelaInicialActivity::class.java).apply {
+                                                    // Se necessário, passe dados extras
+                                                }
+                                                context.startActivity(intent)
+                                                // Finaliza a Activity atual para remover da pilha (similar ao popUpTo)
+                                                (context as? Activity)?.finish()
+                                            },
+                                            modifier = Modifier.size(20.dp), // Tamanho definido para equivalência visual
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = Color.Transparent,
+                                                contentColor = Color.Unspecified
+                                            ),
+                                            contentPadding = PaddingValues(0.dp) // Remove o padding interno do Button
+                                        ) {
+                                            Image(
+                                                painter = painterResource(R.mipmap.icon_logout),
+                                                contentDescription = "Ícone de Sair",
+                                                modifier = Modifier.size(16.dp) // Tamanho do ícone
+                                            )
+                                        }
+
                                     }
                                 }
                             }
