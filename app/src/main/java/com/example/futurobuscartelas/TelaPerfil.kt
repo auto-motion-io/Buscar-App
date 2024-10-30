@@ -156,7 +156,7 @@ fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                                                 coroutineScope.launch {
                                                     userRepository.clearUserData()
                                                 }
-                                                val intent = Intent(context, TelaInicialActivity::class.java).apply {
+                                                val intent = Intent(context, MainActivity::class.java).apply {
                                                     // Se necessário, passe dados extras
                                                 }
                                                 context.startActivity(intent)
