@@ -228,8 +228,8 @@ fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                                 Modifier.padding(start = 30.dp)
                             ) {
                                 Image(
-                                    painter = painterResource(R.mipmap.icon_calendario_colorido),
-                                    contentDescription = "Icone de calendário",
+                                    painter = painterResource(R.mipmap.icon_fidelidade),
+                                    contentDescription = "Icone de Preço",
                                     Modifier.size(24.dp)
                                 )
                             }
@@ -237,7 +237,7 @@ fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                                 Modifier.padding(start = 14.dp)
                             ) {
                                 Text(
-                                    text = stringResource(R.string.label_minhaAgenda),
+                                    text = stringResource(R.string.label_fidelidade),
                                     fontSize = 16.sp,
                                     fontFamily = PRODUCT_SANS_FAMILY,
                                     color = VerdeBuscar,

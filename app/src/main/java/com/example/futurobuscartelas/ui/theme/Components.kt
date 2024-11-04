@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -922,23 +923,38 @@ fun MainScreen() {
 }
 
 @Composable
-fun CardSOS(oficina: Oficina){
-
-    val imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+fun CardSOS(
+    oficina: Oficina = Oficina(
+        id = 0,
+        nome = "Oficina Padrão",
+        cnpj = "00.000.000/0000-00",
+        cep = "00000-000",
+        numero = "0",
+        complemento = "",
+        hasBuscar = false,
+        logoUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg"
+    )
+) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val cardHeight = screenHeight * 0.75f
+    val imageUrl = oficina.logoUrl
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .height(cardHeight)
             .clip(RoundedCornerShape(40.dp))
             .background(color = Color(240, 240, 240))
     ) {
         // Imagem de fundo do card
         AsyncImage(
-            model = imageUrl, // URL da imagem
+            model = imageUrl,
             contentDescription = "Logo da ${oficina.nome}",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize().padding(0.dp) // Ajuste o tamanho conforme necessário
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp)
         )
 
         // Conteúdo do Card sobreposto
@@ -1030,7 +1046,7 @@ fun CardSOS(oficina: Oficina){
                         .fillMaxWidth()
                         .weight(2.5f)
                         .clip(RoundedCornerShape(40.dp))
-                        .background(Color(240,240,240,200))
+                        .background(Color(240, 240, 240, 200))
                 ) {
                     Column(
                         Modifier
@@ -1045,7 +1061,7 @@ fun CardSOS(oficina: Oficina){
                         ) {
                             Text(
                                 text = oficina.nome,
-                                fontSize = 30.sp,
+                                fontSize = 26.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY,
                                 fontWeight = FontWeight.Bold,
                                 color = VerdeBuscar
@@ -1107,6 +1123,67 @@ fun CardSOS(oficina: Oficina){
                                 fontSize = 16.sp
                             )
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+fun CardFidelidade(){
+    Box(
+        modifier = Modifier
+            .padding(top = 20.dp)
+            .height(120.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .fillMaxWidth()
+            .background(Color(235, 235, 235))
+    ){
+        Column (
+            Modifier
+                .padding(20.dp)
+        ) {
+            Row () {
+                Text(
+                    text = stringResource(R.string.label_tituloOficinas),
+                    fontSize = 18.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    color = VerdeBuscar,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Row {
+                Text(
+                    text = stringResource(R.string.label_desconto),
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontSize = 14.sp,
+                    color = Color(70,70,70)
+                )
+            }
+            Row {
+                Column {
+                    Row (
+                        Modifier
+                            .padding(top = 10.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(5.dp)
+                            .fillMaxWidth()
+                            .background(Color(200, 200, 200))
+                    ) {}
+                    Row (
+                        Modifier
+                            .padding(top = 5.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            text = stringResource(R.string.label_exemploVisitas),
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontSize = 14.sp,
+                            color = Color(100,100,100)
+                        )
                     }
                 }
             }
