@@ -1120,6 +1120,66 @@ fun CardSOS(oficina: Oficina){
 }
 
 @Composable
+fun CardFidelidade(){
+    Box(
+        modifier = Modifier
+            .padding(top = 20.dp)
+            .height(120.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .fillMaxWidth()
+            .background(Color(235, 235, 235))
+    ){
+        Column (
+            Modifier
+                .padding(20.dp)
+        ) {
+            Row () {
+                Text(
+                    text = stringResource(R.string.label_tituloOficinas),
+                    fontSize = 18.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    color = VerdeBuscar,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+            Row {
+                Text(
+                    text = stringResource(R.string.label_desconto),
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontSize = 14.sp,
+                    color = Color(70,70,70)
+                )
+            }
+            Row {
+                Column {
+                    Row (
+                        Modifier
+                            .padding(top = 10.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .height(5.dp)
+                            .fillMaxWidth()
+                            .background(Color(200, 200, 200))
+                    ) {}
+                    Row (
+                        Modifier
+                            .padding(top = 5.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        Text(
+                            text = stringResource(R.string.label_exemploVisitas),
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontSize = 14.sp,
+                            color = Color(100,100,100)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun ResultDialog(title: String, text: String, icon: ImageVector, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = {

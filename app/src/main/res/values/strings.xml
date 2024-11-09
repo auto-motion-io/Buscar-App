@@ -42,4 +42,8 @@
     <string name="label_exemploAvaliacao">5.0</string>
     <string name="label_distancia">600 Metros</string>
     <string name="title_activity_forgot_password_screen">ForgotPasswordScreen</string>
+    <string name="label_fidelidade">Fidelidade</string>
+    <string name="label_subtituloFidelidade">Confira sua pontuação nos programas de fidelidade.</string>
+    <string name="label_desconto">Desconto de 25%</string>
+    <string name="label_exemploVisitas">1/2 Visitas</string>
 </resources>

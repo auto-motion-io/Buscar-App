@@ -129,7 +129,7 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                     }
                 }
 
-                CardSOS()
+                //CardSOS() FIXME david arruma isso aq
 
                 // Box para exibir os cartões
                 Box(Modifier.fillMaxSize()) {
