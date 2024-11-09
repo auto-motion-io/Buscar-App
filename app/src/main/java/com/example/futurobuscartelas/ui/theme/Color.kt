@@ -16,6 +16,7 @@ val ClickAnimationColor = Color(241, 240, 238, 255)
 val VerdeBuscar = Color(59, 86, 60, 255)
 val InputContainerUnfocusedColor = Color(240, 239, 236)
 
+val ErrorColor = Color(0xFFD9534F)
 
 val CheckBoxColorsMotion = CheckboxColors(
     checkedCheckmarkColor = VerdeBuscar,

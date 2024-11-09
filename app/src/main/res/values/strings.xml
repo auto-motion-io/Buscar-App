@@ -41,4 +41,5 @@
     <string name="label_categorias">Categorias</string>
     <string name="label_exemploAvaliacao">5.0</string>
     <string name="label_distancia">600 Metros</string>
+    <string name="title_activity_forgot_password_screen">ForgotPasswordScreen</string>
 </resources>

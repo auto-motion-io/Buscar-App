@@ -2,6 +2,7 @@ package com.example.futurobuscartelas
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
@@ -42,25 +44,28 @@ import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.ListarFavoritos
 import com.example.futurobuscartelas.ui.theme.MainScreen
 import com.example.futurobuscartelas.ui.theme.NavigationBar
+import org.koin.android.ext.android.inject
 
 
 class TelaInicialActivity : ComponentActivity() {
+
+    private val sessaoUsuario: SessaoUsuario by inject()
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaInicial(0) { }
+            TelaInicial(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
         }
     }
 }
 
 @Composable
-fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuario: SessaoUsuario) {
 
     var token by remember { mutableStateOf("") }
-
-    Scaffold (
+    Log.i("session", sessaoUsuario.nome)
+    Scaffold(
         bottomBar = {
             NavigationBar(
                 selectedTabIndex = selectedTabIndex,
@@ -73,14 +78,15 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
-        ){
-            Column (
+        ) {
+            Column(
                 Modifier
                     .fillMaxSize()
                     .padding(top = 20.dp, bottom = 20.dp, start = 30.dp, end = 30.dp)
             ) {
-                Row (
-                    Modifier.fillMaxWidth()
+                Row(
+                    Modifier
+                        .fillMaxWidth()
                         .padding(bottom = 30.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
@@ -206,5 +212,5 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaInicialPreview() {
-    TelaInicial(selectedTabIndex = 0, onTabSelected = {})
+    TelaInicial(selectedTabIndex = 0, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
 }

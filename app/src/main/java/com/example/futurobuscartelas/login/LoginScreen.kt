@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -51,21 +52,25 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.TelaInicialActivity
+import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.signup.SignUpViewModel
 import com.example.futurobuscartelas.ui.theme.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import com.example.futurobuscartelas.login.LoginState
+import org.koin.android.ext.android.inject
 
 
 class LoginActivity() : ComponentActivity() {
+    private val sessaoUsuario: SessaoUsuario by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             // Inicializa o NavController aqui
             val navController = rememberNavController()
             // Chama a composable principal
-            LoginScreen(navController = navController)
+            LoginScreen(navController = navController,sessaoUsuario)
         }
     }
 }
@@ -74,12 +79,12 @@ class LoginActivity() : ComponentActivity() {
 @Composable
 fun LoginScreenPreview() {
     val navController = rememberNavController()
-    LoginScreen(navController = navController)
+    LoginScreen(navController = navController, sessaoUsuario = SessaoUsuario())
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
     val context = LocalContext.current
     val userRepository = remember { UserRepository(context) }
     val viewmodel = remember { LoginViewModel(userRepository) }
@@ -104,6 +109,10 @@ fun LoginScreen(navController: NavHostController) {
     LaunchedEffect(loginState) {
         when (loginState) {
             is LoginState.Success -> {
+                sessaoUsuario.id = userData!!.idUsuario
+                sessaoUsuario.nome = userData!!.nome
+                sessaoUsuario.token = userData!!.token
+                sessaoUsuario.fotoUrl = userData!!.fotoUrl
                 val intent = Intent(context, TelaInicialActivity::class.java).apply {
                     // Se necessário, passe dados extras
 
@@ -191,7 +200,9 @@ fun LoginScreen(navController: NavHostController) {
                         )
                         Text(
                             text = "Esqueci minha senha",
-                            modifier = Modifier.padding(6.dp),
+                            modifier = Modifier.padding(6.dp).clickable {
+                                navController.navigate("forgot-password")
+                            },
                             textDecoration = TextDecoration.Underline,
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontSize = 14.sp,
@@ -203,6 +214,7 @@ fun LoginScreen(navController: NavHostController) {
 
                             onClick = {
                                 viewmodel.login()
+
                             },
                             modifier = Modifier
                                 .align(Alignment.CenterHorizontally)

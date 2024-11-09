@@ -68,6 +68,7 @@ import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.UpperLabelText
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import com.example.futurobuscartelas.ui.theme.CardFiltro
+import com.example.futurobuscartelas.ui.theme.ResultDialog
 import com.example.futurobuscartelas.ui.theme.isKeyboardVisible
 
 @Composable
@@ -611,36 +612,7 @@ fun TermsAndConditionsDialog(onDismiss: () -> Unit) {
     )
 }
 
-@Composable
-fun ResultDialog(title: String, text: String, icon: ImageVector, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = {
-            onDismiss()
-        },
-        icon = {
-            Image(
-                painter = painterResource(id = R.drawable.logo_buscar),
-                contentDescription = "Example Icon"
-            )
-        },
-        title = {
-            Text(text = title)
-        },
-        text = {
-            Text(text = text)
-        },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    onDismiss()
-                    Log.i("api", "ondismiss")
-                }
-            ) {
-                Text("Ok", color = VerdeBuscar)
-            }
-        },
-    )
-}
+
 
 
 

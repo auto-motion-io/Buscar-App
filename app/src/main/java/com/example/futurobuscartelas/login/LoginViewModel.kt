@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.futurobuscartelas.dto.LoginUsuarioResponseDTO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.java.KoinJavaComponent.inject
 
 class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     var email = mutableStateOf("")
@@ -31,12 +32,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 
-
-    private val buscarApi: BuscarApi
-
-    init {
-        buscarApi = RetrofitService.getApiBuscar()
-    }
+    private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
 
     @OptIn(DelicateCoroutinesApi::class)
     fun login() {
@@ -55,10 +51,10 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
                 } else {
                     Log.e("api", "Erro ao logar usuário: ${resposta.errorBody()?.string()}")
                     if (resposta.code() != 500) {
+                        Log.i("api","ifzada????")
                         _loginState.update { LoginState.Error("Usuário ou senha inválidos") }
                     } else {
-                        _loginState.update { LoginState.Error("Erro ao logar") }
-
+                        _loginState.update { LoginState.Error("Ocorreu um erro inesperado") }
                     }
                 }
             } catch (exception: Exception) {

@@ -14,6 +14,7 @@ import com.example.futurobuscartelas.models.Usuario
 import com.google.android.gms.common.api.Response
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 
 class SignUpViewModel : ViewModel() {
 
@@ -38,11 +39,9 @@ class SignUpViewModel : ViewModel() {
     // para acessá-la de fora, usamos o getFilmes() que retorna uma cópia de seu conteúdo
     private val users = mutableStateListOf<Usuario>()
 
-    private val buscarApi: BuscarApi
+    private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
 
-    init {
-        buscarApi = RetrofitService.getApiBuscar()
-    }
+
 
     fun getUsers() = users.toList()
 

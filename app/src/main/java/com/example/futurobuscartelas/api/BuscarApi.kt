@@ -30,7 +30,7 @@ interface BuscarApi {
     suspend fun setToken(
         @Body dto: SendEmailDTO,
         @Query("op") op: String
-    ): Response<Unit>
+    ):Response<Void>
 
     @POST("usuarios/confirmar-token")
     suspend fun confirmarToken(

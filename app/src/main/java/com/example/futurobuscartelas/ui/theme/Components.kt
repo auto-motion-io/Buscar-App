@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas.ui.theme
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -25,12 +26,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,6 +62,7 @@ import com.example.futurobuscartelas.TelaConsultaOS
 import com.example.futurobuscartelas.TelaInicial
 import com.example.futurobuscartelas.TelaPerfil
 import com.example.futurobuscartelas.TelaSOS
+import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.Oficina
 
 @Composable
@@ -877,7 +882,7 @@ onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(sessaoUsuario: SessaoUsuario) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
     Scaffold(
@@ -891,7 +896,7 @@ fun MainScreen() {
                 enter = slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn(),
                 exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             ) {
-                TelaInicial(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+                TelaInicial(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it }, sessaoUsuario = sessaoUsuario)
             }
 
             AnimatedVisibility(
@@ -1112,4 +1117,35 @@ fun CardSOS(oficina: Oficina){
             }
         }
     }
+}
+
+@Composable
+fun ResultDialog(title: String, text: String, icon: ImageVector, onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        icon = {
+            Image(
+                painter = painterResource(id = R.drawable.logo_buscar),
+                contentDescription = "Example Icon"
+            )
+        },
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Text(text = text)
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onDismiss()
+                    Log.i("api", "ondismiss")
+                }
+            ) {
+                Text("Ok", color = VerdeBuscar)
+            }
+        },
+    )
 }
