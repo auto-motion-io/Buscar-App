@@ -29,6 +29,8 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     var email = mutableStateOf("")
     var senha = mutableStateOf("")
 
+    var isLoading = mutableStateOf(false)
+
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
 
@@ -40,7 +42,9 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
         GlobalScope.launch(Dispatchers.IO) {
             Log.i("api", "Logando....")
             try {
+                isLoading.value = true
                 val resposta = buscarApi.login(userLogin)
+                isLoading.value = false
                 if (resposta.isSuccessful) {
                     Log.i("api", "Usuário logado com sucesso: ${resposta.body()}")
                     val userData = resposta.body()!!.let {
@@ -51,7 +55,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
                 } else {
                     Log.e("api", "Erro ao logar usuário: ${resposta.errorBody()?.string()}")
                     if (resposta.code() != 500) {
-                        Log.i("api","ifzada????")
+                        Log.i("api", "ifzada????")
                         _loginState.update { LoginState.Error("Usuário ou senha inválidos") }
                     } else {
                         _loginState.update { LoginState.Error("Ocorreu um erro inesperado") }
@@ -60,6 +64,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
             } catch (exception: Exception) {
                 Log.e("api", "Exception ao tentar logar usuário", exception)
                 _loginState.update { LoginState.Error("Erro inesperado") }
+                isLoading.value = false
             }
         }
     }
@@ -67,7 +72,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
     fun getUserData(): Flow<UserData?> = userRepository.getUserData()
 
     fun clearUserData() {
-        Log.i("user","teste")
+        Log.i("user", "teste")
         viewModelScope.launch(Dispatchers.IO) {
             userRepository.clearUserData()
             _loginState.update { LoginState.Idle } // Resetar estado de login se necessário

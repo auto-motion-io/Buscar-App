@@ -70,7 +70,7 @@ class LoginActivity() : ComponentActivity() {
             // Inicializa o NavController aqui
             val navController = rememberNavController()
             // Chama a composable principal
-            LoginScreen(navController = navController,sessaoUsuario)
+            LoginScreen(navController = navController, sessaoUsuario)
         }
     }
 }
@@ -84,7 +84,7 @@ fun LoginScreenPreview() {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
+fun LoginScreen(navController: NavHostController, sessaoUsuario: SessaoUsuario) {
     val context = LocalContext.current
     val userRepository = remember { UserRepository(context) }
     val viewmodel = remember { LoginViewModel(userRepository) }
@@ -97,6 +97,8 @@ fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
 
     var userData by remember { mutableStateOf<UserData?>(null) }
 
+    var isLoading by viewmodel.isLoading
+
     // Coletar dados diretamente do repositório
     LaunchedEffect(Unit) {
         userRepository.getUserData().collect { data ->
@@ -105,7 +107,7 @@ fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
     }
 
     val focusManager = LocalFocusManager.current
-    Log.i("userdata","useru data ${userData}")
+    Log.i("userdata", "useru data ${userData}")
     LaunchedEffect(loginState) {
         when (loginState) {
             is LoginState.Success -> {
@@ -117,7 +119,7 @@ fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
                     // Se necessário, passe dados extras
 
                 }
-                intent.putExtra("name",userData)
+                intent.putExtra("name", userData)
                 context.startActivity(intent)
                 // Finaliza a Activity atual para remover da pilha (similar ao popUpTo)
                 (context as? Activity)?.finish()
@@ -138,6 +140,10 @@ fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
         modifier = Modifier.fillMaxSize(),
         color = BackGroundColor
     ) {
+        if (isLoading) {
+            MotionLoading()
+        }
+
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -200,9 +206,11 @@ fun LoginScreen(navController: NavHostController,sessaoUsuario: SessaoUsuario) {
                         )
                         Text(
                             text = "Esqueci minha senha",
-                            modifier = Modifier.padding(6.dp).clickable {
-                                navController.navigate("forgot-password")
-                            },
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .clickable {
+                                    navController.navigate("forgot-password")
+                                },
                             textDecoration = TextDecoration.Underline,
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontSize = 14.sp,

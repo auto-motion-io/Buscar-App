@@ -29,6 +29,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -55,6 +57,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
@@ -155,7 +158,7 @@ fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
 }
 
 @Composable
-fun CheckSemana(listaDias: List<Boolean>){
+fun CheckSemana(listaDias: List<Boolean>) {
     val diasSemana = listOf("D", "S", "T", "Q", "Q", "S", "S");
 
     Row(
@@ -164,14 +167,14 @@ fun CheckSemana(listaDias: List<Boolean>){
             .height(60.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        for(i in diasSemana.indices){
+        for (i in diasSemana.indices) {
             Column(
                 Modifier.padding(start = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if(listaDias[i]){
+                if (listaDias[i]) {
                     CheckOn()
-                } else{
+                } else {
                     CheckOff()
                 }
                 Text(
@@ -188,7 +191,7 @@ fun CheckSemana(listaDias: List<Boolean>){
 }
 
 @Composable
-fun CheckOn(){
+fun CheckOn() {
     Image(
         painterResource(id = R.mipmap.icon_check),
         contentDescription = "Icone de Check",
@@ -197,7 +200,7 @@ fun CheckOn(){
 }
 
 @Composable
-fun CheckOff(){
+fun CheckOff() {
     Image(
         painterResource(id = R.mipmap.icon_check_semcor),
         contentDescription = "Icone de Check sem cor",
@@ -207,7 +210,8 @@ fun CheckOff(){
 
 @Composable
 fun ListarServicos(modifier: Modifier) {
-    val listaServicos = listOf("Troca de Óleo", "Troca de Pneu", "Alinhamento", "Balanceamento", "Teste")
+    val listaServicos =
+        listOf("Troca de Óleo", "Troca de Pneu", "Alinhamento", "Balanceamento", "Teste")
 
     // Agrupa os serviços em pares
     val groupedServicos = listaServicos.chunked(2)
@@ -286,19 +290,19 @@ fun ListarPecas(modifier: Modifier) {
 }
 
 @Composable
-fun AddCategoria(categoria: String){
-    Column (
+fun AddCategoria(categoria: String) {
+    Column(
         Modifier.width(100.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column (
+        Column(
             Modifier
                 .height(80.dp)
                 .width(80.dp)
                 .clip(RoundedCornerShape(46.dp))
                 .background(color = Color(241, 240, 237))
         ) {}
-        Row (
+        Row(
             Modifier.padding(10.dp)
         ) {
             Text(
@@ -314,7 +318,8 @@ fun AddCategoria(categoria: String){
 
 @Composable
 fun ListarFavoritos(modifier: Modifier) {
-    val listaFavoritos = listOf("Favorito 1","Favorito 2","Favorito 3","Favorito 4","Favorito 5","Favorito 6")
+    val listaFavoritos =
+        listOf("Favorito 1", "Favorito 2", "Favorito 3", "Favorito 4", "Favorito 5", "Favorito 6")
 
     // Agrupa os serviços em pares
     val groupedFavoritos = listaFavoritos.chunked(2)
@@ -353,9 +358,10 @@ fun ListarFavoritos(modifier: Modifier) {
 }
 
 @Composable
-fun BotaoPesquisa(fundo: Boolean){
-    if(fundo){
-        Button(onClick = { /*TODO*/ },
+fun BotaoPesquisa(fundo: Boolean) {
+    if (fundo) {
+        Button(
+            onClick = { /*TODO*/ },
             Modifier
                 .padding(start = 5.dp, top = 5.dp)
                 .size(48.dp)
@@ -363,7 +369,8 @@ fun BotaoPesquisa(fundo: Boolean){
             colors = ButtonDefaults.buttonColors(
                 containerColor = VerdeBuscar,
                 disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.White),
+                disabledContentColor = Color.White
+            ),
             contentPadding = PaddingValues(0.dp)
         ) {
             Image(
@@ -372,14 +379,14 @@ fun BotaoPesquisa(fundo: Boolean){
                 Modifier.size(16.dp)
             )
         }
-    } else{
+    } else {
         Button(
             onClick = { /*TODO*/ },
             Modifier
                 .padding(0.dp)
                 .width(40.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0,0,0, 0)
+                containerColor = Color(0, 0, 0, 0)
             ),
             contentPadding = PaddingValues(0.dp)
         ) {
@@ -395,9 +402,16 @@ fun BotaoPesquisa(fundo: Boolean){
 }
 
 @Composable
-fun CardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: String, modifier: Modifier, fundo: Boolean, onclick:()->Unit){
-    if(fundo){
-        Button (
+fun CardFiltro(
+    tituloCard: String,
+    imagePainter: Painter,
+    descricaoConteudo: String,
+    modifier: Modifier,
+    fundo: Boolean,
+    onclick: () -> Unit
+) {
+    if (fundo) {
+        Button(
             onClick = { onclick() },
             modifier
                 .height(50.dp)
@@ -405,7 +419,8 @@ fun CardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
             colors = ButtonDefaults.buttonColors(
                 containerColor = VerdeBuscar,
                 disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.White),
+                disabledContentColor = Color.White
+            ),
             contentPadding = PaddingValues(16.dp)
         ) {
             Image(
@@ -420,9 +435,8 @@ fun CardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
                 modifier = Modifier.padding(start = 8.dp)
             )
         }
-    }
-    else{
-        Button (
+    } else {
+        Button(
             onClick = { onclick() },
             modifier
                 .height(50.dp)
@@ -430,7 +444,8 @@ fun CardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0, 0, 0, 0),
                 disabledContainerColor = Color.LightGray,
-                disabledContentColor = Color.White),
+                disabledContentColor = Color.White
+            ),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             Image(
@@ -450,7 +465,14 @@ fun CardFiltro(tituloCard: String, imagePainter: Painter, descricaoConteudo: Str
 
 @Composable
 fun ListarOficinas(modifier: Modifier) {
-    val listaOficinas = listOf("Fast Motors","Fast Motors","Fast Motors","Fast Motors","Fast Motors","Fast Motors")
+    val listaOficinas = listOf(
+        "Fast Motors",
+        "Fast Motors",
+        "Fast Motors",
+        "Fast Motors",
+        "Fast Motors",
+        "Fast Motors"
+    )
 
     // Agrupa os serviços em pares
     val groupedOficinas = listaOficinas.chunked(2)
@@ -480,10 +502,10 @@ fun ListarOficinas(modifier: Modifier) {
                                 .background(color = Color(240, 239, 236, 210))
                         ) {}
 
-                        Column (
+                        Column(
                             Modifier.padding(bottom = 10.dp)
                         ) {
-                            Row (
+                            Row(
                                 Modifier
                                     .fillMaxWidth()
                                     .padding(start = 5.dp, end = 5.dp, top = 5.dp),
@@ -497,9 +519,9 @@ fun ListarOficinas(modifier: Modifier) {
                                     modifier = Modifier.padding(top = 5.dp),
                                     fontFamily = PRODUCT_SANS_FAMILY,
                                 )
-                                Row (
+                                Row(
                                     Modifier.padding(top = 7.dp)
-                                ){
+                                ) {
                                     Image(
                                         painter = painterResource(R.mipmap.icon_stars),
                                         contentDescription = "Imagem de Estrela",
@@ -514,7 +536,7 @@ fun ListarOficinas(modifier: Modifier) {
                                     )
                                 }
                             }
-                            Row (
+                            Row(
                                 Modifier
                                     .fillMaxWidth()
                                     .padding(start = 5.dp, end = 5.dp),
@@ -531,7 +553,7 @@ fun ListarOficinas(modifier: Modifier) {
                                     fontSize = 14.sp, fontFamily = PRODUCT_SANS_FAMILY
                                 )
                             }
-                            Row (
+                            Row(
                                 Modifier
                                     .fillMaxWidth()
                                     .padding(start = 5.dp, end = 5.dp, top = 6.dp),
@@ -541,14 +563,14 @@ fun ListarOficinas(modifier: Modifier) {
                                     contentDescription = "Icone de ponto de localização",
                                     Modifier.size(11.dp)
                                 )
-                                Row (
+                                Row(
                                     Modifier.padding(start = 4.dp)
                                 ) {
                                     Text(
                                         text = "Av. Miguel Ferreira de Melo. 500",
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         fontSize = 10.sp,
-                                        color = Color(0,0,0, 180)
+                                        color = Color(0, 0, 0, 180)
                                     )
                                 }
                             }
@@ -561,29 +583,29 @@ fun ListarOficinas(modifier: Modifier) {
 }
 
 @Composable
-fun TelaBaseOSP(navController: NavController, titulo: String){
-    Column (
+fun TelaBaseOSP(navController: NavController, titulo: String) {
+    Column(
         Modifier
             .padding(top = 40.dp, start = 20.dp, end = 20.dp)
             .verticalScroll(
                 rememberScrollState()
             )
     ) {
-        Row(){
+        Row() {
             ArrowBackButton(navController = navController)
             Row(
                 Modifier
                     .fillMaxWidth()
                     .padding(end = 35.dp),
                 horizontalArrangement = Arrangement.Center
-            ){
+            ) {
                 Image(
                     painter = painterResource(R.mipmap.logo_buscar),
                     contentDescription = "Logo do Buscar!"
                 )
             }
         }
-        Row (
+        Row(
             Modifier
                 .padding(top = 10.dp)
                 .fillMaxWidth(),
@@ -596,7 +618,7 @@ fun TelaBaseOSP(navController: NavController, titulo: String){
                 fontFamily = PRODUCT_SANS_FAMILY,
                 fontWeight = FontWeight.Bold
             )
-            Row () {
+            Row() {
                 BotaoPesquisa(false)
                 Button(
                     onClick = { /*TODO*/ },
@@ -604,7 +626,7 @@ fun TelaBaseOSP(navController: NavController, titulo: String){
                         .padding(0.dp)
                         .width(40.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0,0,0, 0)
+                        containerColor = Color(0, 0, 0, 0)
                     ),
                     contentPadding = PaddingValues(0.dp)
                 ) {
@@ -618,7 +640,7 @@ fun TelaBaseOSP(navController: NavController, titulo: String){
                 }
             }
         }
-        Row (
+        Row(
             Modifier.padding(top = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
@@ -639,7 +661,7 @@ fun TelaBaseOSP(navController: NavController, titulo: String){
                 onclick = {}
             )
         }
-        Row (
+        Row(
             Modifier
                 .padding(top = 20f.dp)
                 .fillMaxWidth(),
@@ -652,15 +674,15 @@ fun TelaBaseOSP(navController: NavController, titulo: String){
 }
 
 @Composable
-fun ListarOS(){
+fun ListarOS() {
     val listaOs = listOf("01258", "01258", "01258")
 
-    Column (
+    Column(
         Modifier.padding(top = 36.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        for (os in listaOs){
-            Row (
+        for (os in listaOs) {
+            Row(
                 Modifier
                     .fillMaxWidth()
                     .height(80.dp)
@@ -669,7 +691,7 @@ fun ListarOS(){
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column (
+                Column(
                     Modifier.padding(horizontal = 20.dp)
                 ) {
                     Text(
@@ -681,10 +703,10 @@ fun ListarOS(){
                     )
                     Text(
                         text = "CMM-5861",
-                        color = Color(130,130,130)
+                        color = Color(130, 130, 130)
                     )
                 }
-                Row (
+                Row(
                     Modifier.padding(horizontal = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -737,8 +759,8 @@ fun CustomInputPerfil(
 }
 
 @Composable
-fun CardAgenda(dia: String, mes: String){
-    Column (
+fun CardAgenda(dia: String, mes: String) {
+    Column(
         Modifier
             .width(160.dp)
             .height(200.dp)
@@ -747,7 +769,7 @@ fun CardAgenda(dia: String, mes: String){
             .padding(20.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Row (
+        Row(
             Modifier
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -799,7 +821,7 @@ fun CardAgenda(dia: String, mes: String){
 }
 
 @Composable
-fun ListarAgenda(){
+fun ListarAgenda() {
     val listaCompromissos = listOf(
         Pair(11, "SET"),
         Pair(19, "OUT"),
@@ -807,7 +829,7 @@ fun ListarAgenda(){
     )
 
     val groupedCompromissos = listaCompromissos.chunked(2)
-    Column (
+    Column(
         Modifier.padding(top = 0.dp),
     ) {
         for (grupo in groupedCompromissos) {
@@ -827,8 +849,8 @@ fun ListarAgenda(){
 
 @Composable
 fun NavigationBar(
-selectedTabIndex: Int, // Tab atualmente selecionada
-onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
+    selectedTabIndex: Int, // Tab atualmente selecionada
+    onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
 ) {
     BottomNavigation(
         backgroundColor = Color.White,
@@ -887,7 +909,9 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
 
     Scaffold(
         bottomBar = {
-            NavigationBar(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+            NavigationBar(
+                selectedTabIndex = selectedTabIndex,
+                onTabSelected = { selectedTabIndex = it })
         }
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -896,7 +920,11 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
                 enter = slideInHorizontally(initialOffsetX = { -1000 }) + fadeIn(),
                 exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             ) {
-                TelaInicial(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it }, sessaoUsuario = sessaoUsuario)
+                TelaInicial(
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = { selectedTabIndex = it },
+                    sessaoUsuario = sessaoUsuario
+                )
             }
 
             AnimatedVisibility(
@@ -904,7 +932,9 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
                 enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn(),
                 exit = slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
             ) {
-                TelaSOS(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+                TelaSOS(
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = { selectedTabIndex = it })
             }
 
             AnimatedVisibility(
@@ -912,7 +942,9 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
                 enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn(),
                 exit = slideOutHorizontally(targetOffsetX = { 1000 }) + fadeOut()
             ) {
-                TelaConsultaOS(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+                TelaConsultaOS(
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = { selectedTabIndex = it })
             }
 
             AnimatedVisibility(
@@ -920,16 +952,19 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
                 enter = slideInHorizontally(initialOffsetX = { 1000 }) + fadeIn(),
                 exit = slideOutHorizontally(targetOffsetX = { -1000 }) + fadeOut()
             ) {
-                TelaPerfil(selectedTabIndex = selectedTabIndex, onTabSelected = { selectedTabIndex = it })
+                TelaPerfil(
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = { selectedTabIndex = it })
             }
         }
     }
 }
 
 @Composable
-fun CardSOS(oficina: Oficina){
+fun CardSOS(oficina: Oficina) {
 
-    val imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+    val imageUrl =
+        "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
 
     Box(
         modifier = Modifier
@@ -943,7 +978,9 @@ fun CardSOS(oficina: Oficina){
             model = imageUrl, // URL da imagem
             contentDescription = "Logo da ${oficina.nome}",
             contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize().padding(0.dp) // Ajuste o tamanho conforme necessário
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp) // Ajuste o tamanho conforme necessário
         )
 
         // Conteúdo do Card sobreposto
@@ -1035,7 +1072,7 @@ fun CardSOS(oficina: Oficina){
                         .fillMaxWidth()
                         .weight(2.5f)
                         .clip(RoundedCornerShape(40.dp))
-                        .background(Color(240,240,240,200))
+                        .background(Color(240, 240, 240, 200))
                 ) {
                     Column(
                         Modifier
@@ -1120,7 +1157,7 @@ fun CardSOS(oficina: Oficina){
 }
 
 @Composable
-fun CardFidelidade(){
+fun CardFidelidade() {
     Box(
         modifier = Modifier
             .padding(top = 20.dp)
@@ -1128,12 +1165,12 @@ fun CardFidelidade(){
             .clip(RoundedCornerShape(20.dp))
             .fillMaxWidth()
             .background(Color(235, 235, 235))
-    ){
-        Column (
+    ) {
+        Column(
             Modifier
                 .padding(20.dp)
         ) {
-            Row () {
+            Row() {
                 Text(
                     text = stringResource(R.string.label_tituloOficinas),
                     fontSize = 18.sp,
@@ -1147,12 +1184,12 @@ fun CardFidelidade(){
                     text = stringResource(R.string.label_desconto),
                     fontFamily = PRODUCT_SANS_FAMILY,
                     fontSize = 14.sp,
-                    color = Color(70,70,70)
+                    color = Color(70, 70, 70)
                 )
             }
             Row {
                 Column {
-                    Row (
+                    Row(
                         Modifier
                             .padding(top = 10.dp)
                             .clip(RoundedCornerShape(10.dp))
@@ -1160,7 +1197,7 @@ fun CardFidelidade(){
                             .fillMaxWidth()
                             .background(Color(200, 200, 200))
                     ) {}
-                    Row (
+                    Row(
                         Modifier
                             .padding(top = 5.dp)
                             .fillMaxWidth(),
@@ -1170,7 +1207,7 @@ fun CardFidelidade(){
                             text = stringResource(R.string.label_exemploVisitas),
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontSize = 14.sp,
-                            color = Color(100,100,100)
+                            color = Color(100, 100, 100)
                         )
                     }
                 }
@@ -1208,4 +1245,23 @@ fun ResultDialog(title: String, text: String, icon: ImageVector, onDismiss: () -
             }
         },
     )
+}
+
+@Composable
+fun MotionLoading() {
+    Box(modifier = Modifier.fillMaxSize().zIndex(1f)){
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.background.copy(alpha = 0.5f))
+                .align(Alignment.Center),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(48.dp),
+                color = VerdeBuscar,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
+        }
+    }
 }

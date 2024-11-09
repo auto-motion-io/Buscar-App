@@ -1,6 +1,7 @@
 package com.example.futurobuscartelas.login
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -26,13 +27,17 @@ class ForgotPasswordViewModel : ViewModel() {
 
     val buscarApi: BuscarApi by inject(BuscarApi::class.java)
 
+    var isLoading = mutableStateOf(false)
+        private set
 
     @OptIn(DelicateCoroutinesApi::class)
     fun recuperarSenha() {
         val sendEmailDTO = SendEmailDTO(email.value)
         GlobalScope.launch {
             try {
+                isLoading.value = true
                 val resposta = buscarApi.setToken(sendEmailDTO, "senha")
+                isLoading.value = false
                 Log.i("api", "res ${resposta}")
                 if (resposta.isSuccessful) {
                     steps.intValue = 2
@@ -48,30 +53,33 @@ class ForgotPasswordViewModel : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
-                Log.i("api",e.toString())
+                Log.i("api", e.toString())
                 errorState.value = ErrorState(
                     hasError = true,
                     message = "Um erro inesperado ocorreu."
                 )
+                isLoading.value = false
             }
         }
     }
 
 
-
     @OptIn(DelicateCoroutinesApi::class)
     fun atualizarSenha() {
-        val confirmTokenDTO = ConfirmTokenDTO(email.value,novaSenha.value,token.value)
+        val tokenUpperCase = token.value.uppercase()
+        val confirmTokenDTO = ConfirmTokenDTO(email.value, novaSenha.value, tokenUpperCase)
         GlobalScope.launch {
             try {
+                isLoading.value = true
                 val resposta = buscarApi.confirmarToken(confirmTokenDTO, "senha")
+                isLoading.value = false
                 Log.i("api", "res ${resposta}")
                 if (resposta.isSuccessful) {
-                    successState.value = SuccessState(true,"Sua senha foi alterada com sucesso")
-                } else if (resposta.code() == 404) {
+                    successState.value = SuccessState(true, "Sua senha foi alterada com sucesso.")
+                } else if (resposta.code() == 401) {
                     errorState.value = ErrorState(
                         hasError = true,
-                        message = "Não encontramos registro do seu email em nosso sistema"
+                        message = "Token inválido, tente novamente."
                     )
                 } else {
                     errorState.value = ErrorState(
@@ -80,11 +88,12 @@ class ForgotPasswordViewModel : ViewModel() {
                     )
                 }
             } catch (e: Exception) {
-                Log.i("api",e.toString())
+                Log.i("api", e.toString())
                 errorState.value = ErrorState(
                     hasError = true,
                     message = "Um erro inesperado ocorreu."
                 )
+                isLoading.value = false
             }
         }
     }

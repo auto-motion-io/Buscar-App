@@ -2,16 +2,22 @@ package com.example.futurobuscartelas.login
 
 
 import android.util.Log
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +26,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
@@ -38,6 +45,7 @@ import com.example.futurobuscartelas.ui.theme.BaseScreenLayout
 import com.example.futurobuscartelas.ui.theme.CustomInputMotion
 import com.example.futurobuscartelas.ui.theme.DefaultButtonMotion
 import com.example.futurobuscartelas.ui.theme.ErrorColor
+import com.example.futurobuscartelas.ui.theme.MotionLoading
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.ResultDialog
 import com.example.futurobuscartelas.ui.theme.UpperLabelText
@@ -52,9 +60,13 @@ fun ForgotPasswordScreen(navController: NavController) {
     val errorState by viewmodel.errorState
     val successState by viewmodel.successState
     var steps by viewmodel.steps
-
+    var isLoading by viewmodel.isLoading
 
     BaseScreenLayout {
+        if (isLoading) {
+            MotionLoading()
+        }
+
         if (errorState.hasError) {
             ResultDialog(
                 title = "Ocorreu um erro ao recuperar a senha",
@@ -70,9 +82,11 @@ fun ForgotPasswordScreen(navController: NavController) {
                 text = "Sua senha foi atualizada com sucesso. Agora, você pode usar sua nova senha para acessar sua conta.",
                 icon = Icons.Default.Check
             ) {
+                navController.navigate("login")
                 viewmodel.successState.value = SuccessState()
             }
         }
+
 
         if (steps == 1) {
             ForgotPasswordStepOne(viewmodel = viewmodel, navController = navController)
@@ -80,9 +94,7 @@ fun ForgotPasswordScreen(navController: NavController) {
             ForgotPasswordStepTwo(viewmodel = viewmodel, navController = navController)
         }
 
-
     }
-
 }
 
 @Composable

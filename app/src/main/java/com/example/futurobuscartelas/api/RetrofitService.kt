@@ -18,7 +18,12 @@ object RetrofitService {
         /*
         cliente OkHttp que tem um interceptor, o InterceptorTokenJWT
          */
-        val okHttpClient = OkHttpClient.Builder().addInterceptor(InterceptorTokenJWT(token)).build()
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(InterceptorTokenJWT(token))
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .build()
 
         val cliente = Retrofit.Builder()
             .client(okHttpClient) // aqui estamos dizendo que o cliente Retrofit usará o cliente OkHttp que criamos
@@ -49,14 +54,14 @@ class InterceptorTokenJWT(val token: String) : Interceptor {
 
         val shouldAddAuthHeader =
             !requestPath.contains("/login") &&
-            !requestPath.contains("/cadastrar") &&
-            !requestPath.contains("/set-token")
-            !requestPath.contains("/confirmar-token")
+                !requestPath.contains("/cadastrar") &&
+                !requestPath.contains("/set-token") &&
+                !requestPath.contains("/confirmar-token")
 
         Log.i("api", "Path = ${requestPath}, should add auth header? $shouldAddAuthHeader")
 
         if (shouldAddAuthHeader && token.isNotEmpty()) {
-            Log.i("api","adding token to the request")
+            Log.i("api", "adding token to the request")
             currentRequest.addHeader("Authorization", "Bearer $token")
         }
         val newRequest = currentRequest.build()
