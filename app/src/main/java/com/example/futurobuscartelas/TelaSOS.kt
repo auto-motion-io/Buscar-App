@@ -92,7 +92,7 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
             Column (
                 Modifier
                     .fillMaxSize()
-                    .padding(top = 20.dp, bottom = 20.dp, start = 30.dp, end = 30.dp)
+                    .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
             ) {
                 Row (
                     Modifier
@@ -128,6 +128,8 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                         )
                     }
                 }
+
+                CardSOS()
 
                 // Box para exibir os cartões
                 Box(Modifier.fillMaxSize()) {
