@@ -120,4 +120,8 @@ dependencies {
 
     //KOIN
     implementation("io.insert-koin:koin-android:4.0.0")
+
+    //LOCALIZACAO
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
 }

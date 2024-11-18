@@ -1,5 +1,7 @@
 package com.example.futurobuscartelas
 
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
+import com.example.futurobuscartelas.api.google.LocationRepository
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.signup.SignUpViewModel
 import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
@@ -53,9 +56,13 @@ import com.example.futurobuscartelas.ui.theme.CardSOS
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
+@OptIn(DelicateCoroutinesApi::class)
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
     val viewModel: TelasViewModel = viewModel()
@@ -66,6 +73,32 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
     LaunchedEffect(Unit) {
         viewModel.listarOficinas()
     }
+    val repository: LocationRepository = LocationRepository()
+    val apiKey = "euleonardobentonaodoessemolemesmocompreguica"
+    val address = "1414001"  // CEP e número do local
+
+    GlobalScope.launch {
+        repository.fetchCoordinates(apiKey, address) { coordinates ->
+            if (coordinates != null) {
+                val currentLat = -23.457142  // Latitude atual do aparelho
+                val currentLon = -46.692007  // Longitude atual do aparelho
+
+                val origins = "$currentLat,$currentLon"
+                val destinations = "${coordinates.first},${coordinates.second}"
+
+                repository.fetchDistance(apiKey, origins, destinations) { distance ->
+                    if (distance != null) {
+                        Log.i("Location", "Distance: $distance")
+                    } else {
+                        Log.i("Location", "Erro ao obter distancia.")
+                    }
+                }
+            } else {
+                Log.i("Location", "Erro ao obter as coordenadas.")
+            }
+        }
+    }
+
 
     // Use derivedStateOf para garantir que visibleCards atualize com oficinas
     val visibleCards = remember { mutableStateListOf<Oficina>() }
@@ -75,7 +108,7 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
         visibleCards.addAll(oficinas)
     }
 
-    Scaffold (
+    Scaffold(
         bottomBar = {
             NavigationBar(
                 selectedTabIndex = selectedTabIndex,
@@ -83,18 +116,18 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
             )
         }
     ) { paddingValues ->
-        Column (
+        Column(
             Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            Column (
+            Column(
                 Modifier
                     .fillMaxSize()
                     .padding(top = 20.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
             ) {
-                Row (
+                Row(
                     Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -106,7 +139,7 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                     )
 
                 }
-                Row (
+                Row(
                     Modifier
                         .padding(top = 20.dp, bottom = 20.dp)
                         .fillMaxWidth(),
@@ -119,7 +152,7 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                         fontWeight = FontWeight.Bold,
                         color = VerdeBuscar
                     )
-                    Row (
+                    Row(
                     ) {
                         Image(
                             painter = painterResource(R.mipmap.icon_engrenagem),
@@ -216,7 +249,12 @@ fun SwipeableCard(
                     }
                 )
             }
-            .offset { IntOffset(offsetX.value.roundToInt(), 0) } // Controla a posição do card com o offset
+            .offset {
+                IntOffset(
+                    offsetX.value.roundToInt(),
+                    0
+                )
+            } // Controla a posição do card com o offset
     ) {
         cardContent() // Renderiza o conteúdo do cartão
     }
