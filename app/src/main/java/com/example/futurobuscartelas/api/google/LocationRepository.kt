@@ -21,13 +21,10 @@ class LocationRepository {
                     response: retrofit2.Response<GeocodeResponse>
                 ) {
                     if (response.isSuccessful) {
-                        Log.i("Location", "Success body ${response.body()}")
                         val location = response.body()?.results?.firstOrNull()?.geometry?.location
                         if (location != null) {
-                            Log.i("Location", "Location != null $location ")
                             callback(Pair(location.lat, location.lng))
                         } else {
-                            Log.i("Location", "Success ${response.body()}")
                             callback(null)
                         }
                     } else {
@@ -47,7 +44,7 @@ class LocationRepository {
         apiKey: String,
         origins: String,
         destinations: String,
-        callback: (String?) -> Unit
+        callback: (Int?) -> Unit
     ) {
         val service = RetrofitClient.instance
         service.getDistance(origins, destinations, apiKey)
@@ -57,12 +54,8 @@ class LocationRepository {
                     response: retrofit2.Response<DistanceMatrixResponse>
                 ) {
                     if (response.isSuccessful) {
-                        Log.i(
-                            "Location",
-                            "${response.body()?.rows?.firstOrNull()?.elements?.firstOrNull()}"
-                        )
                         val distance =
-                            response.body()?.rows?.firstOrNull()?.elements?.firstOrNull()?.distance?.text
+                            response.body()?.rows?.firstOrNull()?.elements?.firstOrNull()?.distance?.value
                         callback(distance)
                     } else {
                         callback(null)
@@ -81,14 +74,13 @@ class LocationRepository {
         if (LocationPermissions.hasLocationPermission(context)) {
             LocationManager.getCurrentLocation { location ->
                 location?.let {
-                    Log.i("Location", "Latitude: ${it.latitude}, Longitude: ${it.longitude}")
                     locationObject = UserLocation(it.latitude.toString(), it.longitude.toString())
                 } ?: run {
-                    Log.i("Location", "Localização indisponível.")
+                    Log.e("Location", "Localização indisponível.")
                 }
             }
         } else {
-            Log.i("Location", "Permissão de localização não concedida.")
+            Log.e("Location", "Permissão de localização não concedida.")
         }
 
         return locationObject

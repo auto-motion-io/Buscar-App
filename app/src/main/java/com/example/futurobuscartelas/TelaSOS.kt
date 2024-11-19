@@ -39,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -51,6 +52,7 @@ import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.api.google.LocationRepository
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.signup.SignUpViewModel
+import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
 import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.CardSOS
 import com.example.futurobuscartelas.ui.theme.NavigationBar
@@ -65,38 +67,13 @@ import kotlin.math.roundToInt
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
-    val viewModel: TelasViewModel = viewModel()
+    val viewModel:SosViewModel = viewModel()
     val oficinas = viewModel.getOficinas() // Obtém a lista de oficinas atualizadas do ViewModel
     var showMessage by remember { mutableStateOf(false) } // Estado para controlar a mensagem
-
+    val context = LocalContext.current
     // Chamamos listarOficinas quando a tela é composta
     LaunchedEffect(Unit) {
-        viewModel.listarOficinas()
-    }
-    val repository: LocationRepository = LocationRepository()
-    val apiKey = "euleonardobentonaodoessemolemesmocompreguica"
-    val address = "1414001"  // CEP e número do local
-
-    GlobalScope.launch {
-        repository.fetchCoordinates(apiKey, address) { coordinates ->
-            if (coordinates != null) {
-                val currentLat = -23.457142  // Latitude atual do aparelho
-                val currentLon = -46.692007  // Longitude atual do aparelho
-
-                val origins = "$currentLat,$currentLon"
-                val destinations = "${coordinates.first},${coordinates.second}"
-
-                repository.fetchDistance(apiKey, origins, destinations) { distance ->
-                    if (distance != null) {
-                        Log.i("Location", "Distance: $distance")
-                    } else {
-                        Log.i("Location", "Erro ao obter distancia.")
-                    }
-                }
-            } else {
-                Log.i("Location", "Erro ao obter as coordenadas.")
-            }
-        }
+        viewModel.listarOficinas(context)
     }
 
 
@@ -104,6 +81,8 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
     val visibleCards = remember { mutableStateListOf<Oficina>() }
 
     LaunchedEffect(oficinas) {
+        //FIXME Aqui a distancia da oficina vem null (mesmo quando nao e para vir), na viewmodel nunca vem
+        Log.i("Location","Oficinas ${oficinas.toList()}")
         visibleCards.clear()
         visibleCards.addAll(oficinas)
     }
