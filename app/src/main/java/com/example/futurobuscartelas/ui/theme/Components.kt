@@ -963,12 +963,18 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
 
 @Composable
 fun CardSOS(oficina: Oficina) {
+<<<<<<< HEAD
 
     var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
 
     if(oficina.logoUrl.isNotBlank()){
         imageUrl = oficina.logoUrl;
     }
+=======
+    Log.i("Location", "distancia dentro do cardsos ${oficina.distance}")
+    val imageUrl =
+        "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+>>>>>>> 71352617a19da47991e4bf776168ba0aec8e06c5
 
     Box(
         modifier = Modifier
@@ -1099,10 +1105,10 @@ fun CardSOS(oficina: Oficina) {
                                 color = VerdeBuscar
                             )
                             Text(
-                                text = stringResource(R.string.label_distancia),
+                                text = oficina.distance?.toString() ?: "Distância indisponível",
                                 fontSize = 16.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY,
-                                color = Color(50, 50, 50),
+                                color = if (oficina.distance != null) Color(50, 50, 50) else Color.Gray,
                                 modifier = Modifier.padding(top = 5.dp)
                             )
                             Row(Modifier.padding(top = 5.dp)) {
