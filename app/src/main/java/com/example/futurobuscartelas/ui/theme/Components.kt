@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas.ui.theme
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -61,10 +62,10 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
-import com.example.futurobuscartelas.TelaConsultaOS
-import com.example.futurobuscartelas.TelaInicial
-import com.example.futurobuscartelas.TelaPerfil
-import com.example.futurobuscartelas.TelaSOS
+import com.example.futurobuscartelas.telas.os.TelaConsultaOS
+import com.example.futurobuscartelas.telas.home.TelaInicial
+import com.example.futurobuscartelas.telas.perfil.TelaPerfil
+import com.example.futurobuscartelas.telas.sos.TelaSOS
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.Oficina
 
@@ -317,12 +318,10 @@ fun AddCategoria(categoria: String) {
 }
 
 @Composable
-fun ListarFavoritos(modifier: Modifier) {
-    val listaFavoritos =
-        listOf("Favorito 1", "Favorito 2", "Favorito 3", "Favorito 4", "Favorito 5", "Favorito 6")
+fun ListarFavoritos(modifier: Modifier, oficinas:List<Oficina>) {
 
     // Agrupa os serviços em pares
-    val groupedFavoritos = listaFavoritos.chunked(2)
+    val groupedFavoritos = oficinas.chunked(2)
 
     Column(modifier = modifier) {
         for (grupo in groupedFavoritos) {
@@ -344,7 +343,7 @@ fun ListarFavoritos(modifier: Modifier) {
                                 .background(color = Color(240, 239, 236))
                         ) {}
                         Text(
-                            text = servico,
+                            text = servico.nome,
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
@@ -853,6 +852,7 @@ fun NavigationBar(
     onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
 ) {
     BottomNavigation(
+        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
         backgroundColor = Color.White,
         contentColor = Color.Black
     ) {
@@ -903,6 +903,7 @@ fun NavigationBar(
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(sessaoUsuario: SessaoUsuario) {
     var selectedTabIndex by remember { mutableStateOf(0) }
@@ -913,7 +914,7 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
                 selectedTabIndex = selectedTabIndex,
                 onTabSelected = { selectedTabIndex = it })
         }
-    ) { paddingValues ->
+    ) {  paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             AnimatedVisibility(
                 visible = selectedTabIndex == 0,
@@ -963,8 +964,11 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
 @Composable
 fun CardSOS(oficina: Oficina) {
 
-    val imageUrl =
-        "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+    var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+
+    if(oficina.logoUrl.isNotBlank()){
+        imageUrl = oficina.logoUrl;
+    }
 
     Box(
         modifier = Modifier
@@ -995,20 +999,22 @@ fun CardSOS(oficina: Oficina) {
                     .weight(0.43f)
                     .fillMaxSize()
             ) {
-                Row(
-                    Modifier
-                        .width(50.dp)
-                        .height(50.dp)
-                        .clip(RoundedCornerShape(100.dp))
-                        .background(color = Color(230, 230, 230)),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Image(
-                        painter = painterResource(R.mipmap.icon_fav_semcor),
-                        contentDescription = "Imagem de Coração(Favoritar)",
-                        Modifier.size(20.dp)
-                    )
+                Button(onClick = {  }) {
+                    Row(
+                        Modifier
+                            .width(50.dp)
+                            .height(50.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                            .background(color = Color(230, 230, 230)),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            painter = painterResource(R.mipmap.icon_fav_semcor),
+                            contentDescription = "Imagem de Coração(Favoritar)",
+                            Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
 
@@ -1249,7 +1255,9 @@ fun ResultDialog(title: String, text: String, icon: ImageVector, onDismiss: () -
 
 @Composable
 fun MotionLoading() {
-    Box(modifier = Modifier.fillMaxSize().zIndex(1f)){
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .zIndex(1f)){
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -1263,5 +1271,48 @@ fun MotionLoading() {
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,
             )
         }
+    }
+}
+
+@Composable
+fun ListarProdutos(){
+    Row (
+        Modifier
+            .padding(top = 20.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .height(60.dp)
+            .fillMaxWidth()
+            .background(Color(240, 240, 240)),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row (
+            Modifier
+                .padding(horizontal = 10.dp)
+        ) {
+            Image(
+                painter = painterResource(R.mipmap.icon_chave_filtro),
+                contentDescription = "Icone de chave de boca",
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(25.dp)
+            )
+            Column {
+                Text(
+                    text = stringResource(R.string.label_exemplo_filtro),
+                    fontSize = 14.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY
+                )
+                Text(
+                    text = stringResource(R.string.label_exemplo_unidade),
+                    fontSize = 10.sp,
+                    fontFamily = PRODUCT_SANS_FAMILY
+                )
+            }
+        }
+        Text(
+            text = stringResource(id = R.string.label_preco),
+            modifier = Modifier.padding(end = 20.dp)
+        )
     }
 }

@@ -1,4 +1,4 @@
-package com.example.futurobuscartelas
+package com.example.futurobuscartelas.telas.perfil
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.ui.theme.ArrowBackButton
 import com.example.futurobuscartelas.ui.theme.ListarAgenda
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY

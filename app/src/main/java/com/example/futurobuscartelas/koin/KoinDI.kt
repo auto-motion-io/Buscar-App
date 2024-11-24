@@ -1,8 +1,8 @@
 package com.example.futurobuscartelas.koin
 
 
-import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.PitstopApi
+import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.RetrofitService
 import org.koin.dsl.module
 

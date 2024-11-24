@@ -22,6 +22,7 @@ import com.example.futurobuscartelas.onboarding.BeforeSignUpScreen
 import com.example.futurobuscartelas.onboarding.LoadingScreen
 import com.example.futurobuscartelas.onboarding.MainViewModel
 import com.example.futurobuscartelas.signup.SignUpScreen
+import com.example.futurobuscartelas.telas.home.OficinaScreen
 import com.example.futurobuscartelas.ui.theme.MainScreen
 import org.koin.android.ext.android.inject
 
@@ -74,7 +75,7 @@ fun MyApp(sessaoUsuario: SessaoUsuario){
             composable("login") { LoginScreen(navController,sessaoUsuario) }
             composable("forgot-password"){ ForgotPasswordScreen(navController)}
             composable("before-signup"){ BeforeSignUpScreen(navController = navController) }
-            composable("oficina"){ OficinaScreen(name = "")}
+            composable("oficina"){ OficinaScreen(name = "") }
             composable("signup"){ SignUpScreen(navController = navController) }
         }
 

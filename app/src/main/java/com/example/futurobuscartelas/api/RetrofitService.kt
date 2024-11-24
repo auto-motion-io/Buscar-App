@@ -1,6 +1,7 @@
 package com.example.futurobuscartelas.api
 
 import android.util.Log
+import com.example.futurobuscartelas.api.PitstopApi
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response

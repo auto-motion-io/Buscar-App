@@ -1,4 +1,4 @@
-package com.example.futurobuscartelas
+package com.example.futurobuscartelas.telas.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,14 +36,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import com.example.futurobuscartelas.ui.theme.AddCategoria
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.ListarFavoritos
-import com.example.futurobuscartelas.ui.theme.MainScreen
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import org.koin.android.ext.android.inject
 
@@ -50,6 +53,7 @@ import org.koin.android.ext.android.inject
 class TelaInicialActivity : ComponentActivity() {
 
     private val sessaoUsuario: SessaoUsuario by inject()
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +66,12 @@ class TelaInicialActivity : ComponentActivity() {
 
 @Composable
 fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuario: SessaoUsuario) {
+    val viewModel: TelasViewModel = viewModel()
+    val oficinas = viewModel.getOficinas()
+
+    LaunchedEffect(Unit) {
+        viewModel.listarOficinasFavoritas(sessaoUsuario.id)
+    }
 
     var token by remember { mutableStateOf("") }
     Log.i("session", sessaoUsuario.nome)
@@ -202,7 +212,7 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuari
                             fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
-                    ListarFavoritos(Modifier)
+                    ListarFavoritos(Modifier, oficinas)
                 }
             }
         }

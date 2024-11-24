@@ -17,6 +17,11 @@
         android:theme="@style/Theme.FuturoBuscarTelas"
         tools:targetApi="31">
         <activity
+            android:name=".telas.os.TelaOS"
+            android:exported="false"
+            android:label="@string/title_activity_tela_os"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
             android:name=".login.ForgotPasswordScreen"
             android:exported="false"
             android:label="@string/title_activity_forgot_password_screen"
@@ -56,7 +61,7 @@
             android:exported="false"
             android:label="@string/title_activity_tela_pesquisar_oficinas"
             android:theme="@style/Theme.FuturoBuscarTelas" />
-        <activity android:name=".TelaInicialActivity" />
+        <activity android:name=".telas.home.TelaInicialActivity" />
         <activity
             android:name=".BeforeSignUpScreen"
             android:exported="false"

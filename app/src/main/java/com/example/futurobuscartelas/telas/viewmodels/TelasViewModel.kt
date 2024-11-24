@@ -3,47 +3,89 @@ package com.example.futurobuscartelas.telas.viewmodels
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.PitstopApi
-import com.example.futurobuscartelas.api.RetrofitService
+import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.models.OrdemServico
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.java.KoinJavaComponent.inject
 
 class TelasViewModel : ViewModel() {
 
-    // privado porque assim evitamos que alguém de fora mexa no conteúdo da lista
-    // para acessá-la de fora, usamos o getFilmes() que retorna uma cópia de seu conteúdo
     private val oficinas = mutableStateListOf<Oficina>()
+    private val ordensDeServico = mutableStateListOf<OrdemServico>()
 
-    private val pitstopApi: PitstopApi
+    private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
 
-    init {
-        pitstopApi = RetrofitService.getApiPitstop()
-    }
+    private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
 
     fun getOficinas() = oficinas.toList()
+    fun getOrdensDeServico() = ordensDeServico.toList()
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun listarOficinas() {
         GlobalScope.launch {
             try {
-                val resposta = pitstopApi.listarTodos() // aqui fizemos o GET p/ a API
+                val resposta = pitstopApi.listarTodos()
                 val listaOficinas = resposta.body();
-                if (resposta.isSuccessful) { // status 2xx (200, 201, 204 etc)?
+                if (resposta.isSuccessful) {
                     Log.i("api", "users da API: ${resposta.body()}")
-                    oficinas.clear() // evitando que a lista fique duplicada
+                    oficinas.clear()
                     if (!listaOficinas.isNullOrEmpty()) {
                         oficinas.addAll(listaOficinas)
                     }
 
                 } else {
-                    // resposta.errorBody()?.string() -> assim que pegamos o corpo de uma requisição em caso de erro (status 4xx ou 5xx)
                     Log.e("api", "Erro ao buscar oficinas: ${resposta.errorBody()?.string()}")
                 }
             } catch (exception: Exception) {
-                /* ocorre uma exceção caso:
-                    1. Não foi possível fazer a chamada p/ a API (sem internet, API fora, App sem premissão de internet)
-                    2. O corpo da resposta não pode ser convertido no tipo esperado
-                 */
+                Log.e("api", "Erro ao buscar oficinas", exception)
+            }
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun listarOficinasFavoritas(id:Int) {
+        GlobalScope.launch {
+            try {
+                val resposta = buscarApi.listarOficinas(id)
+                val listaOficinas = resposta.body();
+                if (resposta.isSuccessful) {
+                    Log.i("api", "users da API: ${resposta.body()}")
+                    oficinas.clear()
+                    if (!listaOficinas.isNullOrEmpty()) {
+                        oficinas.addAll(listaOficinas)
+                    }
+
+                } else {
+                    Log.e("api", "Erro ao buscar oficinas: ${resposta.errorBody()?.string()}")
+                }
+            } catch (exception: Exception) {
+                Log.e("api", "Erro ao buscar oficinas", exception)
+            }
+        }
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun listarOsPorCliente(id:Int) {
+        GlobalScope.launch {
+            try {
+                val resposta = buscarApi.listarOsPorCliente(id)
+                val listaOs = resposta.body();
+                if (resposta.isSuccessful) {
+                    Log.i("api", "users da API: ${resposta.body()}")
+                    ordensDeServico.clear()
+                    if (!listaOs.isNullOrEmpty()) {
+                        ordensDeServico.addAll(listaOs)
+                    }
+
+                } else {
+                    Log.e("api", "Erro ao buscar oficinas: ${resposta.errorBody()?.string()}")
+                }
+            } catch (exception: Exception) {
                 Log.e("api", "Erro ao buscar oficinas", exception)
             }
         }
