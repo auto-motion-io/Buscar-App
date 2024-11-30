@@ -21,7 +21,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 class SosViewModel : ViewModel() {
     val repository: LocationRepository = LocationRepository()
-    val apiKey = ""
+    val apiKey = "AIzaSyAwuUkYWSl7wySsNrZuVYpahXS3F49w9xE"
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
@@ -78,13 +78,21 @@ class SosViewModel : ViewModel() {
                     Log.i("api", "Oficinas da API: ${resposta.body()}")
                     oficinas.clear()
                     if (!listaOficinas.isNullOrEmpty()) {
-                        // Calculando a distância para cada oficina
                         listaOficinas.forEach { oficina ->
                             getDistanceFromOficina(context, oficina.cep) { distance ->
                                 oficina.distance = distance
-                                Log.i("Location", "distancia para oficina viewmodel${oficina.nome}: ${oficina.distance}")
-                                // Adicionando a oficina após calcular a distância
-                                oficinas.add(oficina)
+                                Log.i("Location", "distancia para oficina viewmodel ${oficina.nome}: ${oficina.distance}")
+                            }
+
+                            // Preenche os campos de endereço da oficina com a função retornada
+                            viewModelScope.launch {
+                                retornarInfoCep(oficina.cep)?.let { cepInfo ->
+                                    oficina.logradouro = cepInfo.logradouro ?: ""
+                                    oficina.bairro = cepInfo.bairro ?: ""
+                                    oficina.cidade = cepInfo.localidade ?: ""
+                                    Log.i("api", "CEP atualizado para oficina ${oficina.nome}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}")
+                                }
+                                oficinas.add(oficina) // Adiciona após ter preenchido as informações
                             }
                         }
                     }
@@ -97,20 +105,21 @@ class SosViewModel : ViewModel() {
         }
     }
 
-    fun retornarInfoCep(cep: String){
-        viewModelScope.launch {
-            try {
-                val resposta = viaCepApi.getCep(cep)
-                if (resposta.isSuccessful) {
-                    val cepInfo = resposta.body()
-                    infoCep.value = cepInfo
-                    Log.i("api", "InfoCEP da API: ${resposta.body()}")
-                } else {
-                    Log.e("api", "Erro ao buscar cep: ${resposta.errorBody()?.string()}")
+
+    suspend fun retornarInfoCep(cep: String): CepInfo? {
+        return try {
+            val resposta = viaCepApi.getCep(cep)
+            if (resposta.isSuccessful) {
+                resposta.body().also {
+                    Log.i("api", "InfoCEP da API: $it")
                 }
-            } catch (exception: Exception) {
-                Log.e("api", "Erro ao buscar cep", exception)
+            } else {
+                Log.e("api", "Erro ao buscar cep: ${resposta.errorBody()?.string()}")
+                null
             }
+        } catch (exception: Exception) {
+            Log.e("api", "Erro ao buscar cep", exception)
+            null
         }
     }
 

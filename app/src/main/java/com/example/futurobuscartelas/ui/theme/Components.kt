@@ -1000,7 +1000,7 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
 }
 
 @Composable
-fun CardSOS(idUsuario: Int, oficina: Oficina, infoCep: CepInfo?) {
+fun CardSOS(idUsuario: Int, oficina: Oficina) {
     val viewModel: SosViewModel = viewModel()
     var listaOficinasFavoritas = viewModel.getOficinasFavoritas()
     var liked by remember { mutableStateOf(false) }
@@ -1178,13 +1178,11 @@ fun CardSOS(idUsuario: Int, oficina: Oficina, infoCep: CepInfo?) {
                                     contentDescription = "Imagem de indicação de local",
                                     Modifier.size(20.dp)
                                 )
-                                if (infoCep != null) {
-                                    Text(
-                                        text = infoCep.logradouro + ", " + oficina.numero,
-                                        color = Color(50, 50, 50),
-                                        modifier = Modifier.padding(start = 5.dp)
-                                    )
-                                }
+                                Text(
+                                    text = oficina.logradouro + ", " + oficina.numero + " - " + oficina.bairro,
+                                    color = Color(50, 50, 50),
+                                    modifier = Modifier.padding(start = 5.dp)
+                                )
                             }
                         }
                     }

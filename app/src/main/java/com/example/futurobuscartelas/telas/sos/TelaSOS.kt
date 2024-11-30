@@ -160,35 +160,18 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: 
                 Box(Modifier.fillMaxSize()) {
                     var infoCep by remember { mutableStateOf<CepInfo?>(null) }
                     visibleCards.forEach { oficina ->
+                        SwipeableCard(
+                            cardContent = { CardSOS(sessaoUsuario.id, oficina) }, // Passa os dados da oficina para o CardSOS
+                            onSwipeComplete = {
+                                // Remove o cartão da lista após o swipe
+                                visibleCards.remove(oficina) // Use remove para eliminar diretamente
 
-                        // Carregar as informações de CEP quando a oficina é renderizada
-                        LaunchedEffect(oficina.cep) {
-                            viewModel.retornarInfoCep(oficina.cep)
-                            infoCep = viewModel.getCep().value
-                        }
-
-                        // Renderizar o CardSOS apenas quando as informações de 'infoCep' estiverem prontas
-                        if (infoCep != null) {
-                            SwipeableCard(
-                                cardContent = { CardSOS(sessaoUsuario.id, oficina, infoCep) }, // Passa os dados da oficina para o CardSOS
-                                onSwipeComplete = {
-                                    // Remove o cartão da lista após o swipe
-                                    visibleCards.remove(oficina) // Use remove para eliminar diretamente
-
-                                    // Verifica se não há mais cartões
-                                    if (visibleCards.isEmpty()) {
-                                        showMessage = true // Exibe a mensagem
-                                    }
+                                // Verifica se não há mais cartões
+                                if (visibleCards.isEmpty()) {
+                                    showMessage = true // Exibe a mensagem
                                 }
-                            )
-                        } else {
-                            // Exibe um texto enquanto o infoCep está sendo carregado
-                            Text(
-                                text = "Carregando informações de CEP...",
-                                modifier = Modifier.padding(16.dp),
-                                color = Color.Gray
-                            )
-                        }
+                            }
+                        )
                     }
                 }
 
