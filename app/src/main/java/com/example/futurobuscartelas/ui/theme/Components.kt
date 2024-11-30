@@ -38,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,6 +51,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -59,6 +61,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
@@ -67,7 +70,9 @@ import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.perfil.TelaPerfil
 import com.example.futurobuscartelas.telas.sos.TelaSOS
 import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
 
 @Composable
 fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
@@ -323,34 +328,60 @@ fun ListarFavoritos(modifier: Modifier, oficinas:List<Oficina>) {
     // Agrupa os serviços em pares
     val groupedFavoritos = oficinas.chunked(2)
 
+    var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg"
+
     Column(modifier = modifier) {
-        for (grupo in groupedFavoritos) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                for (servico in grupo) {
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(end = 14.dp)
-                    ) {
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(150.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = servico.nome,
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
+        if(oficinas.isNotEmpty()){
+            for (grupo in groupedFavoritos) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    for (oficina in grupo) {
+                        if(!oficina.logoUrl.isNullOrEmpty()){
+                            imageUrl = oficina.logoUrl
+                        }
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(end = 14.dp)
+                        ) {
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(150.dp)
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(color = Color(240, 239, 236))
+                            ) {
+                                // Imagem de fundo do card
+                                AsyncImage(
+                                    model = imageUrl, // URL da imagem
+                                    contentDescription = "Logo da ${oficina.nome}",
+                                    contentScale = ContentScale.Crop,
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(0.dp) // Ajuste o tamanho conforme necessário
+                                )
+                            }
+                            Text(
+                                text = oficina.nome,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
                     }
                 }
+            }
+        } else{
+            Column {
+                Text(
+                    text = stringResource(R.string.label_semFavoritos),
+                    fontFamily = PRODUCT_SANS_FAMILY,
+                    fontSize = 16.sp,
+                    color = Color(50, 50, 50)
+                )
             }
         }
     }
@@ -852,9 +883,14 @@ fun NavigationBar(
     onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
 ) {
     BottomNavigation(
-        modifier = Modifier.clip(RoundedCornerShape(20.dp)),
-        backgroundColor = Color.White,
-        contentColor = Color.Black
+        modifier = Modifier.clip(RoundedCornerShape(
+            topStart = 30.dp,
+            topEnd = 30.dp,
+            bottomStart = 0.dp,
+            bottomEnd = 0.dp
+        )),
+        backgroundColor = Color(238,238,238),
+        contentColor = Color(59,86,60)
     ) {
         BottomNavigationItem(
             icon = {
@@ -935,7 +971,9 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaSOS(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it })
+                    onTabSelected = { selectedTabIndex = it },
+                    sessaoUsuario = sessaoUsuario
+                )
             }
 
             AnimatedVisibility(
@@ -962,24 +1000,34 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
 }
 
 @Composable
-fun CardSOS(oficina: Oficina) {
-<<<<<<< HEAD
+fun CardSOS(idUsuario: Int, oficina: Oficina, infoCep: CepInfo?) {
+    val viewModel: SosViewModel = viewModel()
+    var listaOficinasFavoritas = viewModel.getOficinasFavoritas()
+    var liked by remember { mutableStateOf(false) }
+    listaOficinasFavoritas.forEach{
+        oficinaFav ->
+        if(oficinaFav.oficina.id == oficina.id && oficinaFav.usuario.idUsuario == idUsuario) {
+            liked = true;
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.listarOficinasFavoritas(idUsuario)
+    }
 
     var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
+    val boxHeight = (screenHeight * 0.75f)
 
     if(oficina.logoUrl.isNotBlank()){
         imageUrl = oficina.logoUrl;
     }
-=======
-    Log.i("Location", "distancia dentro do cardsos ${oficina.distance}")
-    val imageUrl =
-        "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
->>>>>>> 71352617a19da47991e4bf776168ba0aec8e06c5
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .height(boxHeight)
             .clip(RoundedCornerShape(40.dp))
             .background(color = Color(240, 240, 240))
     ) {
@@ -1002,25 +1050,34 @@ fun CardSOS(oficina: Oficina) {
         ) {
             Row(
                 Modifier
-                    .weight(0.43f)
+                    .weight(0.60f)
                     .fillMaxSize()
             ) {
-                Button(onClick = {  }) {
-                    Row(
-                        Modifier
-                            .width(50.dp)
-                            .height(50.dp)
+                Button(
+                    onClick = {
+                        if(liked){
+                            viewModel.removeOficina(idUsuario, oficina.id)
+                            liked = false;
+                        } else{
+                            viewModel.favoritarOficina(idUsuario, oficina.id)
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(230, 230, 230) // Removendo a cor de fundo
+                    ),
+                    shape = RoundedCornerShape(100.dp),
+                    elevation = null, // Removendo elevação
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .size(50.dp)
+                ) {
+                    Image(
+                        painter = if(!liked){painterResource(R.mipmap.icon_fav_semcor)} else{painterResource(R.mipmap.icon_fav)},
+                        contentDescription = "Imagem de Coração(Favoritar)",
+                        modifier = Modifier
+                            .size(20.dp)
                             .clip(RoundedCornerShape(100.dp))
-                            .background(color = Color(230, 230, 230)),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(R.mipmap.icon_fav_semcor),
-                            contentDescription = "Imagem de Coração(Favoritar)",
-                            Modifier.size(20.dp)
-                        )
-                    }
+                    )
                 }
             }
 
@@ -1105,26 +1162,13 @@ fun CardSOS(oficina: Oficina) {
                                 color = VerdeBuscar
                             )
                             Text(
-                                text = oficina.distance?.toString() ?: "Distância indisponível",
+                                text = "Há " + (oficina.distance?.toString() ?: "Distância indisponível") + " metros",
                                 fontSize = 16.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY,
                                 color = if (oficina.distance != null) Color(50, 50, 50) else Color.Gray,
-                                modifier = Modifier.padding(top = 5.dp)
+                                modifier = Modifier.padding(top = 15.dp)
                             )
-                            Row(Modifier.padding(top = 5.dp)) {
-                                Text(
-                                    text = "$$$",
-                                    color = VerdeBuscar,
-                                    fontFamily = PRODUCT_SANS_FAMILY,
-                                    fontSize = 16.sp
-                                )
-                                Text(
-                                    text = "$",
-                                    color = Color(50, 50, 50),
-                                    fontFamily = PRODUCT_SANS_FAMILY,
-                                    fontSize = 16.sp
-                                )
-                            }
+
                             Row(
                                 Modifier.padding(top = 6.dp),
                                 verticalAlignment = Alignment.CenterVertically
@@ -1134,11 +1178,13 @@ fun CardSOS(oficina: Oficina) {
                                     contentDescription = "Imagem de indicação de local",
                                     Modifier.size(20.dp)
                                 )
-                                Text(
-                                    text = oficina.cep,
-                                    color = Color(50, 50, 50),
-                                    modifier = Modifier.padding(start = 5.dp)
-                                )
+                                if (infoCep != null) {
+                                    Text(
+                                        text = infoCep.logradouro + ", " + oficina.numero,
+                                        color = Color(50, 50, 50),
+                                        modifier = Modifier.padding(start = 5.dp)
+                                    )
+                                }
                             }
                         }
                     }

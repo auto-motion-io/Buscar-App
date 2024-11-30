@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,8 +20,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,12 +41,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.koin.SessaoUsuario
-import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.ArrowBackButton
-import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
-import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
-import com.example.futurobuscartelas.ui.theme.ListarOS
 import com.example.futurobuscartelas.ui.theme.ListarProdutos
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY

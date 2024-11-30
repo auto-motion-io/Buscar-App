@@ -63,7 +63,7 @@
             android:exported="false"
             android:label="@string/title_activity_tela_pesquisar_oficinas"
             android:theme="@style/Theme.FuturoBuscarTelas" />
-        <activity android:name=".telas.home.TelaInicialActivity" />
+        <activity android:name=".TelaInicialActivity" />
         <activity
             android:name=".BeforeSignUpScreen"
             android:exported="false"

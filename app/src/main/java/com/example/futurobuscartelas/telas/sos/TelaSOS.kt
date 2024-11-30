@@ -1,7 +1,11 @@
 package com.example.futurobuscartelas.telas.sos
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -42,16 +46,15 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-<<<<<<< HEAD:app/src/main/java/com/example/futurobuscartelas/telas/sos/TelaSOS.kt
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.models.Oficina
-=======
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.api.google.LocationRepository
-import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.signup.SignUpViewModel
+import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
->>>>>>> 71352617a19da47991e4bf776168ba0aec8e06c5:app/src/main/java/com/example/futurobuscartelas/TelaSOS.kt
 import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.CardSOS
 import com.example.futurobuscartelas.ui.theme.NavigationBar
@@ -60,30 +63,43 @@ import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import kotlin.math.roundToInt
 
-@OptIn(DelicateCoroutinesApi::class)
+class TelaSOSActivity : ComponentActivity() {
+
+    private val sessaoUsuario: SessaoUsuario by inject()
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TelaSOS(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
+        }
+    }
+}
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: SessaoUsuario) {
     val viewModel:SosViewModel = viewModel()
-    val oficinas = viewModel.getOficinas() // Obtém a lista de oficinas atualizadas do ViewModel
-    var showMessage by remember { mutableStateOf(false) } // Estado para controlar a mensagem
+    val oficinas = viewModel.getOficinas()
+    var showMessage by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    // Chamamos listarOficinas quando a tela é composta
+    val visibleCards = remember { mutableStateListOf<Oficina>() }
+
     LaunchedEffect(Unit) {
+        // A primeira chamada que carrega as oficinas
         viewModel.listarOficinas(context)
     }
 
-
-    // Use derivedStateOf para garantir que visibleCards atualize com oficinas
-    val visibleCards = remember { mutableStateListOf<Oficina>() }
-
     LaunchedEffect(oficinas) {
-        //FIXME Aqui a distancia da oficina vem null (mesmo quando nao e para vir), na viewmodel nunca vem
-        Log.i("Location","Oficinas ${oficinas.toList()}")
-        visibleCards.clear()
-        visibleCards.addAll(oficinas)
+        // Verifica se as oficinas estão carregadas e só então as adiciona aos cartões
+        if (oficinas.isNotEmpty() && visibleCards.isEmpty()) {
+            Log.i("Location", "Oficinas ${oficinas.toList()}")
+            visibleCards.addAll(oficinas) // Adiciona as oficinas apenas quando carregadas
+        }
     }
 
     Scaffold(
@@ -142,21 +158,40 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 
                 // Box para exibir os cartões
                 Box(Modifier.fillMaxSize()) {
+                    var infoCep by remember { mutableStateOf<CepInfo?>(null) }
                     visibleCards.forEach { oficina ->
-                        SwipeableCard(
-                            cardContent = { CardSOS(oficina) }, // Passa os dados da oficina para o CardSOS
-                            onSwipeComplete = {
-                                // Remove o cartão da lista após o swipe
-                                visibleCards.remove(oficina) // Use remove para eliminar diretamente
 
-                                // Verifica se não há mais cartões
-                                if (visibleCards.isEmpty()) {
-                                    showMessage = true // Exibe a mensagem
+                        // Carregar as informações de CEP quando a oficina é renderizada
+                        LaunchedEffect(oficina.cep) {
+                            viewModel.retornarInfoCep(oficina.cep)
+                            infoCep = viewModel.getCep().value
+                        }
+
+                        // Renderizar o CardSOS apenas quando as informações de 'infoCep' estiverem prontas
+                        if (infoCep != null) {
+                            SwipeableCard(
+                                cardContent = { CardSOS(sessaoUsuario.id, oficina, infoCep) }, // Passa os dados da oficina para o CardSOS
+                                onSwipeComplete = {
+                                    // Remove o cartão da lista após o swipe
+                                    visibleCards.remove(oficina) // Use remove para eliminar diretamente
+
+                                    // Verifica se não há mais cartões
+                                    if (visibleCards.isEmpty()) {
+                                        showMessage = true // Exibe a mensagem
+                                    }
                                 }
-                            }
-                        )
+                            )
+                        } else {
+                            // Exibe um texto enquanto o infoCep está sendo carregado
+                            Text(
+                                text = "Carregando informações de CEP...",
+                                modifier = Modifier.padding(16.dp),
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
+
 
                 // Exibição da mensagem quando todos os cartões forem removidos
                 if (showMessage) {
@@ -239,5 +274,5 @@ fun SwipeableCard(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview3() {
-    TelaSOS(selectedTabIndex = 1, onTabSelected = {})
+    TelaSOS(selectedTabIndex = 1, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
 }

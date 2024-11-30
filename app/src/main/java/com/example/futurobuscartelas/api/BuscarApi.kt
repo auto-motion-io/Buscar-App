@@ -1,6 +1,7 @@
 package com.example.futurobuscartelas.api
 import com.example.futurobuscartelas.dto.*
 import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.models.OficinaFavorita
 import com.example.futurobuscartelas.models.OrdemServico
 import com.example.futurobuscartelas.models.Usuario
 import retrofit2.Call
@@ -67,12 +68,19 @@ interface BuscarApi {
     ): Response<Usuario>
 
     @GET("usuarios/{id}/oficinas-favoritas")
-    suspend fun listarOficinas(@Path("id") id: Int): Response<List<Oficina>>
+    suspend fun listarOficinas(@Path("id") id: Int): Response<List<OficinaFavorita>>
 
-    @POST("usuarios/{id}/oficinas-favoritas/{idOficina}")
+    @POST("usuarios/{idUsuario}/oficinas-favoritas/{idOficina}")
     suspend fun favoritar(
-        @Path("idUsuario") id: Int
-    )
+        @Path("idUsuario") idUsuario: Int,
+        @Path("idOficina") idOficina: Int
+    ): Response<Unit>
+
+    @DELETE("usuarios/{idUsuario}/oficinas-favoritas/{idOficina}")
+    suspend fun remover(
+        @Path("idUsuario") idUsuario: Int,
+        @Path("idOficina") idOficina: Int
+    ): Response<Unit>
 
     @GET("ordemDeServicos/cliente/{id}")
     suspend fun listarOsPorCliente(@Path("id") id: Int): Response<List<OrdemServico>>

@@ -71,4 +71,5 @@
     <string name="label_preco">R$80,00</string>
     <string name="label_valor_total">Valor Total</string>
     <string name="label_total">R$160,00</string>
+    <string name="label_semFavoritos">Nenhuma oficina favorita.</string>
 </resources>

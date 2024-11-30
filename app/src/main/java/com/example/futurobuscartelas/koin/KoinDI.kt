@@ -4,6 +4,7 @@ package com.example.futurobuscartelas.koin
 import com.example.futurobuscartelas.api.PitstopApi
 import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.RetrofitService
+import com.example.futurobuscartelas.api.ViaCepApi
 import org.koin.dsl.module
 
 
@@ -23,5 +24,9 @@ val appModule = module {
 
     single<PitstopApi> {
         RetrofitService.getApiPitstop()
+    }
+
+    single<ViaCepApi> {
+        RetrofitService.api
     }
 }

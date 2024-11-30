@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
@@ -66,7 +67,7 @@ class TelaInicialActivity : ComponentActivity() {
 
 @Composable
 fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuario: SessaoUsuario) {
-    val viewModel: TelasViewModel = viewModel()
+    val viewModel: TelaInicialViewModel = viewModel()
     val oficinas = viewModel.getOficinas()
 
     LaunchedEffect(Unit) {
@@ -75,6 +76,7 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuari
 
     var token by remember { mutableStateOf("") }
     Log.i("session", sessaoUsuario.nome)
+
     Scaffold(
         bottomBar = {
             NavigationBar(
