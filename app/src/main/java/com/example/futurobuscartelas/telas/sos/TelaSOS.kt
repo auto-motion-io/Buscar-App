@@ -156,6 +156,21 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: 
                     }
                 }
 
+//                val oficinaExemplo = Oficina(
+//                    id = 1,
+//                    nome = "Oficina Exemplo",
+//                    cnpj = "12.345.678/0001-90",
+//                    cep = "12345-678",
+//                    logradouro = "Rua Exemplo",
+//                    bairro = "Bairro Exemplo",
+//                    cidade = "Cidade Exemplo",
+//                    numero = "123",
+//                    complemento = "Apartamento 101",
+//                    hasBuscar = true,
+//                    logoUrl = "http://exemplo.com/logo.png",
+//                    distance = 10
+//                )
+
                 // Box para exibir os cartões
                 Box(Modifier.fillMaxSize()) {
                     var infoCep by remember { mutableStateOf<CepInfo?>(null) }
@@ -173,6 +188,7 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: 
                             }
                         )
                     }
+                    //CardSOS(1, oficinaExemplo)
                 }
 
 

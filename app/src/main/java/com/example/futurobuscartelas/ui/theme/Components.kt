@@ -1199,7 +1199,7 @@ fun CardSOS(idUsuario: Int, oficina: Oficina) {
                                 Modifier.size(16.dp)
                             )
                             Text(
-                                text = "4.5",
+                                text = oficina.mediaAvaliacao?.nota?.toString() ?: "N/A",  // Caso não tenha nota, exibe "N/A"
                                 modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
                                 fontFamily = PRODUCT_SANS_FAMILY,
                                 fontSize = 16.sp

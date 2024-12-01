@@ -1,5 +1,7 @@
 package com.example.futurobuscartelas.api
 import com.example.futurobuscartelas.dto.*
+import com.example.futurobuscartelas.models.Avaliacao
+import com.example.futurobuscartelas.models.MediaAvaliacao
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.OficinaFavorita
 import com.example.futurobuscartelas.models.OrdemServico
@@ -67,6 +69,8 @@ interface BuscarApi {
         @Body dto: UpdatePreferenciasDTO
     ): Response<Usuario>
 
+
+    // Favoritar Oficinas
     @GET("usuarios/{id}/oficinas-favoritas")
     suspend fun listarOficinas(@Path("id") id: Int): Response<List<OficinaFavorita>>
 
@@ -82,6 +86,15 @@ interface BuscarApi {
         @Path("idOficina") idOficina: Int
     ): Response<Unit>
 
+
+    // Ordens de Serviço
     @GET("ordemDeServicos/cliente/{id}")
     suspend fun listarOsPorCliente(@Path("id") id: Int): Response<List<OrdemServico>>
+
+    // Avaliação Oficina
+    @GET("avaliacoes/oficina/{id}")
+    suspend fun buscarAvaliacao(@Path("id") id: Int): Response<List<Avaliacao>>
+
+    @GET("avaliacoes/media-notas-oficina/{id}")
+    suspend fun mediaAvaliacaoOficina(@Path("id") id: Int): Response<MediaAvaliacao>
 }

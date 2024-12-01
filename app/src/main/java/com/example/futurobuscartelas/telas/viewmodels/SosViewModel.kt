@@ -6,22 +6,25 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.futurobuscartelas.BuildConfig
 import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.PitstopApi
 import com.example.futurobuscartelas.api.ViaCepApi
 import com.example.futurobuscartelas.api.google.LocationRepository
-import com.example.futurobuscartelas.location.UserLocation
+import com.example.futurobuscartelas.models.Avaliacao
 import com.example.futurobuscartelas.models.CepInfo
+import com.example.futurobuscartelas.models.MediaAvaliacao
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.OficinaFavorita
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 
 class SosViewModel : ViewModel() {
     val repository: LocationRepository = LocationRepository()
-    val apiKey = "AIzaSyAwuUkYWSl7wySsNrZuVYpahXS3F49w9xE"
+    val apiKey = ""
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
@@ -29,9 +32,7 @@ class SosViewModel : ViewModel() {
 
     val oficinas = mutableStateListOf<Oficina>()
     val oficinasFavoritas = mutableStateListOf<OficinaFavorita>()
-    var infoCep = mutableStateOf<CepInfo?>(null)
 
-    fun getCep() = infoCep;
     fun getOficinas() = oficinas.toList()
     fun getOficinasFavoritas() = oficinasFavoritas.toList()
 
@@ -78,23 +79,35 @@ class SosViewModel : ViewModel() {
                     Log.i("api", "Oficinas da API: ${resposta.body()}")
                     oficinas.clear()
                     if (!listaOficinas.isNullOrEmpty()) {
-                        listaOficinas.forEach { oficina ->
-                            getDistanceFromOficina(context, oficina.cep) { distance ->
-                                oficina.distance = distance
-                                Log.i("Location", "distancia para oficina viewmodel ${oficina.nome}: ${oficina.distance}")
-                            }
+                        // Use async para garantir que todas as tarefas assíncronas sejam completadas antes de adicionar
+                        val oficinaTasks = listaOficinas.map { oficina ->
+                            async {
+                                // Obtém a distância da oficina
+                                getDistanceFromOficina(context, oficina.cep) { distance ->
+                                    oficina.distance = distance
+                                    Log.i("Location", "distancia para oficina viewmodel ${oficina.nome}: ${oficina.distance}")
+                                }
 
-                            // Preenche os campos de endereço da oficina com a função retornada
-                            viewModelScope.launch {
+                                // Preenche os campos de endereço da oficina com a função retornada
                                 retornarInfoCep(oficina.cep)?.let { cepInfo ->
                                     oficina.logradouro = cepInfo.logradouro ?: ""
                                     oficina.bairro = cepInfo.bairro ?: ""
                                     oficina.cidade = cepInfo.localidade ?: ""
                                     Log.i("api", "CEP atualizado para oficina ${oficina.nome}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}")
                                 }
-                                oficinas.add(oficina) // Adiciona após ter preenchido as informações
+
+                                // Busca a avaliação da oficina
+                                buscarMediaAvaliacao(oficina.id)?.let { avaliacao ->
+                                    oficina.mediaAvaliacao = avaliacao
+                                }
                             }
                         }
+
+                        // Espera todos os cálculos assíncronos serem completados
+                        oficinaTasks.awaitAll()
+
+                        // Agora que todas as informações estão carregadas, adicione as oficinas à lista
+                        oficinas.addAll(listaOficinas)
                     }
                 } else {
                     Log.e("api", "Erro ao buscar oficinas: ${resposta.errorBody()?.string()}")
@@ -175,4 +188,38 @@ class SosViewModel : ViewModel() {
             }
         }
     }
+
+    suspend fun buscarAvaliacao(idOficina: Int): Avaliacao? {
+        return try {
+            val resposta = buscarApi.buscarAvaliacao(idOficina)
+            if (resposta.isSuccessful) {
+                val listaAvaliacoes = resposta.body()  // Aqui espera-se uma lista
+                listaAvaliacoes?.firstOrNull()
+            } else {
+                Log.e("api", "Erro ao buscar avaliação: ${resposta.errorBody()?.string()}")
+                null
+            }
+        } catch (exception: Exception) {
+            Log.e("api", "Erro ao buscar avaliação: ", exception)
+            null
+        }
+    }
+
+    suspend fun buscarMediaAvaliacao(idOficina: Int): MediaAvaliacao? {
+        return try {
+            val resposta = buscarApi.mediaAvaliacaoOficina(idOficina)
+            if (resposta.isSuccessful) {
+                resposta.body().also {
+                    Log.i("api", "Medias de avaliacao da oficina: $it")
+                }
+            } else {
+                Log.e("api", "Erro ao buscar avaliação: ${resposta.errorBody()?.string()}")
+                null
+            }
+        } catch (exception: Exception) {
+            Log.e("api", "Erro ao buscar avaliação: ", exception)
+            null
+        }
+    }
+
 }

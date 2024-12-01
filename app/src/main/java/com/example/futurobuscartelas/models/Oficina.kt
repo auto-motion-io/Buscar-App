@@ -14,5 +14,7 @@ data class Oficina(
     val complemento: String,
     val hasBuscar: Boolean,
     val logoUrl: String,
-    var distance: Int?
+    var distance: Int?,
+    var avaliacao: Avaliacao?,
+    var mediaAvaliacao: MediaAvaliacao?
 )
