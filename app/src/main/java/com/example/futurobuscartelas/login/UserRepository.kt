@@ -15,7 +15,9 @@ val Context.dataStore by preferencesDataStore("user_prefs")
 // Modelo para os dados do usuário
 data class UserData  (
     val idUsuario: Int,
+    val email: String,
     val nome: String,
+    val sobrenome: String,
     val token: String,
     val fotoUrl: String?
 ): Serializable
@@ -27,7 +29,9 @@ class UserRepository(private val context: Context) {
     suspend fun saveUserData(user: UserData) {
         context.dataStore.edit { preferences ->
             preferences[UserPreferencesKeys.USER_ID] = user.idUsuario.toString()
-            preferences[UserPreferencesKeys.USER_NAME] = user.nome
+            preferences[UserPreferencesKeys.USER_EMAIL] = user.email
+            preferences[UserPreferencesKeys.USER_NOME] = user.nome
+            preferences[UserPreferencesKeys.USER_SOBRENOME] = user.sobrenome
             preferences[UserPreferencesKeys.TOKEN] = user.token
             preferences[UserPreferencesKeys.FOTO_URL] = user.fotoUrl ?: ""
         }
@@ -37,21 +41,21 @@ class UserRepository(private val context: Context) {
     fun getUserData(): Flow<UserData?> {
         return context.dataStore.data.map { preferences ->
             val id = preferences[UserPreferencesKeys.USER_ID]?.toIntOrNull()
-            val nome = preferences[UserPreferencesKeys.USER_NAME]
+            val email = preferences[UserPreferencesKeys.USER_EMAIL]
+            val nome = preferences[UserPreferencesKeys.USER_NOME]
+            val sobrenome = preferences[UserPreferencesKeys.USER_SOBRENOME]
             val token = preferences[UserPreferencesKeys.TOKEN]
             val fotoUrl = preferences[UserPreferencesKeys.FOTO_URL]
 
-            if (id != null && nome != null && token != null) {
-                UserData(id, nome, token, fotoUrl)
-            } else {
-                null
-            }
+
+                UserData(id?:0,email?:"", nome?:"",sobrenome?:"", token?:"", fotoUrl)
+
         }
     }
 
     // Função para limpar dados armazenados (logout)
     suspend fun clearUserData() {
         context.dataStore.edit { it.clear() }
-        Log.i("user","clinando")
+        Log.i("user","limpando")
     }
 }

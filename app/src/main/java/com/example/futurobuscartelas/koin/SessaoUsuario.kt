@@ -8,7 +8,9 @@ Outros atributos que ela poderia ter: email, URL da foto, perfil, id da empresa 
  */
 data class SessaoUsuario(
     var id: Int = 0,
+    var email: String = "",
     var nome: String = "",
+    var sobrenome: String = "",
     var token: String = "",
     var fotoUrl: String? = ""
 )

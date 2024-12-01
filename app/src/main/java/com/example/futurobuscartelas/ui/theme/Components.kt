@@ -764,7 +764,8 @@ fun CustomInputPerfil(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isPasswordField: Boolean = false
+    isPasswordField: Boolean = false,
+    isEnabled: Boolean = false
 ) {
     OutlinedTextField(
         value = value,
@@ -784,7 +785,8 @@ fun CustomInputPerfil(
             .fillMaxWidth()
             .height(52.dp),
         textStyle = TextStyle(fontSize = 16.sp),
-        visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None
+        visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None,
+        enabled = isEnabled
     )
 }
 
@@ -993,7 +995,8 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaPerfil(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it })
+                    onTabSelected = { selectedTabIndex = it }, sessaoUsuario = sessaoUsuario)
+
             }
         }
     }

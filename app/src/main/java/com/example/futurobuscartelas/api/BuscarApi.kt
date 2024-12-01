@@ -45,7 +45,7 @@ interface BuscarApi {
     @PUT("usuarios/atualizar-senha/{id}")
     suspend fun atualizarSenha(
         @Path("id") id: Int,
-        @Body updateSenhaUsuarioDTO: UpdateSenhaUsuarioDTO
+        @Body updateSenhaUsuarioDTO: UpdateSenhaDTO
     ): Response<Usuario>
 
     @DELETE("usuarios/{id}")

@@ -157,7 +157,7 @@ fun DefaultButtonMotion(
             )
             .clip(RoundedCornerShape(100)),
         colors = ButtonDefaults.buttonColors(
-            containerColor = VerdeBuscar
+            containerColor = if (isFilled) VerdeBuscar else BackGroundColor
         ),
         enabled = enabled
     ) {
@@ -183,7 +183,7 @@ fun CustomInputMotion(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isPasswordField: Boolean = false
+    isPasswordField: Boolean = false,
 ) {
     OutlinedTextField(
         value = value,

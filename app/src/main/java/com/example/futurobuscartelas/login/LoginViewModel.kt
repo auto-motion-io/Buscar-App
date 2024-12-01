@@ -48,7 +48,7 @@ class LoginViewModel(private val userRepository: UserRepository) : ViewModel() {
                 if (resposta.isSuccessful) {
                     Log.i("api", "Usuário logado com sucesso: ${resposta.body()}")
                     val userData = resposta.body()!!.let {
-                        UserData(it.idUsuario, it.nome, it.token, it.fotoUrl)
+                        UserData(it.idUsuario,it.email, it.nome,it.sobrenome, it.token, it.fotoUrl)
                     }
                     userRepository.saveUserData(userData)
                     _loginState.update { LoginState.Success }
