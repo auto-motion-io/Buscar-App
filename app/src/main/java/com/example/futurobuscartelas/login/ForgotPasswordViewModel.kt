@@ -75,7 +75,7 @@ class ForgotPasswordViewModel : ViewModel() {
                 isLoading.value = false
                 Log.i("api", "res ${resposta}")
                 if (resposta.isSuccessful) {
-                    successState.value = SuccessState(true, "Sua senha foi alterada com sucesso.")
+                    successState.value = SuccessState(true, "Sua senha foi atualizada com sucesso. Agora, você pode usar sua nova senha para acessar sua conta.")
                 } else if (resposta.code() == 401) {
                     errorState.value = ErrorState(
                         hasError = true,
@@ -84,7 +84,7 @@ class ForgotPasswordViewModel : ViewModel() {
                 } else {
                     errorState.value = ErrorState(
                         hasError = true,
-                        message = "Um erro inesperado ocorreu."
+                        message = "Um erro inesperado ocorreu. Entre em contato com o suporte."
                     )
                 }
             } catch (e: Exception) {

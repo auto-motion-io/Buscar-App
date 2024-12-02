@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 
 import androidx.compose.ui.text.TextStyle
 
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.api.ErrorState
 import com.example.futurobuscartelas.api.SuccessState
 import com.example.futurobuscartelas.signup.SignUpViewModel
@@ -60,7 +62,7 @@ fun ForgotPasswordScreen(navController: NavController) {
     val errorState by viewmodel.errorState
     val successState by viewmodel.successState
     var steps by viewmodel.steps
-    var isLoading by viewmodel.isLoading
+    val isLoading by viewmodel.isLoading
 
     BaseScreenLayout {
         if (isLoading) {
@@ -69,7 +71,7 @@ fun ForgotPasswordScreen(navController: NavController) {
 
         if (errorState.hasError) {
             ResultDialog(
-                title = "Ocorreu um erro ao recuperar a senha",
+                title = stringResource(id = R.string.dialog_erro),
                 text = errorState.message,
                 icon = Icons.Default.Check
             ) {
@@ -78,8 +80,8 @@ fun ForgotPasswordScreen(navController: NavController) {
         }
         if (successState.isSuccessfull) {
             ResultDialog(
-                title = "Senha alterada com sucesso",
-                text = "Sua senha foi atualizada com sucesso. Agora, você pode usar sua nova senha para acessar sua conta.",
+                title = stringResource(id = R.string.dialog_sucesso),
+                text = successState.message,
                 icon = Icons.Default.Check
             ) {
                 navController.navigate("login")

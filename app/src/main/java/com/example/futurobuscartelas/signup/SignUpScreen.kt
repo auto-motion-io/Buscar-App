@@ -47,6 +47,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -596,7 +597,7 @@ fun TermsAndConditionsDialog(onDismiss: () -> Unit) {
         text = {
 
             Text(
-                text = "Ao utilizar os serviços oferecidos pela Motion, você concorda que seus dados pessoais serão utilizados apenas para finalidades internas da aplicação. Isso inclui o armazenamento e processamento de suas informações para melhorar a experiência do usuário, oferecer suporte e permitir o uso contínuo das funcionalidades do aplicativo.\nGarantimos que os dados não serão divulgados para terceiros sem o seu consentimento explícito, exceto nos casos em que for exigido por lei. Seus dados são tratados com o máximo de segurança e confidencialidade.\nEm caso de vazamento de dados a responsável direta é Thaisa Nobrega de Costa, dona e coofundadora da motion"
+                text = stringResource(id = R.string.termos_de_uso)
             )
         },
         confirmButton = {
@@ -604,7 +605,7 @@ fun TermsAndConditionsDialog(onDismiss: () -> Unit) {
                 onClick = { onDismiss() }
             ) {
                 Text(
-                    "Fechar",
+                    stringResource(id = R.string.fechar),
                     color = VerdeBuscar
                 )
             }

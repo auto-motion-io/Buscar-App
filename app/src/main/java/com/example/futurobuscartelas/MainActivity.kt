@@ -59,10 +59,12 @@ class MainActivity : ComponentActivity() {
                 logLocation(context = context)
             }
 
-            var isLogged: Boolean = userData != null
+            var isLogged: Boolean = userData != null && userData!!.idUsuario != 0
             if(isLogged){
                 sessaoUsuario.id = userData!!.idUsuario
+                sessaoUsuario.email = userData!!.email
                 sessaoUsuario.nome = userData!!.nome
+                sessaoUsuario.sobrenome = userData!!.sobrenome
                 sessaoUsuario.token = userData!!.token
                 sessaoUsuario.fotoUrl = userData!!.fotoUrl
                 MainScreen(sessaoUsuario)

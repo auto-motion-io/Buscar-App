@@ -72,4 +72,12 @@
     <string name="label_valor_total">Valor Total</string>
     <string name="label_total">R$160,00</string>
     <string name="label_semFavoritos">Nenhuma oficina favorita.</string>
+    <string name="label_email">Email*</string>
+    <string name="dialog_sucesso">Tudo certo!</string>
+    <string name="dialog_erro">Algo deu errado!</string>
+    <string name="termos_de_uso">Ao utilizar os serviços oferecidos pela Motion, você concorda que seus dados pessoais serão utilizados apenas para finalidades internas da aplicação. Isso inclui o armazenamento e processamento de suas informações para melhorar a experiência do usuário, oferecer suporte e permitir o uso contínuo das funcionalidades do aplicativo.\\nGarantimos que os dados não serão divulgados para terceiros sem o seu consentimento explícito, exceto nos casos em que for exigido por lei. Seus dados são tratados com o máximo de segurança e confidencialidade.</string>
+    <string name="fechar">Fechar</string>
+    <string name="label_confirmacao_senha">Confirme a senha*</string>
+    <string name="label_nova_senha">Nova senha*</string>
+    <string name="label_senha_atual">Senha atual*</string>
 </resources>
