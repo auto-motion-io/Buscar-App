@@ -68,7 +68,6 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
     val viewModel: TelasViewModel = viewModel()
     var token by remember { mutableStateOf("") }
 
-
     var ordens = viewModel.getOrdensDeServico()
 
     LaunchedEffect(Unit) {

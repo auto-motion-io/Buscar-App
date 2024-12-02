@@ -72,6 +72,7 @@ import com.example.futurobuscartelas.telas.sos.TelaSOS
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.models.OrdemServico
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
 
 @Composable
@@ -704,14 +705,13 @@ fun TelaBaseOSP(navController: NavController, titulo: String) {
 }
 
 @Composable
-fun ListarOS() {
-    val listaOs = listOf("01258", "01258", "01258")
+fun ListarOS(ordensDeServico: List<OrdemServico>) {
 
     Column(
         Modifier.padding(top = 36.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        for (os in listaOs) {
+        for (os in ordensDeServico) {
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -725,14 +725,14 @@ fun ListarOS() {
                     Modifier.padding(horizontal = 20.dp)
                 ) {
                     Text(
-                        text = "#$os",
+                        text = "#${os.token}",
                         fontSize = 22.sp,
                         fontFamily = PRODUCT_SANS_FAMILY,
                         fontWeight = FontWeight.Bold,
                         color = VerdeBuscar
                     )
                     Text(
-                        text = "CMM-5861",
+                        text = os.veiculo.placa,
                         color = Color(130, 130, 130)
                     )
                 }
@@ -749,7 +749,7 @@ fun ListarOS() {
                             .background(color = Color(253, 216, 53))
                     )
                     Text(
-                        text = "Em andamento",
+                        text = os.status,
                         fontSize = 12.sp,
                         fontFamily = PRODUCT_SANS_FAMILY
                     )
@@ -983,7 +983,9 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaConsultaOS(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it })
+                    onTabSelected = { selectedTabIndex = it },
+                    sessaoUsuario = sessaoUsuario
+                )
             }
 
             AnimatedVisibility(

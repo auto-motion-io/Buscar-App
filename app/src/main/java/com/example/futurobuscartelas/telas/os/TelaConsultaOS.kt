@@ -1,5 +1,10 @@
 package com.example.futurobuscartelas.telas.os
 
+import android.annotation.SuppressLint
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +21,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,19 +34,43 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.telas.home.TelaInicial
+import com.example.futurobuscartelas.telas.viewmodels.OrdemServicoViewModel
+import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.ListarOS
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
+import org.koin.android.ext.android.inject
 
+class TelaConsultaOSActivity : ComponentActivity() {
+
+    private val sessaoUsuario: SessaoUsuario by inject()
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TelaConsultaOS(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
+        }
+    }
+}
 
 @Composable
-fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
-
+fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuario: SessaoUsuario) {
+    val viewModel: OrdemServicoViewModel = viewModel()
+    var ordensDeServico = viewModel.getListaOs()
     var token by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        viewModel.listarOS(sessaoUsuario.id)
+    }
 
     Scaffold (
         bottomBar ={
@@ -138,7 +168,7 @@ fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
                         fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
-                ListarOS()
+                ListarOS(ordensDeServico)
             }
         }
     }
@@ -147,5 +177,5 @@ fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaConsultaOsPreview() {
-    TelaConsultaOS(selectedTabIndex = 2, onTabSelected = {})
+    TelaConsultaOS(selectedTabIndex = 2, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
 }
