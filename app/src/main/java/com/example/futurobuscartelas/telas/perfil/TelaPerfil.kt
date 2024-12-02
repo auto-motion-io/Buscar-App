@@ -198,11 +198,7 @@ fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuari
                             modifier = Modifier.fillMaxHeight(),
                             verticalArrangement = Arrangement.Center
                         ) {
-                            Image(
-                                painter = painterResource(R.mipmap.icon_user),
-                                contentDescription = "Ícone do Usuário",
-                                Modifier.size(64.dp)
-                            )
+
                         }
                         Column(
                             Modifier.padding(horizontal = 10.dp)
