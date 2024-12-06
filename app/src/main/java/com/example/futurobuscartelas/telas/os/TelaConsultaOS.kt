@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.models.OrdemServico
 import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.home.TelaInicialActivity
 import com.example.futurobuscartelas.telas.viewmodels.OrdemServicoViewModel
@@ -75,11 +76,21 @@ fun TelaConsultaOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val ordensDeServico = viewModel.getListaOs()
     var token by remember { mutableStateOf("") }
     val context = LocalContext.current
-    var newSelectedTabIndex by remember { mutableStateOf(0) }
+    var ordem: OrdemServico?
+    val isOrdemAvailable = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.listarOS(sessaoUsuario.id)
         Log.d("TelaConsultaOS", "Tab Selecionada: $selectedTabIndex")
+    }
+
+    LaunchedEffect(token) {
+        ordem = viewModel.listarOsPorTokenConsulta(token)
+        if (ordem != null) {
+            isOrdemAvailable.value = true  // Marca como encontrado quando ordem não for nula
+        } else {
+            isOrdemAvailable.value = false  // Marca como não encontrado
+        }
     }
 
     Scaffold (
@@ -158,9 +169,15 @@ fun TelaConsultaOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                             onValueChange = { token = it }
                         )
                         BotaoPesquisa(true) {
-                            val intent = Intent(context, TelaOsActivity::class.java)
-                            intent.putExtra("TOKEN_KEY", token) // Passando o token como extra
-                            context.startActivity(intent)
+                            // Verifica se a ordem foi encontrada antes de iniciar a navegação
+                            if (isOrdemAvailable.value) {
+                                val intent = Intent(context, TelaOsActivity::class.java)
+                                intent.putExtra("TOKEN_KEY", token)  // Passando o token como extra
+                                context.startActivity(intent)
+                            } else {
+                                // Exiba uma mensagem de erro ou um aviso caso não encontre a ordem
+                                Log.d("TelaConsultaOS", "Ordem não encontrada")
+                            }
                         }
                     }
                 }

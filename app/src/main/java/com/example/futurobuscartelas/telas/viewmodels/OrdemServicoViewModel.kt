@@ -80,6 +80,22 @@ class OrdemServicoViewModel : ViewModel(){
         }
     }
 
+    suspend fun listarOsPorTokenConsulta(token: String) : OrdemServico? {
+        return try{
+            Log.i("API","Pré chamada da api")
+            val resposta = pitstopApi.listarOsPorToken(token)
+            if(resposta.isSuccessful){
+                resposta.body()
+            } else{
+                Log.e("api", "Lista de OS erro: ${resposta.code()}")
+                null
+            }
+        } catch(exception: Exception){
+            Log.e("api", "Erro ao buscar ordem de serviço", exception)
+            null
+        }
+    }
+
     suspend fun retornarInfoCep(cep: String): CepInfo? {
         return try {
             val resposta = viaCepApi.getCep(cep)

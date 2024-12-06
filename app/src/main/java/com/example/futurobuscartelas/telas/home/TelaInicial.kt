@@ -155,53 +155,6 @@ fun TelaInicial(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                         AddCategoria(categoria = "Peças", context, TelaPesquisarPecasActivity::class.java)
                     }
                 }
-                Column(Modifier.padding(top = 30.dp)) {
-                    Column(Modifier.padding(bottom = 5.dp)) {
-                        Text(
-                            text = "Consulta OS",
-                            fontSize = 36.sp,
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                    }
-                    Text(
-                        text = stringResource(id = R.string.label_tokenOs)
-                    )
-                    Column(
-                        Modifier.padding(top = 20.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.label_token),
-                            color = VerdeBuscar,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
-                        Row(
-                            Modifier
-                                .padding(top = 5.dp)
-                                .fillMaxWidth()
-                        ) {
-                            OutlinedTextField(
-                                value = token,
-                                colors = OutlinedTextFieldDefaults.colors(
-                                    focusedTextColor = VerdeBuscar,
-                                    unfocusedTextColor = Color.Black,
-                                    focusedLabelColor = VerdeBuscar,
-                                    unfocusedLabelColor = Color.Gray,
-                                    focusedBorderColor = VerdeBuscar,
-                                    unfocusedBorderColor = Color.Transparent,
-                                    unfocusedContainerColor = InputContainerUnfocusedColor
-                                ),
-                                singleLine = true,
-                                shape = RoundedCornerShape(50.dp),
-                                onValueChange = { token = it }
-                            )
-                            BotaoPesquisa(true, {})
-                        }
-                    }
-                }
                 Column(
                     Modifier
                         .padding(top = 30.dp)
