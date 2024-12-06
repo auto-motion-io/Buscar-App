@@ -1,7 +1,11 @@
 package com.example.futurobuscartelas.ui.theme
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -9,6 +13,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -70,9 +75,19 @@ import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.perfil.TelaPerfil
 import com.example.futurobuscartelas.telas.sos.TelaSOS
 import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.login.UserData
 import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.OrdemServico
+import com.example.futurobuscartelas.models.Produto
+import com.example.futurobuscartelas.models.Servico
+import com.example.futurobuscartelas.telas.home.TelaInicialActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarOficinasActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarPecasActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarServicosActivity
+import com.example.futurobuscartelas.telas.os.TelaConsultaOSActivity
+import com.example.futurobuscartelas.telas.perfil.TelaPerfilActivity
+import com.example.futurobuscartelas.telas.sos.TelaSOSActivity
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
 
 @Composable
@@ -216,9 +231,8 @@ fun CheckOff() {
 }
 
 @Composable
-fun ListarServicos(modifier: Modifier) {
-    val listaServicos =
-        listOf("Troca de Óleo", "Troca de Pneu", "Alinhamento", "Balanceamento", "Teste")
+fun ListarServicos(modifier: Modifier, lista: List<Servico>) {
+    val listaServicos = lista
 
     // Agrupa os serviços em pares
     val groupedServicos = listaServicos.chunked(2)
@@ -243,7 +257,7 @@ fun ListarServicos(modifier: Modifier) {
                                 .background(color = Color(240, 239, 236))
                         ) {}
                         Text(
-                            text = servico,
+                            text = servico.nome,
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
@@ -257,8 +271,8 @@ fun ListarServicos(modifier: Modifier) {
 }
 
 @Composable
-fun ListarPecas(modifier: Modifier) {
-    val listaPecas = listOf("Pneu", "Farois", "Bateria", "Freios", "Filtros", "Correias")
+fun ListarPecas(modifier: Modifier, lista: List<Produto>) {
+    val listaPecas = lista
 
     // Agrupa as peças em pares
     val groupedPecas = listaPecas.chunked(2)
@@ -283,7 +297,7 @@ fun ListarPecas(modifier: Modifier) {
                                 .background(color = Color(240, 239, 236))
                         ) {}
                         Text(
-                            text = peca,
+                            text = peca.nome,
                             color = Color(59, 86, 60),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.padding(top = 5.dp),
@@ -297,9 +311,15 @@ fun ListarPecas(modifier: Modifier) {
 }
 
 @Composable
-fun AddCategoria(categoria: String) {
+fun AddCategoria(categoria: String, context: Context, activity: Class<out ComponentActivity>) {
     Column(
-        Modifier.width(100.dp),
+        Modifier
+            .width(100.dp)
+            .clickable {
+                // Navegando para a TelaPesquisarOficinasActivity usando Intent
+                val intent = Intent(context, activity)
+                context.startActivity(intent)
+            },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -307,8 +327,20 @@ fun AddCategoria(categoria: String) {
                 .height(80.dp)
                 .width(80.dp)
                 .clip(RoundedCornerShape(46.dp))
-                .background(color = Color(241, 240, 237))
-        ) {}
+                .background(color = Color(241, 240, 237)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = when (categoria) {
+                    "Oficinas" -> painterResource(R.mipmap.icon_oficina)
+                    "Serviços" -> painterResource(R.mipmap.icon_servico)
+                    else -> painterResource(R.mipmap.icon_ferramenta) // Ícone padrão se nenhuma condição for atendida
+                },
+                contentDescription = "Icone de Lupa Branca",
+                Modifier.size(40.dp),
+            )
+        }
         Row(
             Modifier.padding(10.dp)
         ) {
@@ -389,10 +421,12 @@ fun ListarFavoritos(modifier: Modifier, oficinas:List<Oficina>) {
 }
 
 @Composable
-fun BotaoPesquisa(fundo: Boolean) {
+fun BotaoPesquisa(fundo: Boolean, onClick : () -> Unit) {
     if (fundo) {
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                onClick()
+            },
             Modifier
                 .padding(start = 5.dp, top = 5.dp)
                 .size(48.dp)
@@ -495,15 +529,8 @@ fun CardFiltro(
 }
 
 @Composable
-fun ListarOficinas(modifier: Modifier) {
-    val listaOficinas = listOf(
-        "Fast Motors",
-        "Fast Motors",
-        "Fast Motors",
-        "Fast Motors",
-        "Fast Motors",
-        "Fast Motors"
-    )
+fun ListarOficinas(modifier: Modifier, lista: List<Oficina>) {
+    val listaOficinas = lista
 
     // Agrupa os serviços em pares
     val groupedOficinas = listaOficinas.chunked(2)
@@ -543,7 +570,7 @@ fun ListarOficinas(modifier: Modifier) {
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Text(
-                                    text = oficina,
+                                    text = oficina.nome,
                                     fontSize = 16.sp,
                                     color = Color(59, 86, 60),
                                     fontWeight = FontWeight.Bold,
@@ -614,7 +641,7 @@ fun ListarOficinas(modifier: Modifier) {
 }
 
 @Composable
-fun TelaBaseOSP(navController: NavController, titulo: String) {
+fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: UserData?) {
     Column(
         Modifier
             .padding(top = 40.dp, start = 20.dp, end = 20.dp)
@@ -623,7 +650,7 @@ fun TelaBaseOSP(navController: NavController, titulo: String) {
             )
     ) {
         Row() {
-            ArrowBackButton(navController = navController)
+            ArrowBackButtonIntent(context, TelaInicialActivity::class.java, userData, 1)
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -650,7 +677,7 @@ fun TelaBaseOSP(navController: NavController, titulo: String) {
                 fontWeight = FontWeight.Bold
             )
             Row() {
-                BotaoPesquisa(false)
+                BotaoPesquisa(false, {})
                 Button(
                     onClick = { /*TODO*/ },
                     Modifier
@@ -699,7 +726,21 @@ fun TelaBaseOSP(navController: NavController, titulo: String) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ListarOficinas(modifier = Modifier)
+            when (titulo) {
+                "Oficinas" -> {
+                    val listaOficinas = lista as? List<Oficina> ?: emptyList()
+                    ListarOficinas(modifier = Modifier, listaOficinas)
+                }
+                "Peças" -> {
+                    val listaPecas = lista as? List<Produto> ?: emptyList()
+                    ListarPecas(modifier = Modifier, listaPecas)
+                }
+                "Serviços" -> {
+                    val listaServicos = lista as? List<Servico> ?: emptyList()
+                    ListarServicos(modifier = Modifier, listaServicos)
+                }
+            }
+
         }
     }
 }
@@ -881,18 +922,20 @@ fun ListarAgenda() {
 
 @Composable
 fun NavigationBar(
-    selectedTabIndex: Int, // Tab atualmente selecionada
-    onTabSelected: (Int) -> Unit // Função para lidar com a seleção de abas
+    context: Context, // Context necessário para iniciar Activities
+    selectedTabIndex: Int // Tab atualmente selecionada
 ) {
     BottomNavigation(
-        modifier = Modifier.clip(RoundedCornerShape(
-            topStart = 30.dp,
-            topEnd = 30.dp,
-            bottomStart = 0.dp,
-            bottomEnd = 0.dp
-        )),
-        backgroundColor = Color(238,238,238),
-        contentColor = Color(59,86,60)
+        modifier = Modifier.clip(
+            RoundedCornerShape(
+                topStart = 30.dp,
+                topEnd = 30.dp,
+                bottomStart = 0.dp,
+                bottomEnd = 0.dp
+            )
+        ),
+        backgroundColor = Color(238, 238, 238),
+        contentColor = Color(59, 86, 60)
     ) {
         BottomNavigationItem(
             icon = {
@@ -903,7 +946,10 @@ fun NavigationBar(
                 )
             },
             selected = selectedTabIndex == 0,
-            onClick = { onTabSelected(0) }
+            onClick = {
+                val intent = Intent(context, TelaInicialActivity::class.java)
+                context.startActivity(intent)
+            }
         )
         BottomNavigationItem(
             icon = {
@@ -914,7 +960,10 @@ fun NavigationBar(
                 )
             },
             selected = selectedTabIndex == 1,
-            onClick = { onTabSelected(1) }
+            onClick = {
+                val intent = Intent(context, TelaSOSActivity::class.java)
+                context.startActivity(intent)
+            }
         )
         BottomNavigationItem(
             icon = {
@@ -925,7 +974,11 @@ fun NavigationBar(
                 )
             },
             selected = selectedTabIndex == 2,
-            onClick = { onTabSelected(2) }
+            onClick = {
+                val intent = Intent(context, TelaConsultaOSActivity::class.java)
+                intent.putExtra("SELECTED_TAB_INDEX", 2) // Envia a aba selecionada
+                context.startActivity(intent)
+            }
         )
         BottomNavigationItem(
             icon = {
@@ -936,21 +989,26 @@ fun NavigationBar(
                 )
             },
             selected = selectedTabIndex == 3,
-            onClick = { onTabSelected(3) }
+            onClick = {
+                val intent = Intent(context, TelaPerfilActivity::class.java)
+                context.startActivity(intent)
+            }
         )
     }
 }
 
+
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(sessaoUsuario: SessaoUsuario) {
+fun MainScreen(sessaoUsuario: SessaoUsuario, context: Context) {
     var selectedTabIndex by remember { mutableStateOf(0) }
 
     Scaffold(
         bottomBar = {
             NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = { selectedTabIndex = it })
+                context,
+                selectedTabIndex = selectedTabIndex
+            )
         }
     ) {  paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -961,7 +1019,6 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaInicial(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it },
                     sessaoUsuario = sessaoUsuario
                 )
             }
@@ -973,7 +1030,6 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaSOS(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it },
                     sessaoUsuario = sessaoUsuario
                 )
             }
@@ -985,7 +1041,6 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaConsultaOS(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it },
                     sessaoUsuario = sessaoUsuario
                 )
             }
@@ -997,8 +1052,7 @@ fun MainScreen(sessaoUsuario: SessaoUsuario) {
             ) {
                 TelaPerfil(
                     selectedTabIndex = selectedTabIndex,
-                    onTabSelected = { selectedTabIndex = it }, sessaoUsuario = sessaoUsuario)
-
+                    sessaoUsuario = sessaoUsuario)
             }
         }
     }
@@ -1330,44 +1384,95 @@ fun MotionLoading() {
 }
 
 @Composable
-fun ListarProdutos(){
-    Row (
-        Modifier
-            .padding(top = 20.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .height(60.dp)
-            .fillMaxWidth()
-            .background(Color(240, 240, 240)),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+fun ListarPecasOs(lista: List<Produto>){
+
+    for(peca in lista){
         Row (
             Modifier
-                .padding(horizontal = 10.dp)
+                .padding(top = 20.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .height(60.dp)
+                .fillMaxWidth()
+                .background(Color(240, 240, 240)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(R.mipmap.icon_chave_filtro),
-                contentDescription = "Icone de chave de boca",
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(25.dp)
-            )
-            Column {
-                Text(
-                    text = stringResource(R.string.label_exemplo_filtro),
-                    fontSize = 14.sp,
-                    fontFamily = PRODUCT_SANS_FAMILY
+            Row (
+                Modifier
+                    .padding(horizontal = 10.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.mipmap.icon_chave_filtro),
+                    contentDescription = "Icone de chave de boca",
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(25.dp)
                 )
-                Text(
-                    text = stringResource(R.string.label_exemplo_unidade),
-                    fontSize = 10.sp,
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
+                Column {
+                    Text(
+                        text = peca.nome,
+                        fontSize = 14.sp,
+                        fontFamily = PRODUCT_SANS_FAMILY,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(80,80,80)
+                    )
+                    Text(
+                        text = peca.quantidade.toString() + " Unidade(s)",
+                        fontSize = 10.sp,
+                        fontFamily = PRODUCT_SANS_FAMILY,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(80,80,80)
+                    )
+                }
             }
+            Text(
+                text = "R$${peca.valorVenda}",
+                modifier = Modifier.padding(end = 20.dp)
+            )
         }
-        Text(
-            text = stringResource(id = R.string.label_preco),
-            modifier = Modifier.padding(end = 20.dp)
-        )
+    }
+}
+
+@Composable
+fun ListarServicosOs(lista: List<Servico>){
+
+    for(servico in lista){
+        Row (
+            Modifier
+                .padding(top = 20.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .height(60.dp)
+                .fillMaxWidth()
+                .background(Color(240, 240, 240)),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row (
+                Modifier
+                    .padding(horizontal = 10.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.mipmap.icon_chave_filtro),
+                    contentDescription = "Icone de chave de boca",
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(25.dp)
+                )
+                Column {
+                    Text(
+                        text = servico.nome,
+                        fontSize = 14.sp,
+                        fontFamily = PRODUCT_SANS_FAMILY,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(80,80,80)
+                    )
+                }
+            }
+            Text(
+                text = stringResource(id = R.string.label_preco),
+                modifier = Modifier.padding(end = 20.dp)
+            )
+        }
     }
 }

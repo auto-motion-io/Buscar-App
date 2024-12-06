@@ -75,14 +75,14 @@ class TelaSOSActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaSOS(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
+            TelaSOS(selectedTabIndex = 1, sessaoUsuario = sessaoUsuario)
         }
     }
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: SessaoUsuario) {
+fun TelaSOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val viewModel:SosViewModel = viewModel()
     val oficinas = viewModel.getOficinas()
     var showMessage by remember { mutableStateOf(false) }
@@ -105,8 +105,8 @@ fun TelaSOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: 
     Scaffold(
         bottomBar = {
             NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
+                context,
+                selectedTabIndex = selectedTabIndex
             )
         }
     ) { paddingValues ->
@@ -273,5 +273,5 @@ fun SwipeableCard(
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview3() {
-    TelaSOS(selectedTabIndex = 1, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
+    TelaSOS(selectedTabIndex = 1, sessaoUsuario = SessaoUsuario())
 }

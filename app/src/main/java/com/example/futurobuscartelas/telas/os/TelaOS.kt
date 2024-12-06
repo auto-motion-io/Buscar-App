@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,13 +42,20 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.telas.viewmodels.OrdemServicoViewModel
 import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.ArrowBackButton
-import com.example.futurobuscartelas.ui.theme.ListarProdutos
+import com.example.futurobuscartelas.ui.theme.ArrowBackButtonIntent
+import com.example.futurobuscartelas.ui.theme.ListarPecas
+import com.example.futurobuscartelas.ui.theme.ListarPecasOs
+import com.example.futurobuscartelas.ui.theme.ListarServicos
+import com.example.futurobuscartelas.ui.theme.ListarServicosOs
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import org.koin.android.ext.android.inject
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TelaOsActivity : ComponentActivity() {
 
@@ -57,36 +65,49 @@ class TelaOsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val token = intent.getStringExtra("TOKEN_KEY")
         setContent {
-            TelaOS(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
+            TelaOS(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario, token = token)
         }
     }
 }
 
 @Composable
-fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: SessaoUsuario) {
-    val viewModel: TelasViewModel = viewModel()
-    var token by remember { mutableStateOf("") }
-
-    var ordens = viewModel.getOrdensDeServico()
+fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: SessaoUsuario, token: String?) {
+    val context = LocalContext.current
+    val viewModel: OrdemServicoViewModel = viewModel()
+    val ordemLista = viewModel.getListaOs()
+    var ordem = ordemLista.firstOrNull()
+    val oficina = viewModel.getOficinas().firstOrNull()
+    val servicos = viewModel.getServicos()
+    val pecas = viewModel.getPecas()
+    val listaServicosOs = ordem?.servicos
+    val listaPecasOs = ordem?.produtos
 
     LaunchedEffect(Unit) {
-        viewModel.listarOsPorCliente(sessaoUsuario.id)
+        if (token != null) {
+            viewModel.listarOsPorToken(token)
+        }
     }
 
-    Scaffold (
-        bottomBar ={
-            NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
-            )
+    LaunchedEffect(ordemLista) {
+        ordem = ordemLista.firstOrNull()
+        ordem?.oficina?.let { viewModel.listarOficinaPorId(it.id) }
+    }
+
+    LaunchedEffect(oficina) {
+        if (oficina != null) {
+            viewModel.listarServicosPorOficina(oficina.id)
+            viewModel.listarPecasPorOficina(oficina.id)
         }
-    ) { paddingValues ->
-        Column (
-            Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
+    }
+
+
+    if(ordem != null){
+    Column (
+        Modifier
+            .fillMaxSize()
+    ) {
             Column(
                 Modifier
                     .fillMaxSize()
@@ -95,10 +116,10 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                 Row (
                     Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 30.dp),
+                        .padding(bottom = 30.dp, top = 30.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    ArrowBackButton {}
+                    ArrowBackButtonIntent(context, TelaConsultaOSActivity::class.java, null, 2)
                     Row (
                         Modifier
                             .fillMaxWidth()
@@ -123,14 +144,14 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                             .padding(top = 10.dp, bottom = 10.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.label_exemploId),
+                            text = "#${ordem?.id}",
                             color = VerdeBuscar,
                             fontSize = 32.sp,
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = stringResource(R.string.label_token) + ": " + stringResource(R.string.label_exemploToken),
+                            text = stringResource(R.string.label_token) + ": " + ordem?.token,
                             color = Color(130, 130, 130),
                             fontSize = 16.sp,
                             fontFamily = PRODUCT_SANS_FAMILY,
@@ -159,13 +180,15 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                     .background(Color(250, 200, 0))
 
                             ) {}
-                            Text(
-                                text = stringResource(R.string.label_statusDesc ),
-                                color = Color(130, 130, 130),
-                                fontSize = 14.sp,
-                                fontFamily = PRODUCT_SANS_FAMILY,
-                                modifier = Modifier.padding(top = 5.dp)
-                            )
+                            ordem?.status?.let {
+                                Text(
+                                    text = it,
+                                    color = Color(130, 130, 130),
+                                    fontSize = 14.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    modifier = Modifier.padding(top = 5.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -205,11 +228,14 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                         fontWeight = FontWeight.Bold,
                                         color = Color(70, 70, 70)
                                     )
-                                    Text(stringResource(R.string.label_orcamento),
-                                        fontSize = 10.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        color = Color(70, 70, 70)
-                                    )
+                                    ordem?.tipoOs?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 10.sp,
+                                            fontFamily = PRODUCT_SANS_FAMILY,
+                                            color = Color(70, 70, 70)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -229,7 +255,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Image(
                                     painter = painterResource(R.mipmap.icon_calendario_os),
                                     contentDescription = "Icone de calendario",
-                                    modifier = Modifier.size(14.dp)
+                                    modifier = Modifier.padding(end = 8.dp).size(14.dp)
                                 )
                                 Column (
                                     Modifier.padding(start = 5.dp)
@@ -241,7 +267,12 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                         fontWeight = FontWeight.Bold,
                                         color = Color(70, 70, 70)
                                     )
-                                    Text(stringResource(R.string.label_dataInicio),
+                                    val dataInicioFormatada = ordem?.dataInicio?.let {
+                                        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                                        formatter.format(it)
+                                    } ?: "Data não disponível"
+                                    Text(
+                                        text = dataInicioFormatada,
                                         fontSize = 10.sp,
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         color = Color(70, 70, 70)
@@ -265,7 +296,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Image(
                                     painter = painterResource(R.mipmap.icon_calendario_filled_os),
                                     contentDescription = "Icone de calendario",
-                                    modifier = Modifier.size(14.dp)
+                                    modifier = Modifier.padding(end = 8.dp).size(14.dp)
                                 )
                                 Column (
                                     Modifier.padding(start = 5.dp)
@@ -277,7 +308,12 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                         fontWeight = FontWeight.Bold,
                                         color = Color(70, 70, 70)
                                     )
-                                    Text(stringResource(R.string.label_dataFim),
+                                    val dataFimFormatada = ordem?.dataFim?.let {
+                                        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                                        formatter.format(it)
+                                    } ?: "Data não disponível"
+                                    Text(
+                                        text = dataFimFormatada,
                                         fontSize = 10.sp,
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         color = Color(70, 70, 70)
@@ -292,23 +328,15 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                         Row (
                             Modifier.padding(top = 20.dp)
                         ) {
-                            Text(
-                                text = stringResource(R.string.label_exemploOficina),
-                                color = VerdeBuscar,
-                                fontSize = 24.sp,
-                                fontFamily = PRODUCT_SANS_FAMILY,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Row (
-                            Modifier.padding(top = 5.dp)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.label_oficinaDesc),
-                                color = Color(80,80,80),
-                                fontSize = 14.sp,
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
+                            ordem?.oficina?.nome?.let {
+                                Text(
+                                    text = it,
+                                    color = VerdeBuscar,
+                                    fontSize = 24.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
                         }
                         Row (
                             Modifier.padding(top = 5.dp)
@@ -320,9 +348,17 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                     .padding(top = 2.dp, end = 4.dp)
                                     .size(15.dp)
                             )
-                            Text(
-                                text = stringResource(R.string.label_exemploTelefone),
-                                color = Color(80,80,80),
+                            ordem?.oficina?.informacoesOficinaDTO?.whatsapp?.let {
+                                val textToDisplay = if (it.isNotEmpty()) it else "Sem número de telefone"
+                                Text(
+                                    text = textToDisplay,
+                                    color = Color(80, 80, 80),
+                                    fontSize = 14.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY
+                                )
+                            } ?: Text(
+                                text = "Sem número de telefone",
+                                color = Color(80, 80, 80),
                                 fontSize = 14.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY
                             )
@@ -338,7 +374,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                     .size(15.dp)
                             )
                             Text(
-                                text = stringResource(R.string.label_exemploLocal),
+                                text = oficina?.logradouro + ", " + oficina?.numero + " - " + oficina?.cidade,
                                 color = Color(80,80,80),
                                 fontSize = 14.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY
@@ -354,12 +390,14 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                     .padding(top = 2.dp, end = 4.dp)
                                     .size(15.dp)
                             )
-                            Text(
-                                text = stringResource(R.string.label_exemploEmail),
-                                color = Color(80,80,80),
-                                fontSize = 14.sp,
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
+                            ordem?.veiculo?.cliente?.email?.let {
+                                Text(
+                                    text = it,
+                                    color = Color(80,80,80),
+                                    fontSize = 14.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY
+                                )
+                            }
                         }
                     }
                     Row (
@@ -379,40 +417,43 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Modifier
                                     .padding(start = 10.dp, end = 10.dp)
                                     .fillMaxSize(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Image(
                                     painter = painterResource(R.mipmap.icon_carro_nocolor),
                                     contentDescription = "Icone de Carro",
                                     modifier = Modifier
-                                        .padding(end = 15.dp)
-                                        .size(20.dp)
+                                        .padding(start = 10.dp, end = 20.dp)
+                                        .size(26.dp)
                                 )
                                 Column (
                                     Modifier.height(40.dp)
                                 ) {
+                                    ordem?.veiculo?.placa?.let {
+                                        Text(
+                                            text = it,
+                                            color = Color(80,80,80),
+                                            fontSize = 14.sp,
+                                            fontFamily = PRODUCT_SANS_FAMILY,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                     Text(
-                                        text = stringResource(R.string.label_placa),
-                                        color = Color(80,80,80),
-                                        fontSize = 14.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.label_descricao_veiculo),
-                                        color = Color(80,80,80),
+                                        text = ordem?.veiculo?.modelo + " - " + ordem?.veiculo?.marca,
+                                        color = Color(80,80, 80),
                                         fontSize = 10.sp,
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         fontWeight = FontWeight.Bold
                                     )
-                                    Text(
-                                        text = stringResource(R.string.label_cor_veiculo),
-                                        color = Color(80,80,80),
-                                        fontSize = 10.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    ordem?.veiculo?.cor?.let {
+                                        Text(
+                                            text = it,
+                                            color = Color(80,80,80),
+                                            fontSize = 10.sp,
+                                            fontFamily = PRODUCT_SANS_FAMILY,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -441,27 +482,33 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Column (
                                     Modifier.height(40.dp)
                                 ) {
-                                    Text(
-                                        text = stringResource(R.string.label_nome_exemplo),
-                                        color = Color(80,80,80),
-                                        fontSize = 14.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.label_exemploTelefone),
-                                        color = Color(80,80,80),
-                                        fontSize = 10.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Text(
-                                        text = stringResource(R.string.label_exemploEmail),
-                                        color = Color(80,80,80),
-                                        fontSize = 10.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY,
-                                        fontWeight = FontWeight.Bold
-                                    )
+                                    ordem?.veiculo?.cliente?.nome?.let {
+                                        Text(
+                                            text = it,
+                                            color = Color(80,80,80),
+                                            fontSize = 14.sp,
+                                            fontFamily = PRODUCT_SANS_FAMILY,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    ordem?.veiculo?.cliente?.telefone?.let {
+                                        Text(
+                                            text = it,
+                                            color = Color(80,80,80),
+                                            fontSize = 10.sp,
+                                            fontFamily = PRODUCT_SANS_FAMILY,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
+                                    ordem?.veiculo?.cliente?.email?.let {
+                                        Text(
+                                            text = it,
+                                            color = Color(80,80,80),
+                                            fontSize = 10.sp,
+                                            fontFamily = PRODUCT_SANS_FAMILY,
+                                            fontWeight = FontWeight.Bold
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -478,7 +525,17 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    ListarProdutos()
+                    if (listaPecasOs != null) {
+                        ListarPecasOs(listaPecasOs)
+                    } else{
+                        Text(
+                            text = stringResource(R.string.label_semPecas),
+                            color = VerdeBuscar,
+                            fontSize = 28.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Row (
                         Modifier
                             .padding(top = 20.dp)
@@ -491,7 +548,17 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    ListarProdutos()
+                    if (listaServicosOs != null) {
+                        ListarServicosOs(listaServicosOs)
+                    } else{
+                        Text(
+                            text = stringResource(R.string.label_semServico),
+                            color = VerdeBuscar,
+                            fontSize = 28.sp,
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                     Row (
                         Modifier
                             .padding(top = 20.dp)
@@ -505,11 +572,25 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontWeight = FontWeight.Bold
                         )
+                        var valorTotal = 0.0;
+
+
+                        if (listaServicosOs != null) {
+                            for (servico in listaServicosOs){
+                                valorTotal += servico.valorServico
+                            }
+                        }
+                        if (listaPecasOs != null) {
+                            for (peca in listaPecasOs){
+                                valorTotal += peca.valorVenda
+                            }
+                        }
                         Text(
-                            text = stringResource(R.string.label_total),
+                            text = "R$${valorTotal}",
                             fontSize = 22.sp,
                             fontFamily = PRODUCT_SANS_FAMILY,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = Color(80,80,80)
                         )
                     }
                 }
@@ -521,5 +602,5 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaOsPreview() {
-    TelaOS(selectedTabIndex = 2, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
+    TelaOS(selectedTabIndex = 2, onTabSelected = {}, sessaoUsuario = SessaoUsuario(), "")
 }

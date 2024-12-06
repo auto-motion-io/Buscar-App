@@ -9,5 +9,6 @@ data class Produto(
     val valorCompra: Double,
     val valorVenda: Double,
     val localizacao: String,
-    val garantia: String
+    val garantia: String,
+    val oficina: Oficina
 )

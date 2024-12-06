@@ -1,7 +1,9 @@
 package com.example.futurobuscartelas.telas.os
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -25,9 +27,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +42,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.telas.home.TelaInicial
+import com.example.futurobuscartelas.telas.home.TelaInicialActivity
 import com.example.futurobuscartelas.telas.viewmodels.OrdemServicoViewModel
 import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
@@ -57,32 +62,36 @@ class TelaConsultaOSActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaConsultaOS(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
+            val initialTabIndex = intent.getIntExtra("SELECTED_TAB_INDEX", 0)
+            TelaConsultaOS(selectedTabIndex = initialTabIndex, sessaoUsuario = sessaoUsuario)
         }
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuario: SessaoUsuario) {
+fun TelaConsultaOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val viewModel: OrdemServicoViewModel = viewModel()
-    var ordensDeServico = viewModel.getListaOs()
+    val ordensDeServico = viewModel.getListaOs()
     var token by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    var newSelectedTabIndex by remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
         viewModel.listarOS(sessaoUsuario.id)
+        Log.d("TelaConsultaOS", "Tab Selecionada: $selectedTabIndex")
     }
 
     Scaffold (
         bottomBar ={
             NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
+                context,
+                selectedTabIndex = selectedTabIndex
             )
         }
-    ) { paddingValues ->
+    ) {
         Column (
             Modifier.fillMaxSize()
-                .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
             Column(
@@ -148,7 +157,11 @@ fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsu
                             shape = RoundedCornerShape(50.dp),
                             onValueChange = { token = it }
                         )
-                        BotaoPesquisa(true)
+                        BotaoPesquisa(true) {
+                            val intent = Intent(context, TelaOsActivity::class.java)
+                            intent.putExtra("TOKEN_KEY", token) // Passando o token como extra
+                            context.startActivity(intent)
+                        }
                     }
                 }
                 Column(
@@ -177,5 +190,5 @@ fun TelaConsultaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsu
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaConsultaOsPreview() {
-    TelaConsultaOS(selectedTabIndex = 2, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
+    TelaConsultaOS(selectedTabIndex = 2, sessaoUsuario = SessaoUsuario())
 }

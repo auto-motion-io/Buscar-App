@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 sessaoUsuario.sobrenome = userData!!.sobrenome
                 sessaoUsuario.token = userData!!.token
                 sessaoUsuario.fotoUrl = userData!!.fotoUrl
-                MainScreen(sessaoUsuario)
+                MainScreen(sessaoUsuario, context)
             }else{
                 MyApp(sessaoUsuario)
             }
@@ -91,7 +91,6 @@ fun MyApp(sessaoUsuario: SessaoUsuario){
             composable("login") { LoginScreen(navController,sessaoUsuario) }
             composable("forgot-password"){ ForgotPasswordScreen(navController)}
             composable("before-signup"){ BeforeSignUpScreen(navController = navController) }
-            composable("oficina"){ OficinaScreen(name = "") }
             composable("signup"){ SignUpScreen(navController = navController) }
         }
 

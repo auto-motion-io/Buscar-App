@@ -80,4 +80,6 @@
     <string name="label_confirmacao_senha">Confirme a senha*</string>
     <string name="label_nova_senha">Nova senha*</string>
     <string name="label_senha_atual">Senha atual*</string>
+    <string name="label_semServico">Nenhum serviço.</string>
+    <string name="label_semPecas">Nenhuma peça.</string>
 </resources>

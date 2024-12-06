@@ -24,7 +24,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 class SosViewModel : ViewModel() {
     val repository: LocationRepository = LocationRepository()
-    val apiKey = ""
+    val apiKey = "AIzaSyAV1EbJzFHWyS6ZAdW4b0SqI-6vlGd73Ys"
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)

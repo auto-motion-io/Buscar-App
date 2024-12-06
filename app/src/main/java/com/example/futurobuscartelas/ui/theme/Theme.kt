@@ -1,6 +1,8 @@
 package com.example.futurobuscartelas.ui.theme
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.graphics.Rect
 import android.view.ViewTreeObserver
 import androidx.compose.animation.animateColorAsState
@@ -45,6 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.koin.SessaoUsuario
+import com.example.futurobuscartelas.login.UserData
+import com.example.futurobuscartelas.telas.home.TelaInicialActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarOficinas
+import com.example.futurobuscartelas.telas.home.TelaPesquisarOficinasActivity
+import com.example.futurobuscartelas.telas.os.TelaOsActivity
 
 // Paddings
 
@@ -72,6 +80,41 @@ fun ArrowBackButton(navController: NavController) {
             .clickable {
                 clicked = !clicked
                 navController.popBackStack()
+            }
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.arrow_back_green),
+            contentDescription = "Botão voltar",
+            modifier = Modifier
+                .size(24.dp)
+                .clip(RoundedCornerShape(24.dp)),
+            contentScale = ContentScale.Fit
+        )
+    }
+}
+
+@Composable
+fun <T> ArrowBackButtonIntent(context: Context, activityClass: Class<T>, userData: UserData?, tabIndexValue: Int) {
+    var clicked by remember { mutableStateOf(false) }
+
+    // Definindo a cor de fundo animada
+    val targetColor = if (clicked) ClickAnimationColor else BackGroundColor
+    val animatedColor by animateColorAsState(
+        targetColor,
+        animationSpec = tween(durationMillis = 300)
+    )
+
+    Box(
+        contentAlignment = Alignment.Center, // Centraliza o conteúdo da Box
+        modifier = Modifier
+            .clip(shape = CircleShape)
+            .background(animatedColor) // Forma circular e cor animada
+            .clickable {
+                clicked = !clicked
+                val intent = Intent(context, activityClass).apply {}
+                intent.putExtra("name", userData)
+                intent.putExtra("SELECTED_TAB_INDEX", tabIndexValue)
+                context.startActivity(intent)
             }
     ) {
         Image(

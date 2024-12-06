@@ -19,7 +19,7 @@
         android:theme="@style/Theme.FuturoBuscarTelas"
         tools:targetApi="31">
         <activity
-            android:name=".telas.os.TelaOS"
+            android:name=".telas.os.TelaOsActivity"
             android:exported="false"
             android:label="@string/title_activity_tela_os"
             android:theme="@style/Theme.FuturoBuscarTelas" />
@@ -39,19 +39,44 @@
             android:label="@string/title_activity_tela_perfil"
             android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
+            android:name=".telas.os.TelaConsultaOSActivity"
+            android:exported="false"
+            android:label="@string/title_activity_tela_consulta_os"
+            android:theme="@style/Theme.FuturoBuscarTelas"
+            android:launchMode="singleTop" />
+        <activity
             android:name=".TelaConsultaOS"
             android:exported="false"
             android:label="@string/title_activity_tela_consulta_os"
             android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
-            android:name=".TelaPesquisarPeças"
+            android:name=".telas.home.TelaPesquisarPecasActivity"
             android:exported="false"
             android:label="@string/title_activity_tela_pesquisar_peças"
             android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
-            android:name=".TelaPesquisarServicos"
+            android:name=".telas.home.TelaPesquisarOficinasActivity"
+            android:exported="false"
+            android:label="@string/title_activity_tela_pesquisar_oficinas"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
+            android:name=".telas.home.TelaPesquisarServicosActivity"
             android:exported="false"
             android:label="@string/title_activity_tela_pesquisar_servicos"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
+            android:name=".telas.home.TelaInicialActivity"
+            android:exported="false"
+            android:label="@string/title_activity_tela_inicial"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
+            android:name=".telas.perfil.TelaPerfilActivity"
+            android:exported="false"
+            android:label="@string/title_activity_tela_perfil"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
+            android:name=".telas.sos.TelaSOSActivity"
+            android:exported="false"
             android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
             android:name=".SignUpScreen"

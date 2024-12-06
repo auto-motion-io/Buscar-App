@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas.models
 
+import com.example.futurobuscartelas.dto.OficinaDTO
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
@@ -14,6 +15,7 @@ data class OrdemServico(
     val tipoOs: String,
     val garantia: String,
     val observacoes: String,
+    val oficina: OficinaDTO,
     val veiculo: Veiculo,
     val mecanico: Mecanico,
     val produtos: List<Produto>,

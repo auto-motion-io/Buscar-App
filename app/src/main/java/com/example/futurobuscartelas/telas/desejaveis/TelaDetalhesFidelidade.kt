@@ -1,5 +1,6 @@
 package com.example.futurobuscartelas.telas.desejaveis
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,19 +31,21 @@ import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TelaDetalhes(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
+fun TelaDetalhes(selectedTabIndex: Int) {
 
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Scaffold (
         bottomBar ={
             NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
+                context,
+                selectedTabIndex = selectedTabIndex
             )
         }
-    ) { paddingValues ->
+    ) {
             Column (
                 Modifier
                     .fillMaxSize()
@@ -91,5 +95,5 @@ fun TelaDetalhes(selectedTabIndex: Int, onTabSelected: (Int) -> Unit) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaDetalhesPreview() {
-        TelaDetalhes(selectedTabIndex = 3, onTabSelected = {})
+        TelaDetalhes(selectedTabIndex = 3)
 }

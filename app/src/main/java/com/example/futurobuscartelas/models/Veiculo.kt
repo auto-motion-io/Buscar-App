@@ -8,5 +8,6 @@ data class Veiculo(
     val marca: String,
     val modelo: String,
     val anoFabricante: Int,
-    val cor: String
+    val cor: String,
+    val cliente: Cliente
 )

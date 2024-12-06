@@ -25,7 +25,7 @@ import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 import com.example.futurobuscartelas.ui.theme.TelaBaseOSP
 import org.koin.android.ext.android.inject
 
-class TelaPesquisarOficinasActivity : ComponentActivity() {
+class TelaPesquisarPecasActivity : ComponentActivity() {
 
     private val sessaoUsuario: SessaoUsuario by inject()
 
@@ -34,37 +34,37 @@ class TelaPesquisarOficinasActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaPesquisarOficinas(sessaoUsuario)
+            TelaPesquisarPecas()
         }
     }
 }
 
 @Composable
-fun TelaPesquisarOficinas(sessaoUsuario: SessaoUsuario) {
+fun TelaPesquisarPecas() {
     val context = LocalContext.current;
-    var viewmodel: TelaInicialViewModel = viewModel()
-    var listaOficinas = viewmodel.getOficinas()
+    val viewmodel: TelaInicialViewModel = viewModel()
+    val listaPecas = viewmodel.getPecas()
     var userData by remember { mutableStateOf<UserData?>(null) }
     val userRepository = remember { UserRepository(context) }
 
     LaunchedEffect(Unit) {
-        viewmodel.listarOficinas()
+        viewmodel.listarPecas()
         userRepository.getUserData().collect { data ->
             userData = data
         }
     }
 
     TelaBaseOSP(
-        titulo = stringResource(id = R.string.label_tituloOficinas),
+        titulo = stringResource(R.string.label_pecas),
         context,
-        listaOficinas,
+        listaPecas,
         userData
     )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun TelaPesquisarOficinasPreview() {
-    val navController = rememberNavController()
-    //TelaPesquisarOficinas()
+fun TelaPesquisarPecasPreview() {
+    val navController = rememberNavController();
+    TelaPesquisarPecas()
 }

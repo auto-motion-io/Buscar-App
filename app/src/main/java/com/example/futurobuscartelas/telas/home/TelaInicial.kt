@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -60,15 +61,16 @@ class TelaInicialActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaInicial(selectedTabIndex = 0, onTabSelected = {},sessaoUsuario = sessaoUsuario)
+            TelaInicial(selectedTabIndex = 0, sessaoUsuario = sessaoUsuario)
         }
     }
 }
 
 @Composable
-fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuario: SessaoUsuario) {
+fun TelaInicial(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val viewModel: TelaInicialViewModel = viewModel()
-    val oficinas = viewModel.getOficinas()
+    val oficinas = viewModel.getOficinasFavoritas()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.listarOficinasFavoritas(sessaoUsuario.id)
@@ -80,8 +82,8 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuari
     Scaffold(
         bottomBar = {
             NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
+                context,
+                selectedTabIndex = selectedTabIndex
             )
         }
     ) { paddingValues ->
@@ -148,9 +150,9 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuari
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        AddCategoria(categoria = "Oficinas")
-                        AddCategoria(categoria = "Serviços")
-                        AddCategoria(categoria = "Peças")
+                        AddCategoria(categoria = "Oficinas", context, TelaPesquisarOficinasActivity::class.java)
+                        AddCategoria(categoria = "Serviços", context, TelaPesquisarServicosActivity::class.java)
+                        AddCategoria(categoria = "Peças", context, TelaPesquisarPecasActivity::class.java)
                     }
                 }
                 Column(Modifier.padding(top = 30.dp)) {
@@ -196,7 +198,7 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuari
                                 shape = RoundedCornerShape(50.dp),
                                 onValueChange = { token = it }
                             )
-                            BotaoPesquisa(true)
+                            BotaoPesquisa(true, {})
                         }
                     }
                 }
@@ -224,5 +226,5 @@ fun TelaInicial(selectedTabIndex: Int, onTabSelected: (Int) -> Unit,sessaoUsuari
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaInicialPreview() {
-    TelaInicial(selectedTabIndex = 0, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
+    TelaInicial(selectedTabIndex = 0, sessaoUsuario = SessaoUsuario())
 }

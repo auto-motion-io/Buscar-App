@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,6 +61,7 @@ import com.example.futurobuscartelas.location.LocationManager
 import com.example.futurobuscartelas.login.UserData
 import com.example.futurobuscartelas.login.UserRepository
 import com.example.futurobuscartelas.onboarding.LoadingScreen
+import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.ui.theme.CustomInputMotion
 import com.example.futurobuscartelas.ui.theme.CustomInputPerfil
 import com.example.futurobuscartelas.ui.theme.DefaultButtonMotion
@@ -67,11 +72,26 @@ import com.example.futurobuscartelas.ui.theme.ResultDialog
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.java.KoinJavaComponent.inject
+
+class TelaPerfilActivity : ComponentActivity() {
+
+    private val sessaoUsuario: SessaoUsuario by inject()
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            TelaPerfil(selectedTabIndex = 3, sessaoUsuario)
+        }
+    }
+}
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: SessaoUsuario) {
+fun TelaPerfil(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val context = LocalContext.current
 
     val userRepository = remember { UserRepository(context) }
@@ -149,8 +169,8 @@ fun TelaPerfil(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuari
     Scaffold(
         bottomBar = {
             NavigationBar(
-                selectedTabIndex = selectedTabIndex,
-                onTabSelected = onTabSelected
+                context,
+                selectedTabIndex = selectedTabIndex
             )
         }
     ) { paddingValues ->
@@ -492,5 +512,5 @@ fun LogoutButton(context: Context, userRepository: UserRepository, coroutineScop
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaPerfilPreview() {
-    TelaPerfil(selectedTabIndex = 3, onTabSelected = {}, sessaoUsuario = SessaoUsuario())
+    TelaPerfil(selectedTabIndex = 3, sessaoUsuario = SessaoUsuario())
 }

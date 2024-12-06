@@ -30,10 +30,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.models.Produto
+import com.example.futurobuscartelas.models.Servico
 import com.example.futurobuscartelas.ui.theme.*
 
 @Composable
-fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
+fun OficinaScreen(name: String, modifier: Modifier = Modifier, listaServicos: List<Servico>, listaPecas: List<Produto>) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -272,7 +274,7 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         .padding(top = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    ListarServicos(Modifier.weight(0.4f))
+                    ListarServicos(Modifier.weight(0.4f), listaServicos)
                 }
             }
             Column(
@@ -293,7 +295,7 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
                         .padding(top = 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    ListarPecas(Modifier.weight(0.4f))
+                    ListarPecas(Modifier.weight(0.4f), listaPecas)
                 }
             }
 
@@ -324,5 +326,5 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier) {
 )
 @Composable
 fun GreetingPreview() {
-    OficinaScreen("Android")
+
 }
