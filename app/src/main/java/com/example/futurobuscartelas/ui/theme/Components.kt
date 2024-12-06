@@ -1074,6 +1074,12 @@ fun CardSOS(idUsuario: Int, oficina: Oficina) {
         viewModel.listarOficinasFavoritas(idUsuario)
     }
 
+    val text = if (oficina.distance != null) {
+        "A ${oficina.distance} metros"
+    } else {
+        "Distância indisponível"
+    }
+
     var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -1221,7 +1227,7 @@ fun CardSOS(idUsuario: Int, oficina: Oficina) {
                                 color = VerdeBuscar
                             )
                             Text(
-                                text = "Há " + (oficina.distance?.toString() ?: "Distância indisponível") + " metros",
+                                text = text ,
                                 fontSize = 16.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY,
                                 color = if (oficina.distance != null) Color(50, 50, 50) else Color.Gray,
