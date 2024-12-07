@@ -1,7 +1,6 @@
 package com.example.futurobuscartelas.ui.theme
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -67,24 +66,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.telas.os.TelaConsultaOS
 import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.perfil.TelaPerfil
 import com.example.futurobuscartelas.telas.sos.TelaSOS
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.login.UserData
-import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.OrdemServico
 import com.example.futurobuscartelas.models.Produto
 import com.example.futurobuscartelas.models.Servico
+import com.example.futurobuscartelas.telas.home.OficinaScreenActivity
 import com.example.futurobuscartelas.telas.home.TelaInicialActivity
-import com.example.futurobuscartelas.telas.home.TelaPesquisarOficinasActivity
-import com.example.futurobuscartelas.telas.home.TelaPesquisarPecasActivity
-import com.example.futurobuscartelas.telas.home.TelaPesquisarServicosActivity
 import com.example.futurobuscartelas.telas.os.TelaConsultaOSActivity
 import com.example.futurobuscartelas.telas.perfil.TelaPerfilActivity
 import com.example.futurobuscartelas.telas.sos.TelaSOSActivity
@@ -180,7 +176,7 @@ fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
 }
 
 @Composable
-fun CheckSemana(listaDias: List<Boolean>) {
+fun CheckSemana(listaDias: List<Boolean>?) {
     val diasSemana = listOf("D", "S", "T", "Q", "Q", "S", "S");
 
     Row(
@@ -194,7 +190,7 @@ fun CheckSemana(listaDias: List<Boolean>) {
                 Modifier.padding(start = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (listaDias[i]) {
+                if (listaDias?.get(i) == true) {
                     CheckOn()
                 } else {
                     CheckOff()
@@ -529,7 +525,7 @@ fun CardFiltro(
 }
 
 @Composable
-fun ListarOficinas(modifier: Modifier, lista: List<Oficina>) {
+fun ListarOficinas(modifier: Modifier, lista: List<OficinaDTO>, context: Context) {
     val listaOficinas = lista
 
     // Agrupa os serviços em pares
@@ -551,6 +547,11 @@ fun ListarOficinas(modifier: Modifier, lista: List<Oficina>) {
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 7.dp, end = 7.dp)
+                            .clickable {
+                                val intent = Intent(context, OficinaScreenActivity::class.java)
+                                intent.putExtra("OFICINA_KEY", oficina) // Passa o objeto
+                                context.startActivity(intent)
+                            }
                     ) {
                         Box(
                             Modifier
@@ -558,7 +559,16 @@ fun ListarOficinas(modifier: Modifier, lista: List<Oficina>) {
                                 .height(140.dp)
                                 .clip(RoundedCornerShape(20.dp))
                                 .background(color = Color(240, 239, 236, 210))
-                        ) {}
+                        ) {
+                            AsyncImage(
+                                model = oficina.logoUrl,
+                                contentDescription = "Logo da ${oficina.nome}",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(0.dp) // Ajuste o tamanho conforme necessário
+                            )
+                        }
 
                         Column(
                             Modifier.padding(bottom = 10.dp)
@@ -588,28 +598,11 @@ fun ListarOficinas(modifier: Modifier, lista: List<Oficina>) {
                                             .size(12.dp)
                                     )
                                     Text(
-                                        text = "5.0",
+                                        text = oficina.mediaAvaliacao?.nota.toString(),
                                         fontSize = 12.sp,
                                         fontFamily = PRODUCT_SANS_FAMILY
                                     )
                                 }
-                            }
-                            Row(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(start = 5.dp, end = 5.dp),
-                            ) {
-                                Text(
-                                    text = "$$$",
-                                    color = Color(59, 86, 60),
-                                    fontSize = 14.sp,
-                                    fontFamily = PRODUCT_SANS_FAMILY
-                                )
-                                Text(
-                                    text = "$",
-                                    color = Color(190, 190, 190),
-                                    fontSize = 14.sp, fontFamily = PRODUCT_SANS_FAMILY
-                                )
                             }
                             Row(
                                 Modifier
@@ -625,7 +618,7 @@ fun ListarOficinas(modifier: Modifier, lista: List<Oficina>) {
                                     Modifier.padding(start = 4.dp)
                                 ) {
                                     Text(
-                                        text = "Av. Miguel Ferreira de Melo. 500",
+                                        text =  oficina.logradouro + " - " + oficina.numero,
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         fontSize = 10.sp,
                                         color = Color(0, 0, 0, 180)
@@ -728,8 +721,8 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
         ) {
             when (titulo) {
                 "Oficinas" -> {
-                    val listaOficinas = lista as? List<Oficina> ?: emptyList()
-                    ListarOficinas(modifier = Modifier, listaOficinas)
+                    val listaOficinas = lista as? List<OficinaDTO> ?: emptyList()
+                    ListarOficinas(modifier = Modifier, listaOficinas, context)
                 }
                 "Peças" -> {
                     val listaPecas = lista as? List<Produto> ?: emptyList()
@@ -1059,7 +1052,7 @@ fun MainScreen(sessaoUsuario: SessaoUsuario, context: Context) {
 }
 
 @Composable
-fun CardSOS(idUsuario: Int, oficina: Oficina) {
+fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
     val viewModel: SosViewModel = viewModel()
     var listaOficinasFavoritas = viewModel.getOficinasFavoritas()
     var liked by remember { mutableStateOf(false) }

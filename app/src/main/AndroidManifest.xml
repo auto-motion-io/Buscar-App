@@ -79,6 +79,10 @@
             android:exported="false"
             android:theme="@style/Theme.FuturoBuscarTelas" />
         <activity
+            android:name=".telas.home.OficinaScreenActivity"
+            android:exported="false"
+            android:theme="@style/Theme.FuturoBuscarTelas" />
+        <activity
             android:name=".SignUpScreen"
             android:exported="false"
             android:label="@string/title_activity_sign_up_screen"

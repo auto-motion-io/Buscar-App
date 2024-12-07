@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.PitstopApi
+import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.OrdemServico
@@ -15,7 +16,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 class TelasViewModel : ViewModel() {
 
-    private val oficinas = mutableStateListOf<Oficina>()
+    private val oficinas = mutableStateListOf<OficinaDTO>()
     private val ordensDeServico = mutableStateListOf<OrdemServico>()
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)

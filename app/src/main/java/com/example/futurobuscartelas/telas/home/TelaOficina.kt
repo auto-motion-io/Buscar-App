@@ -1,5 +1,13 @@
 package com.example.futurobuscartelas.telas.home
 
+import android.annotation.SuppressLint
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,6 +17,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,65 +28,107 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.dto.OficinaDTO
+import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.Produto
 import com.example.futurobuscartelas.models.Servico
+import com.example.futurobuscartelas.telas.os.TelaConsultaOSActivity
+import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 import com.example.futurobuscartelas.ui.theme.*
+import org.koin.android.ext.android.inject
+
+class OficinaScreenActivity : ComponentActivity() {
+
+    private val sessaoUsuario: SessaoUsuario by inject()
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            val oficina = intent.getSerializableExtra("OFICINA_KEY", OficinaDTO::class.java)
+            OficinaScreen(oficina)
+        }
+    }
+}
 
 @Composable
-fun OficinaScreen(name: String, modifier: Modifier = Modifier, listaServicos: List<Servico>, listaPecas: List<Produto>) {
+fun OficinaScreen(oficina: OficinaDTO?) {
+    val context = LocalContext.current
+    val viewModel: TelaInicialViewModel = viewModel()
+    val listaServicos = viewModel.getServicos()
+    val listaPecas = viewModel.getPecas()
+
+    LaunchedEffect(Unit) {
+        oficina?.id?.let { viewModel.listarServicosPorOficina(it) }
+        oficina?.id?.let { viewModel.listarPecasPorOficina(it) }
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
             .background(color = Color(250, 250, 250))
             .verticalScroll(rememberScrollState())
-    )
-    {
-        // Logo section
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(top = 46.dp, bottom = 16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(id = R.mipmap.logo_buscar),
-                contentDescription = "Logo Buscar",
-                Modifier
-                    .size(90.dp)
-            )
-        }
-
+    ) {
         // Main content section
         Column(
             Modifier
-                .padding(bottom = 70.dp)
+                .padding(top = 20.dp, bottom = 70.dp)
                 .padding(horizontal = 25.dp)
         ) {
-            // Header row with title and favorite icon
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 30.dp, top = 30.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                ArrowBackButtonIntent(context, TelaInicialActivity::class.java, null, 1)
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(end = 35.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(R.mipmap.logo_buscar),
+                        contentDescription = "Logo do Buscar!"
+                    )
+                }
+            }
+
             Row(
                 Modifier
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = "Fast Motors",
-                    color = Color(59, 86, 60),
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = PRODUCT_SANS_FAMILY
-                )
+                oficina?.nome?.let {
+                    Text(
+                        text = it,
+                        color = Color(59, 86, 60),
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = PRODUCT_SANS_FAMILY
+                    )
+                }
                 Image(
                     painter = painterResource(id = R.mipmap.icon_fav),
                     contentDescription = "Botão de Favoritar",
@@ -97,9 +148,11 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier, listaServicos: Li
                         .size(20.dp)
                         .padding(top = 2.dp)
                 )
-                Column {
+                Column(
+                    Modifier.padding(top = 4.dp)
+                ) {
                     Text(
-                        text = "5.0",
+                        text = oficina?.mediaAvaliacao?.nota.toString(),
                         Modifier.padding(bottom = 4.dp, start = 5.dp),
                         fontSize = 14.sp,
                         color = Color(30, 30, 30),
@@ -112,16 +165,20 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier, listaServicos: Li
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(46.dp))
-                    .background(color = Color(185, 185, 185, 28))
                     .fillMaxWidth()
                     .height(220.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.mipmap.logo_buscar_nocolor),
-                    contentDescription = "Imagem da Oficina",
-                    modifier = Modifier.size(150.dp)
-                )
+                if (oficina != null) {
+                    AsyncImage(
+                        model = oficina.logoUrl, // URL da imagem
+                        contentDescription = "Logo da ${oficina.nome}",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(0.dp) // Ajuste o tamanho conforme necessário
+                    )
+                }
             }
 
             // Bottom section
@@ -229,12 +286,14 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier, listaServicos: Li
                     )
                 }
                 Column(Modifier.padding(top = 1.dp)) {
-                    Text(
-                        text = "9H00 ás 16H00",
-                        fontSize = 14.sp,
-                        color = Color(50, 50, 50, 240),
-                        fontFamily = PRODUCT_SANS_FAMILY
-                    )
+                    if (oficina != null) {
+                        Text(
+                            text = "${oficina.informacoesOficina?.horarioIniSem} ás ${oficina.informacoesOficina?.horarioFimSem}",
+                            fontSize = 14.sp,
+                            color = Color(50, 50, 50, 240),
+                            fontFamily = PRODUCT_SANS_FAMILY
+                        )
+                    }
                 }
             }
 
@@ -252,7 +311,10 @@ fun OficinaScreen(name: String, modifier: Modifier = Modifier, listaServicos: Li
                         Modifier.size(20.dp)
                     )
                 }
-                CheckSemana(listOf(false, true, true, true, true, false, true))
+                val listaCheck = oficina?.informacoesOficina?.diasSemanaAberto?.split(";")
+                val listaBooleans = listaCheck?.map { it.toBoolean() }
+
+                CheckSemana(listaBooleans)
             }
 
             //--------------

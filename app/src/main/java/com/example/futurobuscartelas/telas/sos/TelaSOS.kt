@@ -47,21 +47,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.futurobuscartelas.R
-import com.example.futurobuscartelas.models.Oficina
-import coil3.compose.AsyncImage
-import com.example.futurobuscartelas.api.google.LocationRepository
+import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.CepInfo
-import com.example.futurobuscartelas.signup.SignUpViewModel
-import com.example.futurobuscartelas.telas.home.TelaInicial
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
-import com.example.futurobuscartelas.telas.viewmodels.TelasViewModel
 import com.example.futurobuscartelas.ui.theme.CardSOS
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import kotlin.math.roundToInt
@@ -87,7 +80,7 @@ fun TelaSOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val oficinas = viewModel.getOficinas()
     var showMessage by remember { mutableStateOf(false) }
     val context = LocalContext.current
-    val visibleCards = remember { mutableStateListOf<Oficina>() }
+    val visibleCards = remember { mutableStateListOf<OficinaDTO>() }
 
     LaunchedEffect(Unit) {
         // A primeira chamada que carrega as oficinas

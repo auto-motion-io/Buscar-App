@@ -10,7 +10,7 @@ import retrofit2.Response
 
 interface PitstopApi {
     @GET("oficinas")
-    suspend fun listarTodos(): Response<List<Oficina>>
+    suspend fun listarTodos(): Response<List<OficinaDTO>>
 
     @GET("oficinas/{id}")
     suspend fun listarOficinaPorId(@Path("id") id: Int): Response<Oficina>

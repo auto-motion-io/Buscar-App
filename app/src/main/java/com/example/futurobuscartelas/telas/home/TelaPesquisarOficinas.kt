@@ -42,8 +42,8 @@ class TelaPesquisarOficinasActivity : ComponentActivity() {
 @Composable
 fun TelaPesquisarOficinas(sessaoUsuario: SessaoUsuario) {
     val context = LocalContext.current;
-    var viewmodel: TelaInicialViewModel = viewModel()
-    var listaOficinas = viewmodel.getOficinas()
+    val viewmodel: TelaInicialViewModel = viewModel()
+    val listaOficinas = viewmodel.getOficinas()
     var userData by remember { mutableStateOf<UserData?>(null) }
     val userRepository = remember { UserRepository(context) }
 

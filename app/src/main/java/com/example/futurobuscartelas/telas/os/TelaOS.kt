@@ -348,7 +348,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                     .padding(top = 2.dp, end = 4.dp)
                                     .size(15.dp)
                             )
-                            ordem?.oficina?.informacoesOficinaDTO?.whatsapp?.let {
+                            ordem?.oficina?.informacoesOficina?.whatsapp?.let {
                                 val textToDisplay = if (it.isNotEmpty()) it else "Sem número de telefone"
                                 Text(
                                     text = textToDisplay,

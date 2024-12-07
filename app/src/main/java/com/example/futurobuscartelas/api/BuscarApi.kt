@@ -93,8 +93,8 @@ interface BuscarApi {
 
     // Avaliação Oficina
     @GET("avaliacoes/oficina/{id}")
-    suspend fun buscarAvaliacao(@Path("id") id: Int): Response<List<Avaliacao>>
+    suspend fun buscarAvaliacao(@Path("id") id: Int): Response<List<AvaliacaoDTO>>
 
     @GET("avaliacoes/media-notas-oficina/{id}")
-    suspend fun mediaAvaliacaoOficina(@Path("id") id: Int): Response<MediaAvaliacao>
+    suspend fun mediaAvaliacaoOficina(@Path("id") id: Int): Response<MediaAvaliacaoDTO>
 }

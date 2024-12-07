@@ -1,5 +1,7 @@
 package com.example.futurobuscartelas.dto
 
+import java.io.Serializable
+
 data class InformacoesOficinaDTO (
     val id:Int,
     val whatsapp:String,
@@ -11,4 +13,4 @@ data class InformacoesOficinaDTO (
     val tipoVeiculosTrabalha:String,
     val tipoPropulsaoTrabalha:String,
     val marcasVeiculosTrabalha:String
-)
+) : Serializable

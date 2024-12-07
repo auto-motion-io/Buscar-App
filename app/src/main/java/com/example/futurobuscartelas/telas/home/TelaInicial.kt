@@ -128,7 +128,7 @@ fun TelaInicial(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                             fontFamily = PRODUCT_SANS_FAMILY
                         )
                         Text(
-                            text = "Marcos Gonzales",
+                            text = sessaoUsuario.nome,
                             fontSize = 18.sp,
                             color = Color(59, 86, 60),
                             fontFamily = PRODUCT_SANS_FAMILY

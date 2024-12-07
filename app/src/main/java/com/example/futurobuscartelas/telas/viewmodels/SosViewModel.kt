@@ -11,6 +11,9 @@ import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.PitstopApi
 import com.example.futurobuscartelas.api.ViaCepApi
 import com.example.futurobuscartelas.api.google.LocationRepository
+import com.example.futurobuscartelas.dto.AvaliacaoDTO
+import com.example.futurobuscartelas.dto.MediaAvaliacaoDTO
+import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.models.Avaliacao
 import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.MediaAvaliacao
@@ -24,13 +27,13 @@ import org.koin.java.KoinJavaComponent.inject
 
 class SosViewModel : ViewModel() {
     val repository: LocationRepository = LocationRepository()
-    val apiKey = "AIzaSyAV1EbJzFHWyS6ZAdW4b0SqI-6vlGd73Ys"
+    val apiKey = ""
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
     private val viaCepApi: ViaCepApi by inject(ViaCepApi::class.java)
 
-    val oficinas = mutableStateListOf<Oficina>()
+    val oficinas = mutableStateListOf<OficinaDTO>()
     val oficinasFavoritas = mutableStateListOf<OficinaFavorita>()
 
     fun getOficinas() = oficinas.toList()
@@ -189,7 +192,7 @@ class SosViewModel : ViewModel() {
         }
     }
 
-    suspend fun buscarAvaliacao(idOficina: Int): Avaliacao? {
+    suspend fun buscarAvaliacao(idOficina: Int): AvaliacaoDTO? {
         return try {
             val resposta = buscarApi.buscarAvaliacao(idOficina)
             if (resposta.isSuccessful) {
@@ -205,7 +208,7 @@ class SosViewModel : ViewModel() {
         }
     }
 
-    suspend fun buscarMediaAvaliacao(idOficina: Int): MediaAvaliacao? {
+    suspend fun buscarMediaAvaliacao(idOficina: Int): MediaAvaliacaoDTO? {
         return try {
             val resposta = buscarApi.mediaAvaliacaoOficina(idOficina)
             if (resposta.isSuccessful) {
