@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
+import com.example.futurobuscartelas.dto.AvaliacaoDTO
 import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.Produto
@@ -64,21 +65,23 @@ class OficinaScreenActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val oficina = intent.getSerializableExtra("OFICINA_KEY", OficinaDTO::class.java)
-            OficinaScreen(oficina)
+            OficinaScreen(oficina, sessaoUsuario)
         }
     }
 }
 
 @Composable
-fun OficinaScreen(oficina: OficinaDTO?) {
+fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario) {
     val context = LocalContext.current
     val viewModel: TelaInicialViewModel = viewModel()
     val listaServicos = viewModel.getServicos()
     val listaPecas = viewModel.getPecas()
+    var avaliacoes = viewModel.getAvaliacoes()
 
     LaunchedEffect(Unit) {
         oficina?.id?.let { viewModel.listarServicosPorOficina(it) }
         oficina?.id?.let { viewModel.listarPecasPorOficina(it) }
+        oficina?.id?.let { viewModel.buscarAvaliacoes(it) }
     }
 
 
@@ -373,7 +376,9 @@ fun OficinaScreen(oficina: OficinaDTO?) {
                 )
             }
             Column{
-                AddAvaliacao(usuario = "Mario Gonzales", estrelas = 5, mensagem = "")
+                avaliacoes.forEach { avaliacao ->
+                    AddAvaliacao(usuario = avaliacao.usuarioAvaliacao.nome, estrelas = avaliacao.nota.toInt(), mensagem = avaliacao.comentario, nomeUsuario = avaliacao.usuarioAvaliacao.nome, logoUsuario = avaliacao.usuarioAvaliacao.fotoUrl.toString())
+                }
             }
         }
     }

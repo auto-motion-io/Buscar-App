@@ -81,6 +81,7 @@ import com.example.futurobuscartelas.models.Oficina
 import com.example.futurobuscartelas.models.OrdemServico
 import com.example.futurobuscartelas.models.Produto
 import com.example.futurobuscartelas.models.Servico
+import com.example.futurobuscartelas.models.Usuario
 import com.example.futurobuscartelas.telas.home.OficinaScreenActivity
 import com.example.futurobuscartelas.telas.home.TelaInicialActivity
 import com.example.futurobuscartelas.telas.os.TelaConsultaOSActivity
@@ -89,32 +90,25 @@ import com.example.futurobuscartelas.telas.sos.TelaSOSActivity
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
 
 @Composable
-fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
+fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String, nomeUsuario: String, logoUsuario: String) {
     var estrelasAdd: Int = 0;
 
     Row(
         Modifier
             .padding(top = 10.dp, bottom = 10.dp)
             .fillMaxWidth()
-            .height(200.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(color = Color(238, 238, 238))
     ) {
         Column(
-            Modifier.padding(start = 20.dp, top = 20.dp, bottom = 24.dp)
+            Modifier.padding(start = 20.dp, top = 10.dp, bottom = 24.dp)
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column {
-                    Image(
-                        painterResource(id = R.mipmap.icon_user),
-                        contentDescription = "Imagem de Usuário",
-                        Modifier.size(56.dp)
-                    )
-                }
+                FotoUsuario(nomeUsuario, logoUsuario)
                 Column(
-                    Modifier.padding(start = 10.dp)
+                    Modifier.padding(top = 10.dp, start = 10.dp)
                 ) {
                     Row {
                         Text(
@@ -138,7 +132,7 @@ fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
                         }
 
                         if (estrelasAdd < 5) {
-                            var estrelasBranco: Int = 5 - estrelasAdd;
+                            val estrelasBranco: Int = 5 - estrelasAdd;
 
                             for (i in 1..estrelasBranco) {
                                 Image(
@@ -150,25 +144,13 @@ fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String) {
                         }
                     }
                 }
-                Column(
-                    Modifier.align(Alignment.Bottom)
-                ) {
-                    Text(
-                        text = "23/04/2024 - 13:55",
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        fontSize = 12.sp,
-                        color = Color(190, 190, 190),
-                        fontFamily = PRODUCT_SANS_FAMILY
-                    )
-                }
             }
             Row(
                 Modifier
                     .padding(end = 22.dp, top = 10.dp)
-                    .height(130.dp)
             ) {
                 Text(
-                    text = "A expressão Lorem ipsum em design gráfico e editoração é um texto padrão em latim utilizado na produção gráfica para preencher os espaços de texto em publicações para testar e ajustar aspectos visuais antes de utilizar conteúdo real.",
+                    text = mensagem,
                     fontSize = 12.sp,
                     fontFamily = PRODUCT_SANS_FAMILY
                 )
@@ -1525,6 +1507,84 @@ fun ListarServicosOs(lista: List<Servico>) {
             Text(
                 text = stringResource(id = R.string.label_preco),
                 modifier = Modifier.padding(end = 20.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun FotoUsuario(nomeUsuario: String, logoUsuario: String){
+    if(logoUsuario.isNotEmpty() && logoUsuario != "null"){
+        Column (
+            Modifier
+                .clip(RoundedCornerShape(50.dp))
+                .width(50.dp)
+                .height(50.dp)
+        ) {
+            AsyncImage(
+                model = logoUsuario, // URL da imagem
+                contentDescription = "Logo do usuário",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(0.dp) // Ajuste o tamanho conforme necessário
+            )
+        }
+    } else {
+        Column (
+            Modifier
+                .clip(RoundedCornerShape(50.dp))
+                .width(50.dp)
+                .height(50.dp)
+                .background(Color(230,230,230)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = nomeUsuario[0].toString(),
+                fontFamily = PRODUCT_SANS_FAMILY,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                color = Color(70,70,70)
+            )
+        }
+    }
+}
+
+@Composable
+fun FotoUsuarioSessao(sessaoUsuario: SessaoUsuario){
+    if(!sessaoUsuario.fotoUrl.isNullOrEmpty()){
+        Column (
+            Modifier
+                .clip(RoundedCornerShape(50.dp))
+                .width(50.dp)
+                .height(50.dp)
+        ) {
+            AsyncImage(
+                model = sessaoUsuario.fotoUrl, // URL da imagem
+                contentDescription = "Logo do usuário",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(0.dp) // Ajuste o tamanho conforme necessário
+            )
+        }
+    } else {
+        Column (
+            Modifier
+                .clip(RoundedCornerShape(50.dp))
+                .width(50.dp)
+                .height(50.dp)
+                .background(Color(230,230,230)),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = sessaoUsuario.nome[0].toString(),
+                fontFamily = PRODUCT_SANS_FAMILY,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                color = Color(70,70,70)
             )
         }
     }

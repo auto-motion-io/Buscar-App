@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.futurobuscartelas.api.BuscarApi
 import com.example.futurobuscartelas.api.PitstopApi
 import com.example.futurobuscartelas.api.ViaCepApi
+import com.example.futurobuscartelas.dto.AvaliacaoDTO
 import com.example.futurobuscartelas.dto.MediaAvaliacaoDTO
 import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.models.CepInfo
@@ -27,6 +28,7 @@ class TelaInicialViewModel : ViewModel() {
     private val oficinas = mutableStateListOf<OficinaDTO>()
     private val servicos = mutableStateListOf<Servico>()
     private val pecas = mutableStateListOf<Produto>()
+    private val avaliacoes = mutableStateListOf<AvaliacaoDTO>()
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
@@ -36,6 +38,7 @@ class TelaInicialViewModel : ViewModel() {
     fun getOficinas() = oficinas.toList()
     fun getServicos() = servicos.toList()
     fun getPecas() = pecas.toList()
+    fun getAvaliacoes() = avaliacoes.toList()
 
     fun listarOficinasFavoritas(id: Int) {
         viewModelScope.launch {
@@ -210,6 +213,26 @@ class TelaInicialViewModel : ViewModel() {
         } catch (exception: Exception) {
             Log.e("api", "Erro ao buscar avaliação: ", exception)
             null
+        }
+    }
+
+    fun buscarAvaliacoes(idOficina: Int) {
+        viewModelScope.launch {
+            try{
+                val resposta = buscarApi.buscarAvaliacao(idOficina)
+                Log.i("api", "Serviços: ${resposta.body()}")
+                if (resposta.isSuccessful) {
+                    val listaAvaliacoes = resposta.body().orEmpty()
+                    Log.i("api", "Lista de OS retornada: $listaAvaliacoes")
+
+                    avaliacoes.clear()
+                    avaliacoes.addAll(listaAvaliacoes)
+                } else {
+                    Log.e("api", "Erro ao buscar Serviços: ${resposta.errorBody()?.string()}")
+                }
+            } catch (e: Exception){
+                Log.e("api", "Erro ao buscar servicos", e)
+            }
         }
     }
 }
