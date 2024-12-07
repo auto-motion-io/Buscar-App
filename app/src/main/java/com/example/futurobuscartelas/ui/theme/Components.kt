@@ -3,6 +3,7 @@ package com.example.futurobuscartelas.ui.theme
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
@@ -56,6 +57,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -352,22 +354,23 @@ fun AddCategoria(categoria: String, context: Context, activity: Class<out Compon
 }
 
 @Composable
-fun ListarFavoritos(modifier: Modifier, oficinas:List<Oficina>) {
+fun ListarFavoritos(modifier: Modifier, oficinas: List<Oficina>) {
 
     // Agrupa os serviços em pares
     val groupedFavoritos = oficinas.chunked(2)
 
-    var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg"
+    var imageUrl =
+        "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg"
 
     Column(modifier = modifier) {
-        if(oficinas.isNotEmpty()){
+        if (oficinas.isNotEmpty()) {
             for (grupo in groupedFavoritos) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     for (oficina in grupo) {
-                        if(!oficina.logoUrl.isNullOrEmpty()){
+                        if (!oficina.logoUrl.isNullOrEmpty()) {
                             imageUrl = oficina.logoUrl
                         }
                         Column(
@@ -403,7 +406,7 @@ fun ListarFavoritos(modifier: Modifier, oficinas:List<Oficina>) {
                     }
                 }
             }
-        } else{
+        } else {
             Column {
                 Text(
                     text = stringResource(R.string.label_semFavoritos),
@@ -417,7 +420,7 @@ fun ListarFavoritos(modifier: Modifier, oficinas:List<Oficina>) {
 }
 
 @Composable
-fun BotaoPesquisa(fundo: Boolean, onClick : () -> Unit) {
+fun BotaoPesquisa(fundo: Boolean, onClick: () -> Unit) {
     if (fundo) {
         Button(
             onClick = {
@@ -618,7 +621,7 @@ fun ListarOficinas(modifier: Modifier, lista: List<OficinaDTO>, context: Context
                                     Modifier.padding(start = 4.dp)
                                 ) {
                                     Text(
-                                        text =  oficina.logradouro + " - " + oficina.numero,
+                                        text = oficina.logradouro + " - " + oficina.numero,
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         fontSize = 10.sp,
                                         color = Color(0, 0, 0, 180)
@@ -724,10 +727,12 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
                     val listaOficinas = lista as? List<OficinaDTO> ?: emptyList()
                     ListarOficinas(modifier = Modifier, listaOficinas, context)
                 }
+
                 "Peças" -> {
                     val listaPecas = lista as? List<Produto> ?: emptyList()
                     ListarPecas(modifier = Modifier, listaPecas)
                 }
+
                 "Serviços" -> {
                     val listaServicos = lista as? List<Servico> ?: emptyList()
                     ListarServicos(modifier = Modifier, listaServicos)
@@ -1003,7 +1008,7 @@ fun MainScreen(sessaoUsuario: SessaoUsuario, context: Context) {
                 selectedTabIndex = selectedTabIndex
             )
         }
-    ) {  paddingValues ->
+    ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
             AnimatedVisibility(
                 visible = selectedTabIndex == 0,
@@ -1045,7 +1050,8 @@ fun MainScreen(sessaoUsuario: SessaoUsuario, context: Context) {
             ) {
                 TelaPerfil(
                     selectedTabIndex = selectedTabIndex,
-                    sessaoUsuario = sessaoUsuario)
+                    sessaoUsuario = sessaoUsuario
+                )
             }
         }
     }
@@ -1054,14 +1060,16 @@ fun MainScreen(sessaoUsuario: SessaoUsuario, context: Context) {
 @Composable
 fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
     val viewModel: SosViewModel = viewModel()
+    val context = LocalContext.current
     var listaOficinasFavoritas = viewModel.getOficinasFavoritas()
     var liked by remember { mutableStateOf(false) }
-    listaOficinasFavoritas.forEach{
-        oficinaFav ->
-        if(oficinaFav.oficina.id == oficina.id && oficinaFav.usuario.idUsuario == idUsuario) {
+    listaOficinasFavoritas.forEach { oficinaFav ->
+        if (oficinaFav.oficina.id == oficina.id && oficinaFav.usuario.idUsuario == idUsuario) {
             liked = true;
         }
     }
+    val hasNumeroWhatsapp =
+        oficina.informacoesOficina != null && oficina.informacoesOficina.whatsapp.isNotBlank()
 
     LaunchedEffect(Unit) {
         viewModel.listarOficinasFavoritas(idUsuario)
@@ -1073,12 +1081,13 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
         "Distância indisponível"
     }
 
-    var imageUrl = "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
+    var imageUrl =
+        "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg" // Altere para o ID correto da imagem padrão
 
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val boxHeight = (screenHeight * 0.75f)
 
-    if(oficina.logoUrl.isNotBlank()){
+    if (oficina.logoUrl.isNotBlank()) {
         imageUrl = oficina.logoUrl;
     }
 
@@ -1113,10 +1122,10 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
             ) {
                 Button(
                     onClick = {
-                        if(liked){
+                        if (liked) {
                             viewModel.removeOficina(idUsuario, oficina.id)
                             liked = false;
-                        } else{
+                        } else {
                             viewModel.favoritarOficina(idUsuario, oficina.id)
                         }
                     },
@@ -1130,7 +1139,11 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                         .size(50.dp)
                 ) {
                     Image(
-                        painter = if(!liked){painterResource(R.mipmap.icon_fav_semcor)} else{painterResource(R.mipmap.icon_fav)},
+                        painter = if (!liked) {
+                            painterResource(R.mipmap.icon_fav_semcor)
+                        } else {
+                            painterResource(R.mipmap.icon_fav)
+                        },
                         contentDescription = "Imagem de Coração(Favoritar)",
                         modifier = Modifier
                             .size(20.dp)
@@ -1164,7 +1177,27 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                         Image(
                             painter = painterResource(R.mipmap.icon_local),
                             contentDescription = "Imagem de indicação de local",
-                            Modifier.size(20.dp)
+                            Modifier
+                                .size(20.dp)
+                                .clickable {
+                                    val logradouro = oficina.logradouro
+                                    val numero = oficina.numero
+                                    val bairro = oficina.bairro
+                                    val cidade = oficina.cidade
+                                    val cep = oficina.cep
+
+                                    val endereco =
+                                        "$logradouro, $numero, $bairro, $cidade, CEP $cep"
+                                    Log.i("address", endereco)
+                                    val intent = Intent(Intent.ACTION_VIEW).apply {
+                                        data = Uri.parse(
+                                            "https://www.google.com/maps/dir/?api=1&destination=${
+                                                Uri.encode(endereco)
+                                            }"
+                                        )
+                                    }
+                                    context.startActivity(intent)
+                                }
                         )
                     }
                 }
@@ -1177,20 +1210,34 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        Modifier
-                            .width(50.dp)
-                            .height(50.dp)
-                            .clip(RoundedCornerShape(100.dp))
-                            .background(color = Color(230, 230, 230)),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(R.mipmap.icon_whatsapp),
-                            contentDescription = "Imagem de WhatsApp",
-                            Modifier.size(20.dp)
-                        )
+                    if (hasNumeroWhatsapp) {
+                        Row(
+                            Modifier
+                                .width(50.dp)
+                                .height(50.dp)
+                                .clip(RoundedCornerShape(100.dp))
+                                .background(color = Color(230, 230, 230)),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            val mensagem =
+                                "Olá, encontrei a oficina pelo SOS do Buscar, está disponível para atender?"
+                            Image(
+                                painter = painterResource(R.mipmap.icon_whatsapp),
+                                contentDescription = "Imagem de WhatsApp",
+                                Modifier
+                                    .size(20.dp)
+                                    .clickable {
+                                        val numeroTelefone = oficina.informacoesOficina!!.whatsapp
+
+                                        val intent = Intent(Intent.ACTION_VIEW).apply {
+                                            data =
+                                                Uri.parse("https://wa.me/+55$numeroTelefone?text=$mensagem")
+                                        }
+                                        context.startActivity(intent)
+                                    }
+                            )
+                        }
                     }
                 }
 
@@ -1220,10 +1267,14 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                                 color = VerdeBuscar
                             )
                             Text(
-                                text = text ,
+                                text = text,
                                 fontSize = 16.sp,
                                 fontFamily = PRODUCT_SANS_FAMILY,
-                                color = if (oficina.distance != null) Color(50, 50, 50) else Color.Gray,
+                                color = if (oficina.distance != null) Color(
+                                    50,
+                                    50,
+                                    50
+                                ) else Color.Gray,
                                 modifier = Modifier.padding(top = 15.dp)
                             )
 
@@ -1257,7 +1308,8 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                                 Modifier.size(16.dp)
                             )
                             Text(
-                                text = oficina.mediaAvaliacao?.nota?.toString() ?: "N/A",  // Caso não tenha nota, exibe "N/A"
+                                text = oficina.mediaAvaliacao?.nota?.toString()
+                                    ?: "N/A",  // Caso não tenha nota, exibe "N/A"
                                 modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
                                 fontFamily = PRODUCT_SANS_FAMILY,
                                 fontSize = 16.sp
@@ -1363,9 +1415,11 @@ fun ResultDialog(title: String, text: String, icon: ImageVector, onDismiss: () -
 
 @Composable
 fun MotionLoading() {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .zIndex(1f)){
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(1f)
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -1383,10 +1437,10 @@ fun MotionLoading() {
 }
 
 @Composable
-fun ListarPecasOs(lista: List<Produto>){
+fun ListarPecasOs(lista: List<Produto>) {
 
-    for(peca in lista){
-        Row (
+    for (peca in lista) {
+        Row(
             Modifier
                 .padding(top = 20.dp)
                 .clip(RoundedCornerShape(12.dp))
@@ -1396,7 +1450,7 @@ fun ListarPecasOs(lista: List<Produto>){
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row (
+            Row(
                 Modifier
                     .padding(horizontal = 10.dp)
             ) {
@@ -1413,14 +1467,14 @@ fun ListarPecasOs(lista: List<Produto>){
                         fontSize = 14.sp,
                         fontFamily = PRODUCT_SANS_FAMILY,
                         fontWeight = FontWeight.Bold,
-                        color = Color(80,80,80)
+                        color = Color(80, 80, 80)
                     )
                     Text(
                         text = peca.quantidade.toString() + " Unidade(s)",
                         fontSize = 10.sp,
                         fontFamily = PRODUCT_SANS_FAMILY,
                         fontWeight = FontWeight.Bold,
-                        color = Color(80,80,80)
+                        color = Color(80, 80, 80)
                     )
                 }
             }
@@ -1433,10 +1487,10 @@ fun ListarPecasOs(lista: List<Produto>){
 }
 
 @Composable
-fun ListarServicosOs(lista: List<Servico>){
+fun ListarServicosOs(lista: List<Servico>) {
 
-    for(servico in lista){
-        Row (
+    for (servico in lista) {
+        Row(
             Modifier
                 .padding(top = 20.dp)
                 .clip(RoundedCornerShape(12.dp))
@@ -1446,7 +1500,7 @@ fun ListarServicosOs(lista: List<Servico>){
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row (
+            Row(
                 Modifier
                     .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -1464,7 +1518,7 @@ fun ListarServicosOs(lista: List<Servico>){
                         fontSize = 14.sp,
                         fontFamily = PRODUCT_SANS_FAMILY,
                         fontWeight = FontWeight.Bold,
-                        color = Color(80,80,80)
+                        color = Color(80, 80, 80)
                     )
                 }
             }

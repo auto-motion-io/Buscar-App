@@ -2,6 +2,7 @@ package com.example.futurobuscartelas.api.google
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
 import com.example.futurobuscartelas.location.LocationManager
 import com.example.futurobuscartelas.location.LocationPermissions
 import com.example.futurobuscartelas.location.UserLocation
@@ -69,21 +70,20 @@ class LocationRepository {
             })
     }
 
-    fun getLocation(context: Context): UserLocation {
-        var locationObject = UserLocation();
+    fun getLocation(context: Context, callback: (UserLocation) -> Unit) {
         if (LocationPermissions.hasLocationPermission(context)) {
             LocationManager.getCurrentLocation { location ->
                 location?.let {
-                    locationObject = UserLocation(it.latitude.toString(), it.longitude.toString())
+                    callback(UserLocation(it.latitude.toString(), it.longitude.toString()))
                 } ?: run {
                     Log.e("Location", "Localização indisponível.")
+                    callback(UserLocation("0.0", "0.0"))
                 }
             }
         } else {
             Log.e("Location", "Permissão de localização não concedida.")
+            callback(UserLocation("0.0", "0.0"))
         }
-
-        return locationObject
     }
 
 }

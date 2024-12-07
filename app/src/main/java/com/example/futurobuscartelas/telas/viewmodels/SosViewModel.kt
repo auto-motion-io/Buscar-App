@@ -14,6 +14,7 @@ import com.example.futurobuscartelas.api.google.LocationRepository
 import com.example.futurobuscartelas.dto.AvaliacaoDTO
 import com.example.futurobuscartelas.dto.MediaAvaliacaoDTO
 import com.example.futurobuscartelas.dto.OficinaDTO
+import com.example.futurobuscartelas.location.UserLocation
 import com.example.futurobuscartelas.models.Avaliacao
 import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.MediaAvaliacao
@@ -44,17 +45,23 @@ class SosViewModel : ViewModel() {
         targetCep: String,
         callback: (Int?) -> Unit
     ) {
-        val userLocation = repository.getLocation(context)
+        var userLocation = UserLocation()
+
+        repository.getLocation(context) {
+            userLocation = it
+        }
         GlobalScope.launch {
             repository.fetchCoordinates(apiKey, targetCep) { coordinates ->
                 if (coordinates != null) {
                     val currentLat = -23.457142
                     val currentLon = -46.692007
 
+
                     //val currentLat = userLocation.latitude
                     //val currentLon = userLocation.longitude
 
                     val origins = "$currentLat,$currentLon"
+                    Log.i("Location", "Origins: $origins")
                     val destinations = "${coordinates.first},${coordinates.second}"
 
                     repository.fetchDistance(apiKey, origins, destinations) { distance ->
@@ -88,7 +95,10 @@ class SosViewModel : ViewModel() {
                                 // Obtém a distância da oficina
                                 getDistanceFromOficina(context, oficina.cep) { distance ->
                                     oficina.distance = distance
-                                    Log.i("Location", "distancia para oficina viewmodel ${oficina.nome}: ${oficina.distance}")
+                                    Log.i(
+                                        "Location",
+                                        "distancia para oficina viewmodel ${oficina.nome}: ${oficina.distance}"
+                                    )
                                 }
 
                                 // Preenche os campos de endereço da oficina com a função retornada
@@ -96,7 +106,10 @@ class SosViewModel : ViewModel() {
                                     oficina.logradouro = cepInfo.logradouro ?: ""
                                     oficina.bairro = cepInfo.bairro ?: ""
                                     oficina.cidade = cepInfo.localidade ?: ""
-                                    Log.i("api", "CEP atualizado para oficina ${oficina.nome}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}")
+                                    Log.i(
+                                        "api",
+                                        "CEP atualizado para oficina ${oficina.nome}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}"
+                                    )
                                 }
 
                                 // Busca a avaliação da oficina
