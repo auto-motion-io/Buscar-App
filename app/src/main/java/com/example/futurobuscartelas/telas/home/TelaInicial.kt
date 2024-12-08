@@ -47,6 +47,7 @@ import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
 import com.example.futurobuscartelas.ui.theme.AddCategoria
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
+import com.example.futurobuscartelas.ui.theme.FotoUsuarioSessao
 import com.example.futurobuscartelas.ui.theme.ListarFavoritos
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import org.koin.android.ext.android.inject
@@ -113,13 +114,9 @@ fun TelaInicial(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                 Row(
                     Modifier.fillMaxWidth()
                 ) {
-                    Image(
-                        painter = painterResource(id = R.mipmap.icon_user),
-                        contentDescription = "Imagem do Usuário",
-                        Modifier
-                            .padding(end = 10.dp)
-                            .size(50.dp)
-                    )
+                    Column (Modifier.padding(end = 10.dp)) {
+                        FotoUsuarioSessao(sessaoUsuario)
+                    }
                     Column {
                         Text(
                             text = stringResource(id = R.string.label_bemvindo),
@@ -169,7 +166,7 @@ fun TelaInicial(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                             fontFamily = PRODUCT_SANS_FAMILY
                         )
                     }
-                    ListarFavoritos(Modifier, oficinas)
+                    ListarFavoritos(Modifier, oficinas, context)
                 }
             }
         }

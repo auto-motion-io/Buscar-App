@@ -15,6 +15,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,9 +27,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,23 +72,34 @@ class OficinaScreenActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val oficina = intent.getSerializableExtra("OFICINA_KEY", OficinaDTO::class.java)
-            OficinaScreen(oficina, sessaoUsuario)
+            val fav = intent.getStringExtra("OFICINA_KEY")
+            OficinaScreen(oficina, sessaoUsuario, fav)
         }
     }
 }
 
 @Composable
-fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario) {
+fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String?) {
     val context = LocalContext.current
     val viewModel: TelaInicialViewModel = viewModel()
     val listaServicos = viewModel.getServicos()
     val listaPecas = viewModel.getPecas()
-    var avaliacoes = viewModel.getAvaliacoes()
+    val avaliacoes = viewModel.getAvaliacoes()
+    var liked by remember { mutableStateOf(false) }
+    val listaOficinasFavoritas = viewModel.getOficinasFavoritas()
+    listaOficinasFavoritas.forEach { oficinaFav ->
+        if (oficina != null) {
+            if (oficinaFav.oficina.id == oficina.id && oficinaFav.usuario.idUsuario == sessaoUsuario.id) {
+                liked = true;
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
         oficina?.id?.let { viewModel.listarServicosPorOficina(it) }
         oficina?.id?.let { viewModel.listarPecasPorOficina(it) }
         oficina?.id?.let { viewModel.buscarAvaliacoes(it) }
+        oficina?.id?.let { viewModel.listarOficinasFavoritas(it) }
     }
 
 
@@ -132,11 +150,41 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario) {
                         fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
-                Image(
-                    painter = painterResource(id = R.mipmap.icon_fav),
-                    contentDescription = "Botão de Favoritar",
-                    Modifier.size(18.dp)
-                )
+                Button(
+                    onClick = {
+                        if (liked) {
+                            if (oficina != null) {
+                                viewModel.removeOficina(sessaoUsuario.id, oficina.id)
+                            }
+                            liked = false;
+                        } else {
+                            if (oficina != null) {
+                                viewModel.favoritarOficina(sessaoUsuario.id, oficina.id)
+                            }
+                            liked = true;
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(230, 230, 230) // Removendo a cor de fundo
+                    ),
+                    shape = RoundedCornerShape(100.dp),
+                    elevation = null, // Removendo elevação
+                    contentPadding = PaddingValues(0.dp),
+                    modifier = Modifier
+                        .size(50.dp)
+                ) {
+                    Image(
+                        painter = if (!liked) {
+                            painterResource(R.mipmap.icon_fav_semcor)
+                        } else {
+                            painterResource(R.mipmap.icon_fav)
+                        },
+                        contentDescription = "Imagem de Coração(Favoritar)",
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                    )
+                }
             }
 
             // Rating row

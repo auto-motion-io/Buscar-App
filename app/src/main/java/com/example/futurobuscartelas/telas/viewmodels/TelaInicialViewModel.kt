@@ -13,6 +13,7 @@ import com.example.futurobuscartelas.dto.OficinaDTO
 import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.models.MediaAvaliacao
 import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.models.OficinaFavorita
 import com.example.futurobuscartelas.models.Produto
 import com.example.futurobuscartelas.models.Servico
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -24,7 +25,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 class TelaInicialViewModel : ViewModel() {
 
-    private val oficinasFavoritas = mutableStateListOf<Oficina>()
+    private val oficinasFavoritas = mutableStateListOf<OficinaFavorita>()
     private val oficinas = mutableStateListOf<OficinaDTO>()
     private val servicos = mutableStateListOf<Servico>()
     private val pecas = mutableStateListOf<Produto>()
@@ -47,10 +48,9 @@ class TelaInicialViewModel : ViewModel() {
                 if (resposta.isSuccessful) {
                     val listaOficinasFavoritas = resposta.body().orEmpty()
                     // Extraia apenas as oficinas
-                    val listaOficinas = listaOficinasFavoritas.mapNotNull { it.oficina }
                     oficinasFavoritas.clear()
-                    oficinasFavoritas.addAll(listaOficinas)
-                    Log.i("api", "Oficinas: $listaOficinas")
+                    oficinasFavoritas.addAll(listaOficinasFavoritas)
+                    Log.i("api", "Oficinas: $listaOficinasFavoritas")
                 } else {
                     Log.e("api", "Erro na API: Código ${resposta.code()} - ${resposta.message()}")
                 }
@@ -232,6 +232,40 @@ class TelaInicialViewModel : ViewModel() {
                 }
             } catch (e: Exception){
                 Log.e("api", "Erro ao buscar servicos", e)
+            }
+        }
+    }
+
+    fun favoritarOficina(idUsuario: Int, idOficina: Int) {
+        GlobalScope.launch {
+            try {
+                // Fazendo o POST para favoritar uma oficina
+                val resposta = buscarApi.favoritar(idUsuario, idOficina)
+
+                if (resposta.isSuccessful) {
+                    Log.i("api", "Oficina ${idOficina} favoritada com sucesso.")
+                } else {
+                    Log.e("api", "Erro ao favoritar oficina: ${resposta.errorBody()?.string()}")
+                }
+            } catch (exception: Exception) {
+                Log.e("api", "Erro ao favoritar oficina", exception)
+            }
+        }
+    }
+
+    fun removeOficina(idUsuario: Int, idOficina: Int) {
+        GlobalScope.launch {
+            try {
+                // Fazendo o POST para favoritar uma oficina
+                val resposta = buscarApi.remover(idUsuario, idOficina)
+
+                if (resposta.isSuccessful) {
+                    Log.i("api", "Oficina ${idOficina} favoritada com sucesso.")
+                } else {
+                    Log.e("api", "Erro ao favoritar oficina: ${resposta.errorBody()?.string()}")
+                }
+            } catch (exception: Exception) {
+                Log.e("api", "Erro ao favoritar oficina", exception)
             }
         }
     }

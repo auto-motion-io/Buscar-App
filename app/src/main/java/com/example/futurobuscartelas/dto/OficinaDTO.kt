@@ -2,6 +2,7 @@ package com.example.futurobuscartelas.dto
 
 import com.example.futurobuscartelas.models.Avaliacao
 import com.example.futurobuscartelas.models.MediaAvaliacao
+import com.example.futurobuscartelas.models.Usuario
 import java.io.Serializable
 
 data class OficinaDTO(
@@ -19,6 +20,7 @@ data class OficinaDTO(
     var distance: Int?,
     var avaliacao: AvaliacaoDTO?,
     var mediaAvaliacao: MediaAvaliacaoDTO?,
-    val informacoesOficina: InformacoesOficinaDTO?
+    val informacoesOficina: InformacoesOficinaDTO?,
+    val usuario: Usuario?
 ) : Serializable
 

@@ -78,6 +78,7 @@ import com.example.futurobuscartelas.telas.sos.TelaSOS
 import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.login.UserData
 import com.example.futurobuscartelas.models.Oficina
+import com.example.futurobuscartelas.models.OficinaFavorita
 import com.example.futurobuscartelas.models.OrdemServico
 import com.example.futurobuscartelas.models.Produto
 import com.example.futurobuscartelas.models.Servico
@@ -88,6 +89,7 @@ import com.example.futurobuscartelas.telas.os.TelaConsultaOSActivity
 import com.example.futurobuscartelas.telas.perfil.TelaPerfilActivity
 import com.example.futurobuscartelas.telas.sos.TelaSOSActivity
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
+import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 
 @Composable
 fun AddAvaliacao(usuario: String, estrelas: Int, mensagem: String, nomeUsuario: String, logoUsuario: String) {
@@ -336,7 +338,7 @@ fun AddCategoria(categoria: String, context: Context, activity: Class<out Compon
 }
 
 @Composable
-fun ListarFavoritos(modifier: Modifier, oficinas: List<Oficina>) {
+fun ListarFavoritos(modifier: Modifier, oficinas: List<OficinaFavorita>, context: Context) {
 
     // Agrupa os serviços em pares
     val groupedFavoritos = oficinas.chunked(2)
@@ -344,21 +346,39 @@ fun ListarFavoritos(modifier: Modifier, oficinas: List<Oficina>) {
     var imageUrl =
         "https://blog.engecass.com.br/wp-content/uploads/2023/09/inovacoes-e-tendencias-para-auto-centers-e-oficinas-mecanicas.jpg"
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier
+    ) {
         if (oficinas.isNotEmpty()) {
             for (grupo in groupedFavoritos) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    for (oficina in grupo) {
-                        if (!oficina.logoUrl.isNullOrEmpty()) {
-                            imageUrl = oficina.logoUrl
+                    for (oficinaFav in grupo) {
+                        val viewmodel: TelaInicialViewModel = viewModel()
+                        val listaOficinas = viewmodel.getOficinas()
+
+                        val novaOficina: OficinaDTO? = listaOficinas.firstOrNull { oficina ->
+                            oficina.id == oficinaFav.oficina.id
+                        }
+
+                        LaunchedEffect(Unit) {
+                            viewmodel.listarOficinas()
+                        }
+
+                        if (!oficinaFav.oficina.logoUrl.isNullOrBlank()) {
+                            imageUrl = oficinaFav.oficina.logoUrl
                         }
                         Column(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(end = 14.dp)
+                                .clickable {
+                                    val intent = Intent(context, OficinaScreenActivity::class.java)
+                                    intent.putExtra("OFICINA_KEY", novaOficina)
+                                    context.startActivity(intent)
+                                }
                         ) {
                             Box(
                                 Modifier
@@ -370,7 +390,7 @@ fun ListarFavoritos(modifier: Modifier, oficinas: List<Oficina>) {
                                 // Imagem de fundo do card
                                 AsyncImage(
                                     model = imageUrl, // URL da imagem
-                                    contentDescription = "Logo da ${oficina.nome}",
+                                    contentDescription = "Logo da ${oficinaFav.oficina.nome}",
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .fillMaxSize()
@@ -378,7 +398,7 @@ fun ListarFavoritos(modifier: Modifier, oficinas: List<Oficina>) {
                                 )
                             }
                             Text(
-                                text = oficina.nome,
+                                text = oficinaFav.oficina.nome,
                                 color = Color(59, 86, 60),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
@@ -1043,7 +1063,7 @@ fun MainScreen(sessaoUsuario: SessaoUsuario, context: Context) {
 fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
     val viewModel: SosViewModel = viewModel()
     val context = LocalContext.current
-    var listaOficinasFavoritas = viewModel.getOficinasFavoritas()
+    val listaOficinasFavoritas = viewModel.getOficinasFavoritas()
     var liked by remember { mutableStateOf(false) }
     listaOficinasFavoritas.forEach { oficinaFav ->
         if (oficinaFav.oficina.id == oficina.id && oficinaFav.usuario.idUsuario == idUsuario) {
@@ -1109,6 +1129,7 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                             liked = false;
                         } else {
                             viewModel.favoritarOficina(idUsuario, oficina.id)
+                            liked = true;
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
