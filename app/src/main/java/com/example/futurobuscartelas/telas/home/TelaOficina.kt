@@ -102,6 +102,11 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String
         oficina?.id?.let { viewModel.listarOficinasFavoritas(it) }
     }
 
+    val isLoading by viewModel.isLoading
+
+    if(isLoading) {
+        MotionLoading()
+    }
 
     Column(
         modifier = Modifier

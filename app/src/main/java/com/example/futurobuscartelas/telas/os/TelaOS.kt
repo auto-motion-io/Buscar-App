@@ -50,6 +50,7 @@ import com.example.futurobuscartelas.ui.theme.ListarPecas
 import com.example.futurobuscartelas.ui.theme.ListarPecasOs
 import com.example.futurobuscartelas.ui.theme.ListarServicos
 import com.example.futurobuscartelas.ui.theme.ListarServicosOs
+import com.example.futurobuscartelas.ui.theme.MotionLoading
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
@@ -83,6 +84,20 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
     val pecas = viewModel.getPecas()
     val listaServicosOs = ordem?.servicos
     val listaPecasOs = ordem?.produtos
+
+    val color = when(
+        ordem?.status
+    ) {
+        "EM ABERTO" -> Color(250, 200, 0)
+        "CONCLUIDO" -> Color(0, 200, 0)
+        else -> Color(250, 200, 0)
+    }
+
+    val isLoading by viewModel.isLoading
+
+    if(isLoading){
+        MotionLoading()
+    }
 
     LaunchedEffect(Unit) {
         if (token != null) {
@@ -177,7 +192,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                     .width(8.dp)
                                     .height(8.dp)
                                     .clip(RoundedCornerShape(20.dp))
-                                    .background(Color(250, 200, 0))
+                                    .background(color = color)
 
                             ) {}
                             ordem?.status?.let {
@@ -255,7 +270,9 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Image(
                                     painter = painterResource(R.mipmap.icon_calendario_os),
                                     contentDescription = "Icone de calendario",
-                                    modifier = Modifier.padding(end = 8.dp).size(14.dp)
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .size(14.dp)
                                 )
                                 Column (
                                     Modifier.padding(start = 5.dp)
@@ -296,7 +313,9 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Image(
                                     painter = painterResource(R.mipmap.icon_calendario_filled_os),
                                     contentDescription = "Icone de calendario",
-                                    modifier = Modifier.padding(end = 8.dp).size(14.dp)
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .size(14.dp)
                                 )
                                 Column (
                                     Modifier.padding(start = 5.dp)
@@ -380,25 +399,6 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 fontFamily = PRODUCT_SANS_FAMILY
                             )
                         }
-                        Row (
-                            Modifier.padding(top = 5.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(R.mipmap.icon_email),
-                                contentDescription = "Icone de Email",
-                                modifier = Modifier
-                                    .padding(top = 2.dp, end = 4.dp)
-                                    .size(15.dp)
-                            )
-                            ordem?.veiculo?.cliente?.email?.let {
-                                Text(
-                                    text = it,
-                                    color = Color(80,80,80),
-                                    fontSize = 14.sp,
-                                    fontFamily = PRODUCT_SANS_FAMILY
-                                )
-                            }
-                        }
                     }
                     Row (
                         Modifier
@@ -429,7 +429,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Column (
                                     Modifier.height(40.dp)
                                 ) {
-                                    ordem?.veiculo?.placa?.let {
+                                    ordem?.placaVeiculo?.let {
                                         Text(
                                             text = it,
                                             color = Color(80,80,80),
@@ -439,13 +439,13 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                         )
                                     }
                                     Text(
-                                        text = ordem?.veiculo?.modelo + " - " + ordem?.veiculo?.marca,
+                                        text = ordem?.modeloVeiculo + " - " + ordem?.marcaVeiculo,
                                         color = Color(80,80, 80),
                                         fontSize = 10.sp,
                                         fontFamily = PRODUCT_SANS_FAMILY,
                                         fontWeight = FontWeight.Bold
                                     )
-                                    ordem?.veiculo?.cor?.let {
+                                    ordem?.corVeiculo?.let {
                                         Text(
                                             text = it,
                                             color = Color(80,80,80),
@@ -482,7 +482,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                 Column (
                                     Modifier.height(40.dp)
                                 ) {
-                                    ordem?.veiculo?.cliente?.nome?.let {
+                                    ordem?.nomeCliente?.let {
                                         Text(
                                             text = it,
                                             color = Color(80,80,80),
@@ -491,7 +491,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
-                                    ordem?.veiculo?.cliente?.telefone?.let {
+                                    ordem?.telefoneCliente?.let {
                                         Text(
                                             text = it,
                                             color = Color(80,80,80),
@@ -500,7 +500,7 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                                             fontWeight = FontWeight.Bold
                                         )
                                     }
-                                    ordem?.veiculo?.cliente?.email?.let {
+                                    ordem?.emailCliente?.let {
                                         Text(
                                             text = it,
                                             color = Color(80,80,80),
@@ -572,19 +572,9 @@ fun TelaOS(selectedTabIndex: Int, onTabSelected: (Int) -> Unit, sessaoUsuario: S
                             fontFamily = PRODUCT_SANS_FAMILY,
                             fontWeight = FontWeight.Bold
                         )
-                        var valorTotal = 0.0;
-
-
-                        if (listaServicosOs != null) {
-                            for (servico in listaServicosOs){
-                                valorTotal += servico.valorServico
-                            }
-                        }
-                        if (listaPecasOs != null) {
-                            for (peca in listaPecasOs){
-                                valorTotal += peca.valorVenda
-                            }
-                        }
+                        val valorTotal = ordem?.valorTotal?.let {
+                            String.format("%.2f", it)
+                        } ?: "0,00"
                         Text(
                             text = "R$${valorTotal}",
                             fontSize = 22.sp,

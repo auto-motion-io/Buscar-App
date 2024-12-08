@@ -2,6 +2,7 @@ package com.example.futurobuscartelas.telas.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.futurobuscartelas.api.BuscarApi
@@ -35,6 +36,9 @@ class TelaInicialViewModel : ViewModel() {
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
     private val viaCepApi: ViaCepApi by inject(ViaCepApi::class.java)
 
+    var isLoading = mutableStateOf(false)
+        private set
+
     fun getOficinasFavoritas() = oficinasFavoritas.toList()
     fun getOficinas() = oficinas.toList()
     fun getServicos() = servicos.toList()
@@ -43,6 +47,7 @@ class TelaInicialViewModel : ViewModel() {
 
     fun listarOficinasFavoritas(id: Int) {
         viewModelScope.launch {
+            isLoading.value = true
             try {
                 val resposta = buscarApi.listarOficinas(id)
                 if (resposta.isSuccessful) {
@@ -56,15 +61,19 @@ class TelaInicialViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar oficinas", e)
+                isLoading.value = false
             }
+            isLoading.value = false
+
         }
     }
 
-    fun listarServicos(){
+    fun listarServicos() {
         viewModelScope.launch {
-            try{
+            isLoading.value = true
+            try {
                 val resposta = pitstopApi.buscarServicos()
-                if(resposta.isSuccessful){
+                if (resposta.isSuccessful) {
                     var listaServicos = resposta.body()?.toList()
 
                     if (listaServicos != null) {
@@ -72,18 +81,21 @@ class TelaInicialViewModel : ViewModel() {
                     }
 
                     Log.i("api", "Serviços: ${servicos}")
-                }else {
+                } else {
                     Log.e("api", "Erro na API: Código ${resposta.code()} - ${resposta.message()}")
                 }
-            } catch(e: Exception){
+            } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar servicos", e)
+                isLoading.value = false
             }
+            isLoading.value = false
         }
     }
 
-    fun listarServicosPorOficina(id: Int){
+    fun listarServicosPorOficina(id: Int) {
         viewModelScope.launch {
-            try{
+            isLoading.value = true
+            try {
                 val resposta = pitstopApi.buscarServicosPorOficina(id)
                 Log.i("api", "Serviços: ${resposta.body()}")
                 if (resposta.isSuccessful) {
@@ -95,17 +107,20 @@ class TelaInicialViewModel : ViewModel() {
                 } else {
                     Log.e("api", "Erro ao buscar Serviços: ${resposta.errorBody()?.string()}")
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar servicos", e)
+                isLoading.value = false
             }
+            isLoading.value = false
         }
     }
 
-    fun listarPecas(){
+    fun listarPecas() {
         viewModelScope.launch {
-            try{
+            isLoading.value = true
+            try {
                 var resposta = pitstopApi.buscarProdutos()
-                if(resposta.isSuccessful){
+                if (resposta.isSuccessful) {
                     var listaPecas = resposta.body()?.toList()
 
                     if (listaPecas != null) {
@@ -113,18 +128,21 @@ class TelaInicialViewModel : ViewModel() {
                     }
 
                     Log.i("api", "Pecas: ${pecas.toList()}")
-                }else {
+                } else {
                     Log.e("api", "Erro na API: Código ${resposta.code()} - ${resposta.message()}")
                 }
-            } catch(e: Exception){
+            } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar servicos", e)
+                isLoading.value = false
             }
+            isLoading.value = false
         }
     }
 
-    fun listarPecasPorOficina(id: Int){
+    fun listarPecasPorOficina(id: Int) {
         viewModelScope.launch {
-            try{
+            isLoading.value = true
+            try {
                 val resposta = pitstopApi.buscarProdutosPorOficina(id)
                 Log.i("api", "Serviços: ${resposta.body()}")
                 if (resposta.isSuccessful) {
@@ -136,19 +154,22 @@ class TelaInicialViewModel : ViewModel() {
                 } else {
                     Log.e("api", "Erro ao buscar Serviços: ${resposta.errorBody()?.string()}")
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar servicos", e)
+                isLoading.value = false
             }
+            isLoading.value = false
         }
     }
 
-    fun listarOficinas(){
+    fun listarOficinas() {
         viewModelScope.launch {
-            try{
+            isLoading.value = true
+            try {
                 val resposta = pitstopApi.listarTodos()
                 val listaOficinas = resposta.body()
                 Log.i("api", "Oficinas: ${resposta.body()}")
-                if(resposta.isSuccessful){
+                if (resposta.isSuccessful) {
                     oficinas.clear()
                     if (!listaOficinas.isNullOrEmpty()) {
                         val oficinaTasks = listaOficinas.map { oficina ->
@@ -159,7 +180,10 @@ class TelaInicialViewModel : ViewModel() {
                                     oficina.logradouro = cepInfo.logradouro ?: ""
                                     oficina.bairro = cepInfo.bairro ?: ""
                                     oficina.cidade = cepInfo.localidade ?: ""
-                                    Log.i("api", "CEP atualizado para oficina ${oficina.informacoesOficina}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}")
+                                    Log.i(
+                                        "api",
+                                        "CEP atualizado para oficina ${oficina.informacoesOficina}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}"
+                                    )
                                 }
 
                                 // Busca a avaliação da oficina
@@ -173,10 +197,55 @@ class TelaInicialViewModel : ViewModel() {
                         oficinas.addAll(listaOficinas)
                     }
                     Log.i("api", "Serviços: ${servicos.toList()}")
-                }else {
+                } else {
                     Log.e("api", "Erro na API: Código ${resposta.code()} - ${resposta.message()}")
                 }
-            } catch(e: Exception){
+            } catch (e: Exception) {
+                Log.e("api", "Erro ao buscar servicos", e)
+                isLoading.value = false
+            }
+            isLoading.value = false
+        }
+    }
+
+    fun listarOficinas2() {
+        viewModelScope.launch {
+            try {
+                val resposta = pitstopApi.listarTodos()
+                val listaOficinas = resposta.body()
+                Log.i("api", "Oficinas: ${resposta.body()}")
+                if (resposta.isSuccessful) {
+                    oficinas.clear()
+                    if (!listaOficinas.isNullOrEmpty()) {
+                        val oficinaTasks = listaOficinas.map { oficina ->
+                            async {
+
+                                // Preenche os campos de endereço da oficina com a função retornada
+                                retornarInfoCep(oficina.cep)?.let { cepInfo ->
+                                    oficina.logradouro = cepInfo.logradouro ?: ""
+                                    oficina.bairro = cepInfo.bairro ?: ""
+                                    oficina.cidade = cepInfo.localidade ?: ""
+                                    Log.i(
+                                        "api",
+                                        "CEP atualizado para oficina ${oficina.informacoesOficina}: ${oficina.logradouro}, ${oficina.bairro}, ${oficina.cidade}"
+                                    )
+                                }
+
+                                // Busca a avaliação da oficina
+                                buscarMediaAvaliacao(oficina.id)?.let { avaliacao ->
+                                    oficina.mediaAvaliacao = avaliacao
+                                }
+                            }
+                        }
+                        oficinaTasks.awaitAll()
+
+                        oficinas.addAll(listaOficinas)
+                    }
+                    Log.i("api", "Serviços: ${servicos.toList()}")
+                } else {
+                    Log.e("api", "Erro na API: Código ${resposta.code()} - ${resposta.message()}")
+                }
+            } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar servicos", e)
             }
         }
@@ -197,6 +266,7 @@ class TelaInicialViewModel : ViewModel() {
             Log.e("api", "Erro ao buscar cep", exception)
             null
         }
+
     }
 
     suspend fun buscarMediaAvaliacao(idOficina: Int): MediaAvaliacaoDTO? {
@@ -218,7 +288,7 @@ class TelaInicialViewModel : ViewModel() {
 
     fun buscarAvaliacoes(idOficina: Int) {
         viewModelScope.launch {
-            try{
+            try {
                 val resposta = buscarApi.buscarAvaliacao(idOficina)
                 Log.i("api", "Serviços: ${resposta.body()}")
                 if (resposta.isSuccessful) {
@@ -230,7 +300,7 @@ class TelaInicialViewModel : ViewModel() {
                 } else {
                     Log.e("api", "Erro ao buscar Serviços: ${resposta.errorBody()?.string()}")
                 }
-            } catch (e: Exception){
+            } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar servicos", e)
             }
         }

@@ -22,6 +22,7 @@ import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.login.UserData
 import com.example.futurobuscartelas.login.UserRepository
 import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
+import com.example.futurobuscartelas.ui.theme.MotionLoading
 import com.example.futurobuscartelas.ui.theme.TelaBaseOSP
 import org.koin.android.ext.android.inject
 
@@ -52,6 +53,12 @@ fun TelaPesquisarOficinas(sessaoUsuario: SessaoUsuario) {
         userRepository.getUserData().collect { data ->
             userData = data
         }
+    }
+
+    val isLoading by viewmodel.isLoading
+
+    if(isLoading) {
+        MotionLoading()
     }
 
     TelaBaseOSP(

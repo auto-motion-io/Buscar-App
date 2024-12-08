@@ -52,6 +52,7 @@ import com.example.futurobuscartelas.koin.SessaoUsuario
 import com.example.futurobuscartelas.models.CepInfo
 import com.example.futurobuscartelas.telas.viewmodels.SosViewModel
 import com.example.futurobuscartelas.ui.theme.CardSOS
+import com.example.futurobuscartelas.ui.theme.MotionLoading
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
@@ -81,6 +82,12 @@ fun TelaSOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     var showMessage by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val visibleCards = remember { mutableStateListOf<OficinaDTO>() }
+
+    val isLoading by viewModel.isLoading
+
+    if(isLoading){
+        MotionLoading()
+    }
 
     LaunchedEffect(Unit) {
         // A primeira chamada que carrega as oficinas
@@ -139,14 +146,7 @@ fun TelaSOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                         fontWeight = FontWeight.Bold,
                         color = VerdeBuscar
                     )
-                    Row(
-                    ) {
-                        Image(
-                            painter = painterResource(R.mipmap.icon_engrenagem),
-                            contentDescription = "Imagem de engrenagem(configurações)",
-                            Modifier.size(26.dp)
-                        )
-                    }
+
                 }
 
                 // Box para exibir os cartões
@@ -154,8 +154,8 @@ fun TelaSOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                     var infoCep by remember { mutableStateOf<CepInfo?>(null) }
 
                     // Ordena as oficinas pela distância, assumindo que a distância é uma propriedade numérica
-                    val sortedOficinas = visibleCards.sortedBy { it.distance }
-
+                    val sortedOficinas = visibleCards.sortedByDescending { it.distance }
+                    Log.i("SortedOficinas", "Oficinas ${sortedOficinas.toList()}")
                     sortedOficinas.forEach { oficina ->
                         SwipeableCard(
                             cardContent = { CardSOS(sessaoUsuario.id, oficina) }, // Passa os dados da oficina para o CardSOS

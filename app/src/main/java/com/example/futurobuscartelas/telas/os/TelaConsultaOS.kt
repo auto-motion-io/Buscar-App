@@ -49,6 +49,7 @@ import com.example.futurobuscartelas.telas.viewmodels.TelaInicialViewModel
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.InputContainerUnfocusedColor
 import com.example.futurobuscartelas.ui.theme.ListarOS
+import com.example.futurobuscartelas.ui.theme.MotionLoading
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import com.example.futurobuscartelas.ui.theme.PRODUCT_SANS_FAMILY
 import com.example.futurobuscartelas.ui.theme.VerdeBuscar
@@ -78,6 +79,13 @@ fun TelaConsultaOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val context = LocalContext.current
     var ordem: OrdemServico?
     val isOrdemAvailable = remember { mutableStateOf(false) }
+
+
+    val isLoading by viewModel.isLoading
+
+    if(isLoading){
+        MotionLoading()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.listarOS(sessaoUsuario.id)

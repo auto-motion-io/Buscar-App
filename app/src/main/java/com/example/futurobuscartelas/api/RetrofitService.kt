@@ -9,11 +9,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitService {
-    val BASE_URL_BUSCAR = "http://10.0.2.2:8080/api/"
-    val BASE_URL_PITSTOP = "http://10.0.2.2:8081/api/"
+//    val BASE_URL_BUSCAR = "http://10.0.2.2:8080/api/"
+//    val BASE_URL_PITSTOP = "http://10.0.2.2:8081/api/"
 
-//    val BASE_URL_BUSCAR = "https://buscar.motionweb.me/api/"
-//    val BASE_URL_PITSTOP = "https://pitstop.motionweb.me/api/"
+    val BASE_URL_BUSCAR = "https://buscar.motionweb.me/api/"
+    val BASE_URL_PITSTOP = "https://pitstop.motionweb.me/api/"
     fun getApiBuscar(token: String): BuscarApi {
 
         /*

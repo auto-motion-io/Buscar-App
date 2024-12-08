@@ -3,6 +3,7 @@ package com.example.futurobuscartelas.telas.viewmodels
 import android.provider.Settings.Global
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.futurobuscartelas.api.BuscarApi
@@ -27,6 +28,9 @@ class OrdemServicoViewModel : ViewModel(){
     val servicos = mutableStateListOf<Servico>()
     val pecas = mutableStateListOf<Produto>()
 
+    var isLoading = mutableStateOf(false)
+        private set
+
     fun getOficinas() = oficinas.toList()
     fun getListaOs() = listaOS.toList()
     fun getServicos() = servicos.toList()
@@ -34,6 +38,7 @@ class OrdemServicoViewModel : ViewModel(){
 
     fun listarOS(idUsuario: Int) {
         viewModelScope.launch {
+            isLoading.value = true
             try {
                 val usuario = buscarApi.buscarPorId(idUsuario)
                 Log.i("api", "Usuário retornado: ${usuario.body()}")
@@ -60,12 +65,15 @@ class OrdemServicoViewModel : ViewModel(){
                 }
             } catch (exception: Exception) {
                 Log.e("api", "Erro ao buscar ordens de serviço", exception)
+                isLoading.value = false
             }
+            isLoading.value = false
         }
     }
 
     fun listarOsPorToken(token: String){
         viewModelScope.launch {
+            isLoading.value = true
             try{
                 Log.i("API","Pré chamada da api")
                 val resposta = pitstopApi.listarOsPorToken(token)
@@ -76,7 +84,9 @@ class OrdemServicoViewModel : ViewModel(){
                 }
             } catch(exception: Exception){
                 Log.e("api", "Erro ao buscar ordem de serviço", exception)
+                isLoading.value = false
             }
+                isLoading.value = false
         }
     }
 

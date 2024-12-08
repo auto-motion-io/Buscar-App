@@ -49,6 +49,7 @@ import com.example.futurobuscartelas.ui.theme.AddCategoria
 import com.example.futurobuscartelas.ui.theme.BotaoPesquisa
 import com.example.futurobuscartelas.ui.theme.FotoUsuarioSessao
 import com.example.futurobuscartelas.ui.theme.ListarFavoritos
+import com.example.futurobuscartelas.ui.theme.MotionLoading
 import com.example.futurobuscartelas.ui.theme.NavigationBar
 import org.koin.android.ext.android.inject
 
@@ -72,6 +73,12 @@ fun TelaInicial(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
     val viewModel: TelaInicialViewModel = viewModel()
     val oficinas = viewModel.getOficinasFavoritas()
     val context = LocalContext.current
+
+    val isLoading by viewModel.isLoading
+
+    if(isLoading) {
+        MotionLoading()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.listarOficinasFavoritas(sessaoUsuario.id)

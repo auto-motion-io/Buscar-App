@@ -16,8 +16,27 @@ data class OrdemServico(
     val garantia: String,
     val observacoes: String,
     val oficina: OficinaDTO,
-    val veiculo: Veiculo,
-    val mecanico: Mecanico,
-    val produtos: List<Produto>,
-    val servicos: List<Servico>
-)
+    val placaVeiculo:String,
+    val marcaVeiculo:String,
+    val modeloVeiculo:String,
+    val anoVeiculo:String,
+    val emailCliente: String,
+    val nomeCliente: String,
+    val telefoneCliente: String,
+    val corVeiculo:String,
+    val nomeMecanico: String,
+    val produtos: List<OSProduto>,
+    val servicos: List<OSServico>,
+) {
+    data class OSProduto (
+        val nome:String,
+        val valor:Double,
+        val quantidade:Int,
+    )
+
+    data class OSServico (
+        val nome:String,
+        val garantia:String,
+        val valor:Double
+    )
+}

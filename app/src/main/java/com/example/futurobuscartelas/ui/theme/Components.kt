@@ -56,10 +56,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -364,7 +366,7 @@ fun ListarFavoritos(modifier: Modifier, oficinas: List<OficinaFavorita>, context
                         }
 
                         LaunchedEffect(Unit) {
-                            viewmodel.listarOficinas()
+                            viewmodel.listarOficinas2()
                         }
 
                         if (!oficinaFav.oficina.logoUrl.isNullOrBlank()) {
@@ -747,12 +749,17 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
 
 @Composable
 fun ListarOS(ordensDeServico: List<OrdemServico>) {
-
+    val clipboardManager = LocalClipboardManager.current
     Column(
         Modifier.padding(top = 36.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         for (os in ordensDeServico) {
+            val color = when (os.status) {
+                "EM ABERTO" -> Color(253, 216, 53)
+                "CONCLUIDO" -> Color(0, 176, 80)
+                else -> Color(253, 216, 53)
+            }
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -770,10 +777,13 @@ fun ListarOS(ordensDeServico: List<OrdemServico>) {
                         fontSize = 22.sp,
                         fontFamily = PRODUCT_SANS_FAMILY,
                         fontWeight = FontWeight.Bold,
-                        color = VerdeBuscar
+                        color = VerdeBuscar,
+                        modifier = Modifier.clickable {
+                            clipboardManager.setText(AnnotatedString(os.token))
+                        }
                     )
                     Text(
-                        text = os.veiculo.placa,
+                        text = os.placaVeiculo,
                         color = Color(130, 130, 130)
                     )
                 }
@@ -787,7 +797,7 @@ fun ListarOS(ordensDeServico: List<OrdemServico>) {
                             .width(15.dp)
                             .height(15.dp)
                             .clip(RoundedCornerShape(40.dp))
-                            .background(color = Color(253, 216, 53))
+                            .background(color = color)
                     )
                     Text(
                         text = os.status,
@@ -1078,7 +1088,7 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
     }
 
     val text = if (oficina.distance != null) {
-        "A ${oficina.distance} metros"
+       formatarDistancia(oficina.distance!!)
     } else {
         "Distância indisponível"
     }
@@ -1440,7 +1450,7 @@ fun MotionLoading() {
 }
 
 @Composable
-fun ListarPecasOs(lista: List<Produto>) {
+fun ListarPecasOs(lista: List<OrdemServico.OSProduto>) {
 
     for (peca in lista) {
         Row(
@@ -1482,7 +1492,7 @@ fun ListarPecasOs(lista: List<Produto>) {
                 }
             }
             Text(
-                text = "R$${peca.valorVenda}",
+                text = "R$${peca.valor}",
                 modifier = Modifier.padding(end = 20.dp)
             )
         }
@@ -1490,7 +1500,7 @@ fun ListarPecasOs(lista: List<Produto>) {
 }
 
 @Composable
-fun ListarServicosOs(lista: List<Servico>) {
+fun ListarServicosOs(lista: List<OrdemServico.OSServico>) {
 
     for (servico in lista) {
         Row(
@@ -1526,7 +1536,7 @@ fun ListarServicosOs(lista: List<Servico>) {
                 }
             }
             Text(
-                text = stringResource(id = R.string.label_preco),
+                text = "R$" + servico.valor,
                 modifier = Modifier.padding(end = 20.dp)
             )
         }
@@ -1608,5 +1618,15 @@ fun FotoUsuarioSessao(sessaoUsuario: SessaoUsuario){
                 color = Color(70,70,70)
             )
         }
+    }
+}
+
+
+private fun formatarDistancia(distancia: Int): String {
+    return if (distancia < 1000) {
+        "$distancia Metros"
+    } else {
+        val km = distancia / 1000.0 // Converte para quilômetros com decimal
+        String.format("%.1f km", km) // Formata com uma casa decimal
     }
 }

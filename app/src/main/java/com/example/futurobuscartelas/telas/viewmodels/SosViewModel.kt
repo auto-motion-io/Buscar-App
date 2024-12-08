@@ -28,7 +28,7 @@ import org.koin.java.KoinJavaComponent.inject
 
 class SosViewModel : ViewModel() {
     val repository: LocationRepository = LocationRepository()
-    val apiKey = "AIzaSyAV1EbJzFHWyS6ZAdW4b0SqI-6vlGd73Ys"
+    val apiKey = ""
 
     private val pitstopApi: PitstopApi by inject(PitstopApi::class.java)
     private val buscarApi: BuscarApi by inject(BuscarApi::class.java)
@@ -36,6 +36,10 @@ class SosViewModel : ViewModel() {
 
     val oficinas = mutableStateListOf<OficinaDTO>()
     val oficinasFavoritas = mutableStateListOf<OficinaFavorita>()
+
+
+    var isLoading = mutableStateOf(false)
+        private set
 
     fun getOficinas() = oficinas.toList()
     fun getOficinasFavoritas() = oficinasFavoritas.toList()
@@ -47,6 +51,7 @@ class SosViewModel : ViewModel() {
     ) {
         var userLocation = UserLocation()
 
+        isLoading.value = true
         repository.getLocation(context) {
             userLocation = it
         }
@@ -77,11 +82,13 @@ class SosViewModel : ViewModel() {
                     Log.i("Location", "Erro ao obter as coordenadas.")
                 }
             }
+            isLoading.value = true
         }
     }
 
     fun listarOficinas(context: Context) {
         viewModelScope.launch {
+            isLoading.value = true;
             try {
                 val resposta = pitstopApi.listarTodos()
                 val listaOficinas = resposta.body()
@@ -130,7 +137,9 @@ class SosViewModel : ViewModel() {
                 }
             } catch (exception: Exception) {
                 Log.e("api", "Erro ao buscar oficinas", exception)
+                isLoading.value = false;
             }
+            isLoading.value = false;
         }
     }
 
