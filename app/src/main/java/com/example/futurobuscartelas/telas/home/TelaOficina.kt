@@ -12,6 +12,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -45,9 +50,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.example.futurobuscartelas.R
@@ -150,9 +157,9 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String
                     Text(
                         text = it,
                         color = Color(59, 86, 60),
-                        fontSize = 32.sp,
+                        fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = PRODUCT_SANS_FAMILY
+                        fontFamily = PRODUCT_SANS_FAMILY,
                     )
                 }
                 Button(
@@ -208,7 +215,7 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String
                     Modifier.padding(top = 4.dp)
                 ) {
                     Text(
-                        text = oficina?.mediaAvaliacao?.nota.toString(),
+                        text = oficina?.mediaAvaliacao?.nota?.toString() ?: "N/A",
                         Modifier.padding(bottom = 4.dp, start = 5.dp),
                         fontSize = 14.sp,
                         color = Color(30, 30, 30),
@@ -247,83 +254,85 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String
                 Column(
                     modifier = Modifier
                 ) {
+                    val listaVeiculo = oficina?.informacoesOficina?.tipoVeiculosTrabalha?.split(";")
+                    val listaPropulsao = oficina?.informacoesOficina?.tipoPropulsaoTrabalha?.split(";")
+
                     Row(
-                        modifier = Modifier
-                            .width(220.dp)
-                            .padding(bottom = 8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        modifier = Modifier.padding(bottom = 10.dp)
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os cards
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .border(
-                                    border = BorderStroke(2.dp, Color(59, 86, 60)),
-                                    shape = RoundedCornerShape(26.dp)
+                        listaVeiculo?.forEach { veiculo ->
+                            when (veiculo) {
+                                "carro" -> CardFiltro(
+                                    "Carros",
+                                    painterResource(R.mipmap.icon_carro),
+                                    "Icone de Carro",
+                                    Modifier.width(120.dp),
+                                    true,
+                                    onclick = {}
                                 )
-                                .padding(horizontal = 18.dp, vertical = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            Column(Modifier.padding(top = 4.dp, end = 6.dp)) {
-                                Image(
-                                    painter = painterResource(id = R.mipmap.icon_carro),
-                                    contentDescription = "Icone de Carro",
-                                    modifier = Modifier.size(15.dp)
+                                "moto" -> CardFiltro(
+                                    "Motos",
+                                    painterResource(R.mipmap.icon_moto),
+                                    "Icone de Moto",
+                                    Modifier.width(120.dp),
+                                    true,
+                                    onclick = {}
                                 )
-                            }
-                            Text(
-                                text = "Carros", fontSize = 14.sp,
-                                color = Color(59, 86, 60),
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
-                        }
-                        Row(
-                            modifier = Modifier
-                                .border(
-                                    border = BorderStroke(2.dp, Color(59, 86, 60)),
-                                    shape = RoundedCornerShape(26.dp)
+                                "caminhao" -> CardFiltro(
+                                    "Caminhão",
+                                    painterResource(R.mipmap.icon_caminhao),
+                                    "Icone de Caminhão",
+                                    Modifier.width(120.dp),
+                                    true,
+                                    onclick = {}
                                 )
-                                .padding(horizontal = 16.dp, vertical = 10.dp)
-                                .width(80.dp),
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            Column(Modifier.padding(end = 6.dp, top = 2.dp)) {
-                                Image(
-                                    painter = painterResource(id = R.mipmap.icon_moto),
-                                    contentDescription = "Icone de Moto",
-                                    modifier = Modifier.size(20.dp)
+                                "onibus" -> CardFiltro(
+                                    "Ônibus",
+                                    painterResource(R.mipmap.icon_onibus),
+                                    "Icone de Ônibus",
+                                    Modifier.width(120.dp),
+                                    true,
+                                    onclick = {}
                                 )
                             }
-                            Text(
-                                text = "Motos", fontSize = 14.sp,
-                                color = Color(59, 86, 60),
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
                         }
                     }
+
+                    // Row para Propulsões
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        modifier = Modifier
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp) // Espaçamento entre os cards
                     ) {
-                        Row(
-                            modifier = Modifier
-                                .border(
-                                    border = BorderStroke(2.dp, Color(59, 86, 60)),
-                                    shape = RoundedCornerShape(26.dp)
+                        listaPropulsao?.forEach { propulsao ->
+                            when (propulsao) {
+                                "combustão" -> CardFiltro(
+                                    "Combustão",
+                                    painterResource(R.mipmap.icon_combustivel),
+                                    "Icone de Combustão",
+                                    Modifier.width(140.dp),
+                                    true,
+                                    onclick = {}
                                 )
-                                .padding(horizontal = 18.dp, vertical = 10.dp),
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            Column(Modifier.padding(top = 4.dp, end = 6.dp)) {
-                                Image(
-                                    painter = painterResource(id = R.mipmap.icon_combustivel),
-                                    contentDescription = "Icone de Combustivel",
-                                    modifier = Modifier.size(15.dp)
+                                "Elétrico" -> CardFiltro(
+                                    "Elétrico",
+                                    painterResource(R.mipmap.icon_eletricos),
+                                    "Icone de Elétrico",
+                                    Modifier.width(140.dp),
+                                    true,
+                                    onclick = {}
+                                )
+                                "Hibrido" -> CardFiltro(
+                                    "Híbridos",
+                                    painterResource(R.mipmap.icon_hibridos),
+                                    "Icone de Híbridos",
+                                    Modifier.width(130.dp),
+                                    true,
+                                    onclick = {}
                                 )
                             }
-                            Text(
-                                text = "Combustão", fontSize = 14.sp,
-                                color = Color(59, 86, 60),
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
                         }
                     }
                 }
@@ -436,9 +445,6 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String
         }
     }
 }
-
-
-
 
 @Preview(
     showBackground = true,

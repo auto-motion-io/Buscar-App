@@ -206,7 +206,9 @@ fun TelaConsultaOS(selectedTabIndex: Int, sessaoUsuario: SessaoUsuario) {
                         fontFamily = PRODUCT_SANS_FAMILY
                     )
                 }
-                ListarOS(ordensDeServico)
+                if(ordensDeServico.isNotEmpty()){
+                    ListarOS(ordensDeServico)
+                }
             }
         }
     }

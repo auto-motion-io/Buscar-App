@@ -27,7 +27,7 @@ interface PitstopApi {
     @GET("buscar-servicos/oficina/{idOficina}")
     suspend fun buscarServicosPorOficina(@Path("idOficina") int: Int) : Response<List<Servico>>
 
-    @GET("produtoEstoque")
+    @GET("produtoEstoque/preco-nome")
     suspend fun buscarProdutos() : Response<List<Produto>>
 
     @GET("produtoEstoque/oficina/{idOficina}")

@@ -91,16 +91,20 @@ class OrdemServicoViewModel : ViewModel(){
     }
 
     suspend fun listarOsPorTokenConsulta(token: String) : OrdemServico? {
+        isLoading.value = true
         return try{
             Log.i("API","Pré chamada da api")
             val resposta = pitstopApi.listarOsPorToken(token)
             if(resposta.isSuccessful){
+                isLoading.value = false
                 resposta.body()
             } else{
+                isLoading.value = false
                 Log.e("api", "Lista de OS erro: ${resposta.code()}")
                 null
             }
         } catch(exception: Exception){
+            isLoading.value = false
             Log.e("api", "Erro ao buscar ordem de serviço", exception)
             null
         }

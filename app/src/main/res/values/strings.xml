@@ -82,4 +82,8 @@
     <string name="label_senha_atual">Senha atual*</string>
     <string name="label_semServico">Nenhum serviço.</string>
     <string name="label_semPecas">Nenhuma peça.</string>
+    <string name="label_filtro">Filtros</string>
+    <string name="label_subtituloFiltro">Selecione as categorias que deseja filtrar</string>
+    <string name="label_tipoVeiculo">Tipo de Veículo</string>
+    <string name="label_valor">Valor</string>
 </resources>

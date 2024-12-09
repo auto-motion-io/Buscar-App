@@ -35,13 +35,14 @@ class TelaPesquisarServicosActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaPesquisarServicos()
+            val sliderValue = intent.getFloatExtra("SLIDER_VALUE", 0f) // 50f é o valor padrão caso o extra não exista
+            TelaPesquisarServicos(sliderValue)
         }
     }
 }
 
 @Composable
-fun TelaPesquisarServicos() {
+fun TelaPesquisarServicos(valorPreco: Float) {
     val context = LocalContext.current
     var viewmodel:TelaInicialViewModel = viewModel()
     var listaServicos = viewmodel.getServicos()
@@ -60,16 +61,27 @@ fun TelaPesquisarServicos() {
         MotionLoading()
     }
 
+    val servicosFiltrados = if (valorPreco == 0f) {
+        listaServicos // Se valorPreco for null, retorna a lista completa
+    } else {
+        listaServicos.filter { servico ->
+            servico.valorServico <= valorPreco // Filtra as peças cujo valorVenda é menor ou igual ao sliderValue
+        }
+    }
+
     TelaBaseOSP(
         titulo = stringResource(R.string.label_servicos),
         context,
-        listaServicos,
-        userData
+        servicosFiltrados,
+        userData,
+        "Serviços",
+        emptyList(),
+        emptyList()
     )
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun TelaPesquisarServicosPreview() {
-    TelaPesquisarServicos()
+    //TelaPesquisarServicos()
 }

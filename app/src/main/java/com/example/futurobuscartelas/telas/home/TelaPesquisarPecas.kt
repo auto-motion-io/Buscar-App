@@ -35,13 +35,14 @@ class TelaPesquisarPecasActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaPesquisarPecas()
+            val sliderValue = intent.getFloatExtra("SLIDER_VALUE", 0f) // 50f é o valor padrão caso o extra não exista
+            TelaPesquisarPecas(sliderValue)
         }
     }
 }
 
 @Composable
-fun TelaPesquisarPecas() {
+fun TelaPesquisarPecas(valorPreco: Float) {
     val context = LocalContext.current;
     val viewmodel: TelaInicialViewModel = viewModel()
     val listaPecas = viewmodel.getPecas()
@@ -60,11 +61,22 @@ fun TelaPesquisarPecas() {
         MotionLoading()
     }
 
+    val pecasFiltradas = if (valorPreco == 0f) {
+        listaPecas // Se valorPreco for null, retorna a lista completa
+    } else {
+        listaPecas.filter { peca ->
+            peca.valorVenda <= valorPreco // Filtra as peças cujo valorVenda é menor ou igual ao sliderValue
+        }
+    }
+
     TelaBaseOSP(
         titulo = stringResource(R.string.label_pecas),
         context,
-        listaPecas,
-        userData
+        pecasFiltradas,
+        userData,
+        "Peças",
+        emptyList(),
+        emptyList()
     )
 }
 
@@ -72,5 +84,5 @@ fun TelaPesquisarPecas() {
 @Composable
 fun TelaPesquisarPecasPreview() {
     val navController = rememberNavController();
-    TelaPesquisarPecas()
+    //TelaPesquisarPecas()
 }

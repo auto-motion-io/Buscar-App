@@ -58,6 +58,7 @@ class TelaInicialViewModel : ViewModel() {
                     Log.i("api", "Oficinas: $listaOficinasFavoritas")
                 } else {
                     Log.e("api", "Erro na API: Código ${resposta.code()} - ${resposta.message()}")
+                    isLoading.value = false
                 }
             } catch (e: Exception) {
                 Log.e("api", "Erro ao buscar oficinas", e)
@@ -125,6 +126,10 @@ class TelaInicialViewModel : ViewModel() {
 
                     if (listaPecas != null) {
                         pecas.addAll(listaPecas)
+                        pecas.forEach{ peca ->
+                            peca.oficina
+
+                        }
                     }
 
                     Log.i("api", "Pecas: ${pecas.toList()}")

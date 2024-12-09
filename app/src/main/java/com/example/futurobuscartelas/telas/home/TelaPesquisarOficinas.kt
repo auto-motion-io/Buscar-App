@@ -35,13 +35,16 @@ class TelaPesquisarOficinasActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TelaPesquisarOficinas(sessaoUsuario)
+            val veiculosSelecionados = intent.getStringArrayListExtra("VEICULOS_SELECIONADOS") ?: arrayListOf()
+            val propulsoesSelecionadas = intent.getStringArrayListExtra("PROPULSOES_SELECIONADAS") ?: arrayListOf()
+
+            TelaPesquisarOficinas(sessaoUsuario, veiculosSelecionados, propulsoesSelecionadas)
         }
     }
 }
 
 @Composable
-fun TelaPesquisarOficinas(sessaoUsuario: SessaoUsuario) {
+fun TelaPesquisarOficinas(sessaoUsuario: SessaoUsuario, veiculosSelecionados: List<String>, propulsoesSelecionadas: List<String> ) {
     val context = LocalContext.current;
     val viewmodel: TelaInicialViewModel = viewModel()
     val listaOficinas = viewmodel.getOficinas()
@@ -61,11 +64,26 @@ fun TelaPesquisarOficinas(sessaoUsuario: SessaoUsuario) {
         MotionLoading()
     }
 
+    val oficinasFiltradas = if (propulsoesSelecionadas.isEmpty()) {
+        listaOficinas // Retorna todas as oficinas
+    } else {
+        listaOficinas.filter { oficina ->
+            val listaPropulsao = oficina.informacoesOficina?.tipoPropulsaoTrabalha?.split(";") ?: emptyList()
+            val listaVeiculos = oficina.informacoesOficina?.tipoVeiculosTrabalha?.split(";") ?: emptyList()
+
+            // A oficina será incluída se atender a pelo menos um critério (propulsão OU veículo)
+            propulsoesSelecionadas.any { it in listaPropulsao } || veiculosSelecionados.any { it in listaVeiculos }
+        }
+    }
+
     TelaBaseOSP(
         titulo = stringResource(id = R.string.label_tituloOficinas),
         context,
-        listaOficinas,
-        userData
+        oficinasFiltradas,
+        userData,
+        "Oficinas",
+        veiculosSelecionados,
+        propulsoesSelecionadas
     )
 }
 

@@ -13,7 +13,9 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,14 +34,18 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.Slider
+import androidx.compose.material.SliderDefaults
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -66,8 +72,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
@@ -87,6 +95,10 @@ import com.example.futurobuscartelas.models.Servico
 import com.example.futurobuscartelas.models.Usuario
 import com.example.futurobuscartelas.telas.home.OficinaScreenActivity
 import com.example.futurobuscartelas.telas.home.TelaInicialActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarOficinasActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarPecas
+import com.example.futurobuscartelas.telas.home.TelaPesquisarPecasActivity
+import com.example.futurobuscartelas.telas.home.TelaPesquisarServicosActivity
 import com.example.futurobuscartelas.telas.os.TelaConsultaOSActivity
 import com.example.futurobuscartelas.telas.perfil.TelaPerfilActivity
 import com.example.futurobuscartelas.telas.sos.TelaSOSActivity
@@ -232,21 +244,113 @@ fun ListarServicos(modifier: Modifier, lista: List<Servico>) {
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 14.dp)
+                            .clickable{
+
+                            }
                     ) {
                         Box(
                             Modifier
                                 .fillMaxWidth()
                                 .height(150.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = servico.nome,
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
+                        ) {
+                            Image(
+                                painter = painterResource(R.mipmap.icon_servico_padrao),
+                                contentDescription = "Icone de Serviço",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize().padding(0.dp)
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = servico.nome,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = "R$" + servico.valorServico,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ListarServicos(modifier: Modifier, lista: List<Servico>, context: Context) {
+    val listaServicos = lista
+
+    // Agrupa os serviços em pares
+    val groupedServicos = listaServicos.chunked(2)
+
+    Column(modifier = modifier) {
+        for (grupo in groupedServicos) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                for (servico in grupo) {
+                    val viewModel: TelaInicialViewModel = viewModel()
+                    val listaOficinas = viewModel.getOficinas()
+
+                    val novaOficina: OficinaDTO? = listaOficinas.firstOrNull { oficina ->
+                        oficina.id == servico.oficina.id
+                    }
+
+                    LaunchedEffect(Unit) {
+                        viewModel.listarOficinas2()
+                    }
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 14.dp)
+                            .clickable{
+                                val intent = Intent(context, OficinaScreenActivity::class.java)
+                                intent.putExtra("OFICINA_KEY", novaOficina)
+                                context.startActivity(intent)
+                            }
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                        ) {
+                            Image(
+                                painter = painterResource(R.mipmap.icon_servico_padrao),
+                                contentDescription = "Icone de Serviço",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize().padding(0.dp)
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = servico.nome,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
+                        Row {
+                            Text(
+                                text = "R$" + servico.valorServico,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
                     }
                 }
             }
@@ -278,15 +382,105 @@ fun ListarPecas(modifier: Modifier, lista: List<Produto>) {
                                 .fillMaxWidth()
                                 .height(150.dp)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(color = Color(240, 239, 236))
-                        ) {}
-                        Text(
-                            text = peca.nome,
-                            color = Color(59, 86, 60),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(top = 5.dp),
-                            fontFamily = PRODUCT_SANS_FAMILY
-                        )
+                        ) {
+                            Image(
+                                painter = painterResource(R.mipmap.icon_peca_padrao),
+                                contentDescription = "Icone de Peça",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize().padding(0.dp)
+                            )
+                        }
+                        Row{
+                            Text(
+                                text = peca.nome,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
+                        Row{
+                            Text(
+                                text = "R$" + peca.valorVenda,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ListarPecas(modifier: Modifier, lista: List<Produto>, context: Context) {
+    val listaPecas = lista
+
+    // Agrupa as peças em pares
+    val groupedPecas = listaPecas.chunked(2)
+
+    Column(modifier = modifier) {
+        for (grupo in groupedPecas) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                for (peca in grupo) {
+                    val viewModel: TelaInicialViewModel = viewModel()
+                    val listaOficinas = viewModel.getOficinas()
+
+                    val novaOficina: OficinaDTO? = listaOficinas.firstOrNull { oficina ->
+                        oficina.id == peca.oficina.id
+                    }
+
+                    LaunchedEffect(Unit) {
+                        viewModel.listarOficinas2()
+                    }
+
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 14.dp)
+                            .clickable{
+                                val intent = Intent(context, OficinaScreenActivity::class.java)
+                                intent.putExtra("OFICINA_KEY", novaOficina)
+                                context.startActivity(intent)
+                            }
+                    ) {
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                        ) {
+                            Image(
+                                painter = painterResource(R.mipmap.icon_peca_padrao),
+                                contentDescription = "Icone de Peça",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize().padding(0.dp)
+                            )
+                        }
+                        Row{
+                            Text(
+                                text = peca.nome,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
+                        Row{
+                            Text(
+                                text = "R$" + peca.valorVenda,
+                                color = Color(59, 86, 60),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(top = 5.dp),
+                                fontFamily = PRODUCT_SANS_FAMILY
+                            )
+                        }
                     }
                 }
             }
@@ -322,7 +516,7 @@ fun AddCategoria(categoria: String, context: Context, activity: Class<out Compon
                     else -> painterResource(R.mipmap.icon_ferramenta) // Ícone padrão se nenhuma condição for atendida
                 },
                 contentDescription = "Icone de Lupa Branca",
-                Modifier.size(40.dp),
+                Modifier.size(35.dp),
             )
         }
         Row(
@@ -508,7 +702,8 @@ fun CardFiltro(
             onClick = { onclick() },
             modifier
                 .height(50.dp)
-                .clip(RoundedCornerShape(220.dp)),
+                .clip(RoundedCornerShape(220.dp))
+                .border(2.dp, VerdeBuscar, RoundedCornerShape(220.dp)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0, 0, 0, 0),
                 disabledContainerColor = Color.LightGray,
@@ -594,22 +789,22 @@ fun ListarOficinas(modifier: Modifier, lista: List<OficinaDTO>, context: Context
                                     modifier = Modifier.padding(top = 5.dp),
                                     fontFamily = PRODUCT_SANS_FAMILY,
                                 )
-                                Row(
-                                    Modifier.padding(top = 7.dp)
-                                ) {
-                                    Image(
-                                        painter = painterResource(R.mipmap.icon_stars),
-                                        contentDescription = "Imagem de Estrela",
-                                        Modifier
-                                            .padding(end = 2.dp)
-                                            .size(12.dp)
-                                    )
-                                    Text(
-                                        text = oficina.mediaAvaliacao?.nota.toString(),
-                                        fontSize = 12.sp,
-                                        fontFamily = PRODUCT_SANS_FAMILY
-                                    )
-                                }
+                            }
+                            Row(
+                                Modifier.padding(top = 7.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(R.mipmap.icon_stars),
+                                    contentDescription = "Imagem de Estrela",
+                                    Modifier
+                                        .padding(end = 2.dp)
+                                        .size(12.dp)
+                                )
+                                Text(
+                                    text = oficina.mediaAvaliacao?.nota?.toString() ?: "N/A",
+                                    fontSize = 12.sp,
+                                    fontFamily = PRODUCT_SANS_FAMILY
+                                )
                             }
                             Row(
                                 Modifier
@@ -641,7 +836,9 @@ fun ListarOficinas(modifier: Modifier, lista: List<OficinaDTO>, context: Context
 }
 
 @Composable
-fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: UserData?) {
+fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: UserData?, tipoFiltro: String, veiculosSelecionados: List<String>, propulsoesSelecionadas: List<String>) {
+    var showFilterDialog by remember { mutableStateOf(false) }
+
     Column(
         Modifier
             .padding(top = 40.dp, start = 20.dp, end = 20.dp)
@@ -677,9 +874,8 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
                 fontWeight = FontWeight.Bold
             )
             Row() {
-                BotaoPesquisa(false, {})
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { showFilterDialog = true },
                     Modifier
                         .padding(0.dp)
                         .width(40.dp),
@@ -698,26 +894,80 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
                 }
             }
         }
-        Row(
-            Modifier.padding(top = 5.dp),
+        Row (
+            Modifier
+                .horizontalScroll(rememberScrollState()),
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            CardFiltro(
-                "Motos",
-                painterResource(R.mipmap.icon_moto_branco),
-                "Icone de Moto",
-                Modifier.width(120.dp),
-                true,
-                onclick = {}
-            )
-            CardFiltro(
-                "Combustão",
-                painterResource(R.mipmap.icon_combustao),
-                "Icone de Galão de Gasolina",
-                Modifier.width(140.dp),
-                true,
-                onclick = {}
-            )
+            for(veiculo in veiculosSelecionados){
+                if (veiculo == "carro"){
+                    CardFiltro(
+                        "Carros",
+                        painterResource(R.mipmap.icon_carro),
+                        "Icone de Carro",
+                        Modifier.width(120.dp),
+                        true,
+                        onclick = {}
+                    )
+                } else if(veiculo == "moto"){
+                    CardFiltro(
+                        "Motos",
+                        painterResource(R.mipmap.icon_moto),
+                        "Icone de Moto",
+                        Modifier.width(120.dp),
+                        true,
+                        onclick = {}
+                    )
+                } else if(veiculo == "caminhao"){
+                    CardFiltro(
+                        "Caminhão",
+                        painterResource(R.mipmap.icon_caminhao),
+                        "Icone de Caminhão",
+                        Modifier.width(120.dp),
+                        true,
+                        onclick = {}
+                    )
+                } else{
+                    CardFiltro(
+                        "Ônibus",
+                        painterResource(R.mipmap.icon_onibus),
+                        "Icone de Ônibus",
+                        Modifier.width(120.dp),
+                        true,
+                        onclick = {}
+                    )
+                }
+            }
+            for (propulsao in propulsoesSelecionadas){
+                if(propulsao == "combustão"){
+                    CardFiltro(
+                        "Combustão",
+                        painterResource(R.mipmap.icon_combustivel),
+                        "Icone de Combustão",
+                        Modifier.width(140.dp),
+                        true,
+                        onclick = {}
+                    )
+                } else if(propulsao == "Elétrico"){
+                    CardFiltro(
+                        "Combustão",
+                        painterResource(R.mipmap.icon_combustivel),
+                        "Icone de Combustão",
+                        Modifier.width(140.dp),
+                        true,
+                        onclick = {}
+                    )
+                } else if(propulsao == "Hibrido"){
+                    CardFiltro(
+                        "Híbridos",
+                        painterResource(R.mipmap.icon_hibridos),
+                        "Icone de Híbridos",
+                        Modifier.width(130.dp),
+                        true,
+                        onclick = {}
+                    )
+                }
+            }
         }
         Row(
             Modifier
@@ -734,15 +984,366 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
 
                 "Peças" -> {
                     val listaPecas = lista as? List<Produto> ?: emptyList()
-                    ListarPecas(modifier = Modifier, listaPecas)
+                    ListarPecas(modifier = Modifier, listaPecas, context)
                 }
 
                 "Serviços" -> {
                     val listaServicos = lista as? List<Servico> ?: emptyList()
-                    ListarServicos(modifier = Modifier, listaServicos)
+                    ListarServicos(modifier = Modifier, listaServicos, context)
                 }
             }
 
+        }
+    }
+    if (showFilterDialog) {
+        val configuration = LocalConfiguration.current
+        val screenHeight = configuration.screenHeightDp // Altura total da tela em dp
+        val height: Dp
+        if(tipoFiltro == "Oficinas"){
+            height = (screenHeight * 0.52).dp // 50% da altura da tela
+        } else {
+            height = (screenHeight * 0.36).dp
+        }
+
+        val isCarroSelected = remember { mutableStateOf(false) }
+        val isMotoSelected = remember { mutableStateOf(false) }
+        val isCaminhaoSelected = remember { mutableStateOf(false) }
+        val isOnibusSelected = remember { mutableStateOf(false) }
+        val tipoVeiculoSelecionado = remember { mutableListOf<String>() }
+
+        val isCombustaoSelected = remember { mutableStateOf(false) }
+        val isEletricoSelected = remember { mutableStateOf(false) }
+        val isHibridoSelected = remember { mutableStateOf(false) }
+        val tipoPropulsaoSelecionada = remember { mutableListOf<String>() }
+
+        val sliderValue = remember { mutableStateOf(0f) }
+
+        Dialog(
+            onDismissRequest = { showFilterDialog = false },
+        ) {
+            Box(
+                Modifier
+                    .clip(RoundedCornerShape(30.dp))
+                    .size(450.dp, height)
+                    .background(Color. White),
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth().padding(10.dp),
+                ) {
+                    Column(
+                        Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.label_filtro),
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 28.sp,
+                            color = VerdeBuscar
+                        )
+                        Text(
+                            text = stringResource(R.string.label_subtituloFiltro),
+                            fontFamily = PRODUCT_SANS_FAMILY,
+                            fontSize = 14.sp,
+                            color = (Color(170, 170, 170)),
+                            modifier = Modifier.padding(bottom = 20.dp)
+                        )
+                        if (tipoFiltro == "Oficinas") {
+                            Column {
+                                Text(
+                                    text = stringResource(R.string.label_tipoVeiculo),
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(bottom = 10.dp)
+                                )
+                                Row(
+                                    Modifier
+                                        .horizontalScroll(rememberScrollState()) // Adiciona o comportamento de scroll horizontal
+                                        .padding(8.dp)
+                                        .padding(bottom = 20.dp)
+                                        .width(530.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    CardFiltro(
+                                        "Carros",
+                                        painterResource(R.mipmap.icon_carro),
+                                        "Icone de Carro",
+                                        Modifier.width(120.dp),
+                                        isCarroSelected.value,
+                                        onclick = {
+                                            isCarroSelected.value = !isCarroSelected.value
+                                            if (isCarroSelected.value) {
+                                                tipoVeiculoSelecionado.add("carro")
+                                            } else {
+                                                tipoVeiculoSelecionado.remove("carro")
+                                            }
+                                        }
+                                    )
+                                    CardFiltro(
+                                        "Motos",
+                                        painterResource(R.mipmap.icon_moto),
+                                        "Icone de Moto",
+                                        Modifier.width(120.dp),
+                                        isMotoSelected.value,
+                                        onclick = {
+                                            isMotoSelected.value = !isMotoSelected.value
+                                            if (isMotoSelected.value) {
+                                                tipoVeiculoSelecionado.add("moto")
+                                            } else {
+                                                tipoVeiculoSelecionado.remove("moto")
+                                            }
+                                        }
+                                    )
+                                    CardFiltro(
+                                        "Caminhão",
+                                        painterResource(R.mipmap.icon_caminhao),
+                                        "Icone de Caminhão",
+                                        Modifier.width(140.dp),
+                                        isCaminhaoSelected.value,
+                                        onclick = {
+                                            isCaminhaoSelected.value = !isCaminhaoSelected.value
+                                            if (isCaminhaoSelected.value) {
+                                                tipoVeiculoSelecionado.add("caminhao")
+                                            } else {
+                                                tipoVeiculoSelecionado.remove("caminhao")
+                                            }
+                                        }
+                                    )
+                                    CardFiltro(
+                                        "Ônibus",
+                                        painterResource(R.mipmap.icon_onibus),
+                                        "Icone de Ônibus",
+                                        Modifier.width(120.dp),
+                                        isOnibusSelected.value,
+                                        onclick = {
+                                            isOnibusSelected.value = !isOnibusSelected.value
+                                            if (isOnibusSelected.value) {
+                                                tipoVeiculoSelecionado.add("onibus")
+                                            } else {
+                                                tipoVeiculoSelecionado.remove("onibus")
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                            Column {
+                                Text(
+                                    text = stringResource(R.string.label_tipoVeiculo),
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp,
+                                    modifier = Modifier.padding(bottom = 10.dp)
+                                )
+                                Row(
+                                    Modifier
+                                        .horizontalScroll(rememberScrollState()) // Adiciona o comportamento de scroll horizontal
+                                        .padding(8.dp)
+                                        .padding(bottom = 20.dp)
+                                        .width(420.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    CardFiltro(
+                                        "Combustão",
+                                        painterResource(R.mipmap.icon_combustivel),
+                                        "Icone de Combustão",
+                                        Modifier.width(140.dp),
+                                        isCombustaoSelected.value,
+                                        onclick = {
+                                            isCombustaoSelected.value = !isCombustaoSelected.value
+                                            if (isCombustaoSelected.value) {
+                                                tipoPropulsaoSelecionada.add("combustão")
+                                            } else {
+                                                tipoVeiculoSelecionado.remove("combustão")
+                                            }
+                                        }
+                                    )
+                                    CardFiltro(
+                                        "Elétricos",
+                                        painterResource(R.mipmap.icon_eletricos),
+                                        "Icone de Elétricos",
+                                        Modifier.width(120.dp),
+                                        isEletricoSelected.value,
+                                        onclick = {
+                                            isEletricoSelected.value = !isEletricoSelected.value
+                                            if (isEletricoSelected.value) {
+                                                tipoPropulsaoSelecionada.add("Elétrico")
+                                            } else {
+                                                tipoPropulsaoSelecionada.remove("Elétrico")
+                                            }
+                                        }
+                                    )
+                                    CardFiltro(
+                                        "Híbridos",
+                                        painterResource(R.mipmap.icon_hibridos),
+                                        "Icone de Híbridos",
+                                        Modifier.width(130.dp),
+                                        isHibridoSelected.value,
+                                        onclick = {
+                                            isHibridoSelected.value = !isHibridoSelected.value
+                                            if (isHibridoSelected.value) {
+                                                tipoPropulsaoSelecionada.add("Hibrido")
+                                            } else {
+                                                tipoPropulsaoSelecionada.remove("Hibrido")
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        } else {
+                            Column {
+                                Text(
+                                    text = stringResource(R.string.label_valor),
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                                Slider(
+                                    value = sliderValue.value,
+                                    onValueChange = { newValue ->
+                                        sliderValue.value = newValue
+                                    },
+                                    valueRange = 0f..1000f,  // Definindo o intervalo do valor do Slider
+                                    steps = 1000,  // Definindo o número de divisões no Slider
+                                    modifier = Modifier.fillMaxWidth(),
+                                    colors = SliderDefaults.colors(
+                                        thumbColor = VerdeBuscar,  // Cor do polegar do slider
+                                        activeTrackColor = VerdeBuscar,  // Cor da barra ativa do slider
+                                        inactiveTrackColor = Color.Gray.copy(alpha = 0.3f)  // Cor da barra inativa do slider
+                                    )
+                                )
+                                Text(
+                                    text = "Preço selecionado: R$ ${sliderValue.value.toInt()}",
+                                    fontFamily = PRODUCT_SANS_FAMILY,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(top = 8.dp, bottom = 10.dp)
+                                )
+                            }
+                        }
+                        Column {
+                            Row(
+                                Modifier.padding(bottom = 5.dp)
+                            ) {
+                                Button(
+                                    onClick = {
+                                        // Reset all the selected filters and values
+                                        isCarroSelected.value = false
+                                        isMotoSelected.value = false
+                                        isCaminhaoSelected.value = false
+                                        isOnibusSelected.value = false
+                                        tipoVeiculoSelecionado.clear()
+
+                                        isCombustaoSelected.value = false
+                                        isEletricoSelected.value = false
+                                        isHibridoSelected.value = false
+                                        tipoPropulsaoSelecionada.clear()
+
+                                        sliderValue.value = 0f
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .border(2.dp, VerdeBuscar, RoundedCornerShape(8.dp)),
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = Color.White
+                                    )
+                                ) {
+                                    Text(
+                                        text = "Limpar Filtro",
+                                        color = VerdeBuscar,
+                                        fontFamily = PRODUCT_SANS_FAMILY,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                Button(
+                                    onClick = {
+                                        showFilterDialog = false
+                                    }, // Ação do botão Cancelar
+                                    modifier = Modifier.weight(1f), // Para os botões ficarem do mesmo tamanho
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = VerdeBuscar
+                                    )
+                                ) {
+                                    Text(
+                                        text = "Cancelar",
+                                        color = Color.White,
+                                        fontFamily = PRODUCT_SANS_FAMILY,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+
+                                Button(
+                                    onClick = {
+                                        // Convertendo as listas para ArrayList
+                                        if (tipoFiltro == "Oficinas") {
+                                            val veiculosSelecionados =
+                                                ArrayList(tipoVeiculoSelecionado)
+                                            val propulsoesSelecionadas =
+                                                ArrayList(tipoPropulsaoSelecionada)
+
+                                            // Criando a Intent e passando os extras
+                                            val intent = Intent(
+                                                context,
+                                                TelaPesquisarOficinasActivity::class.java
+                                            ).apply {
+                                                putStringArrayListExtra(
+                                                    "VEICULOS_SELECIONADOS",
+                                                    veiculosSelecionados
+                                                )
+                                                putStringArrayListExtra(
+                                                    "PROPULSOES_SELECIONADAS",
+                                                    propulsoesSelecionadas
+                                                )
+                                            }
+                                            context.startActivity(intent)
+
+                                        } else if (tipoFiltro == "Peças") {
+                                            val intent = Intent(
+                                                context,
+                                                TelaPesquisarPecasActivity::class.java
+                                            ).apply {
+                                                putExtra("SLIDER_VALUE", sliderValue.value)
+                                            }
+                                            context.startActivity(intent)
+                                        } else if (tipoFiltro == "Serviços"){
+                                            val intent = Intent(
+                                                context,
+                                                TelaPesquisarServicosActivity::class.java
+                                            ).apply {
+                                                putExtra("SLIDER_VALUE", sliderValue.value)
+                                            }
+                                            context.startActivity(intent)
+                                        }
+                                    },
+                                    modifier = Modifier.weight(1f), // Para os botões ficarem do mesmo tamanho
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = VerdeBuscar
+                                    )
+                                ) {
+                                    Text(
+                                        text = "Filtrar",
+                                        color = Color.White,
+                                        fontFamily = PRODUCT_SANS_FAMILY,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
