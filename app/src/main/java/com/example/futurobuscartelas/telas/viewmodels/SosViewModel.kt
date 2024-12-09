@@ -58,12 +58,12 @@ class SosViewModel : ViewModel() {
         GlobalScope.launch {
             repository.fetchCoordinates(apiKey, targetCep) { coordinates ->
                 if (coordinates != null) {
-                    val currentLat = -23.457142
-                    val currentLon = -46.692007
+                    //val currentLat = -23.457142
+                    //val currentLon = -46.692007
 
 
-                    //val currentLat = userLocation.latitude
-                    //val currentLon = userLocation.longitude
+                    val currentLat = userLocation.latitude
+                    val currentLon = userLocation.longitude
 
                     val origins = "$currentLat,$currentLon"
                     Log.i("Location", "Origins: $origins")

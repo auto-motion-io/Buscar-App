@@ -784,7 +784,7 @@ fun ListarOficinas(modifier: Modifier, lista: List<OficinaDTO>, context: Context
                                         .size(12.dp)
                                 )
                                 Text(
-                                    text = oficina.mediaAvaliacao?.nota?.toString() ?: "N/A",
+                                    text = oficina.mediaAvaliacao?.nota?.let { String.format("%.2f", it) } ?: "N/A",
                                     fontSize = 12.sp,
                                     fontFamily = PRODUCT_SANS_FAMILY
                                 )
@@ -1889,8 +1889,7 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                                 Modifier.size(16.dp)
                             )
                             Text(
-                                text = oficina.mediaAvaliacao?.nota?.toString()
-                                    ?: "N/A",  // Caso não tenha nota, exibe "N/A"
+                                text = oficina.mediaAvaliacao?.nota?.let { String.format("%.2f", it) } ?: "N/A",
                                 modifier = Modifier.padding(start = 4.dp, bottom = 5.dp),
                                 fontFamily = PRODUCT_SANS_FAMILY,
                                 fontSize = 16.sp

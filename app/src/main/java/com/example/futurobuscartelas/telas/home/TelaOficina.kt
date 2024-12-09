@@ -215,7 +215,7 @@ fun OficinaScreen(oficina: OficinaDTO?, sessaoUsuario: SessaoUsuario, fav:String
                     Modifier.padding(top = 4.dp)
                 ) {
                     Text(
-                        text = oficina?.mediaAvaliacao?.nota?.toString() ?: "N/A",
+                        text = oficina?.mediaAvaliacao?.nota?.let { String.format("%.2f", it) } ?: "N/A", // Caso não tenha nota, exibe "N/A"
                         Modifier.padding(bottom = 4.dp, start = 5.dp),
                         fontSize = 14.sp,
                         color = Color(30, 30, 30),
