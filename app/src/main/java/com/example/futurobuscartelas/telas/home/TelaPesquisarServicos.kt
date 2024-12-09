@@ -65,7 +65,7 @@ fun TelaPesquisarServicos(valorPreco: Float) {
         listaServicos // Se valorPreco for null, retorna a lista completa
     } else {
         listaServicos.filter { servico ->
-            servico.valorServico <= valorPreco // Filtra as peças cujo valorVenda é menor ou igual ao sliderValue
+            servico.valorServico >= valorPreco // Filtra as peças cujo valorVenda é menor ou igual ao sliderValue
         }
     }
 

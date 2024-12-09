@@ -270,15 +270,7 @@ fun ListarServicos(modifier: Modifier, lista: List<Servico>) {
                                 fontFamily = PRODUCT_SANS_FAMILY
                             )
                         }
-                        Row {
-                            Text(
-                                text = "R$" + servico.valorServico,
-                                color = Color(59, 86, 60),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
-                        }
+
                     }
                 }
             }
@@ -333,21 +325,12 @@ fun ListarServicos(modifier: Modifier, lista: List<Servico>, context: Context) {
                                 modifier = Modifier.fillMaxSize().padding(0.dp)
                             )
                         }
-                        Row {
+                        Row(modifier = Modifier.padding(bottom = 5.dp)) {
                             Text(
                                 text = servico.nome,
                                 color = Color(59, 86, 60),
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(top = 5.dp),
-                                fontFamily = PRODUCT_SANS_FAMILY
-                            )
-                        }
-                        Row {
-                            Text(
-                                text = "R$" + servico.valorServico,
-                                color = Color(59, 86, 60),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
                                 fontFamily = PRODUCT_SANS_FAMILY
                             )
                         }
@@ -1000,9 +983,9 @@ fun <T> TelaBaseOSP(titulo: String, context: Context, lista: List<T>, userData: 
         val screenHeight = configuration.screenHeightDp // Altura total da tela em dp
         val height: Dp
         if(tipoFiltro == "Oficinas"){
-            height = (screenHeight * 0.52).dp // 50% da altura da tela
+            height = (screenHeight * 0.62).dp // 50% da altura da tela
         } else {
-            height = (screenHeight * 0.36).dp
+            height = (screenHeight * 0.40).dp
         }
 
         val isCarroSelected = remember { mutableStateOf(false) }
@@ -1891,22 +1874,6 @@ fun CardSOS(idUsuario: Int, oficina: OficinaDTO) {
                                 ) else Color.Gray,
                                 modifier = Modifier.padding(top = 15.dp)
                             )
-
-                            Row(
-                                Modifier.padding(top = 6.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(R.mipmap.icon_local),
-                                    contentDescription = "Imagem de indicação de local",
-                                    Modifier.size(20.dp)
-                                )
-                                Text(
-                                    text = oficina.logradouro + ", " + oficina.numero + " - " + oficina.bairro,
-                                    color = Color(50, 50, 50),
-                                    modifier = Modifier.padding(start = 5.dp)
-                                )
-                            }
                         }
                     }
                     Column(
@@ -2225,9 +2192,9 @@ fun FotoUsuarioSessao(sessaoUsuario: SessaoUsuario){
 
 private fun formatarDistancia(distancia: Int): String {
     return if (distancia < 1000) {
-        "$distancia Metros"
+        "A $distancia metros de distância"
     } else {
         val km = distancia / 1000.0 // Converte para quilômetros com decimal
-        String.format("%.1f km", km) // Formata com uma casa decimal
+        String.format("A %.1f km de distância", km) // Formata com uma casa decimal
     }
 }
